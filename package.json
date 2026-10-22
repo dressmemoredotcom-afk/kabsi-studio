@@ -6,9 +6,11 @@
   "type": "module",
   "scripts": {
     "check": "node scripts/check-script.mjs",
-    "voice": "node scripts/voice.mjs",
+    "voice": "node scripts/voice.mjs 01",
+    "voice:02": "node scripts/voice.mjs 02",
     "studio": "remotion studio src/index.ts",
-    "render": "node scripts/render.mjs"
+    "render": "node scripts/render.mjs 01",
+    "render:02": "node scripts/render.mjs 02"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.538",

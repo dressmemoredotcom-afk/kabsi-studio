@@ -1,0 +1,11 @@
+{
+  "voice": "af_sarah",
+  "speed": 1.15,
+  "durations": {
+    "hook": 2.512,
+    "whatsapp": 5.852,
+    "qr": 4.982,
+    "protect": 4.99,
+    "end": 3.575
+  }
+}

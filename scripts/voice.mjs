@@ -1,16 +1,20 @@
 // Generates one WAV per voice-over line with Kokoro TTS and records each line's measured duration.
-//   node scripts/voice.mjs                      uses "kabsi-voice" from kabsi.config.json
-//   node scripts/voice.mjs --compare af_heart,bf_emma   writes hook-line samples to out/voice-test/
+//   node scripts/voice.mjs [01|02]                          uses the video's voice id from kabsi.config.json
+//   node scripts/voice.mjs [01|02] --compare a,b,c [--speed 1.15]   writes sample lines to out/voice-test<id>/
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { KokoroTTS } from "kokoro-js";
-import { VOICE_LINES } from "../src/script.ts";
+import { pickVideo } from "./videos.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const config = JSON.parse(readFileSync(join(root, "kabsi.config.json"), "utf8"));
 const args = process.argv.slice(2);
+const video = pickVideo(args);
+const { VOICE_LINES } = await import(video.scriptFile);
 const compareIdx = args.indexOf("--compare");
+const speedIdx = args.indexOf("--speed");
+const speed = speedIdx >= 0 ? Number(args[speedIdx + 1]) : config[video.speedKey];
 
 function toWav(samples, rate) {
   const buf = Buffer.alloc(44 + samples.length * 2);
@@ -57,23 +61,26 @@ const tts = await KokoroTTS.from_pretrained(config.model, {
 });
 
 if (compareIdx >= 0) {
-  const dir = join(root, "out", "voice-test");
+  const dir = join(root, "out", video.id === "01" ? "voice-test" : `voice-test-${video.id}`);
   mkdirSync(dir, { recursive: true });
+  const samples = [VOICE_LINES[0], VOICE_LINES[VOICE_LINES.length - 1]];
   for (const voice of args[compareIdx + 1].split(",")) {
-    const audio = await tts.generate(VOICE_LINES[0].vo, { voice, speed: config["voice-speed"] });
-    const samples = trim(audio.audio, audio.sampling_rate);
-    writeFileSync(join(dir, `${voice}.wav`), toWav(samples, audio.sampling_rate));
-    console.log(`${voice}: ${(samples.length / audio.sampling_rate).toFixed(3)} s`);
+    for (const line of samples) {
+      const audio = await tts.generate(line.vo, { voice, speed });
+      const trimmed = trim(audio.audio, audio.sampling_rate);
+      writeFileSync(join(dir, `${voice}-${line.id}.wav`), toWav(trimmed, audio.sampling_rate));
+      console.log(`${voice} ${line.id}: ${(trimmed.length / audio.sampling_rate).toFixed(3)} s`);
+    }
   }
   process.exit(0);
 }
 
-const voice = config["kabsi-voice"];
-const outDir = join(root, "assets", "voice");
+const voice = config[video.voiceKey];
+const outDir = join(root, "assets", video.voiceDir);
 mkdirSync(outDir, { recursive: true });
 const durations = {};
 for (const line of VOICE_LINES) {
-  const audio = await tts.generate(line.vo, { voice, speed: config["voice-speed"] });
+  const audio = await tts.generate(line.vo, { voice, speed });
   const samples = trim(audio.audio, audio.sampling_rate);
   writeFileSync(join(outDir, `${line.id}.wav`), toWav(samples, audio.sampling_rate));
   durations[line.id] = Number((samples.length / audio.sampling_rate).toFixed(3));
@@ -81,7 +88,7 @@ for (const line of VOICE_LINES) {
 }
 mkdirSync(join(root, "src", "generated"), { recursive: true });
 writeFileSync(
-  join(root, "src", "generated", "voice.json"),
-  JSON.stringify({ voice, speed: config["voice-speed"], durations }, null, 2) + "\n",
+  join(root, "src", "generated", video.voiceJson),
+  JSON.stringify({ voice, speed, durations }, null, 2) + "\n",
 );
 console.log(`voice ${voice}, ${Object.keys(durations).length} lines written`);

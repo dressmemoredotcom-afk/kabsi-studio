@@ -1,5 +1,6 @@
 // One command: check the script, make the voice if missing, render with Remotion, mix and encode with FFmpeg.
-//   npm run render
+//   npm run render        video 01
+//   npm run render:02     video 02
 // Env: CHROME_PATH to use an installed Chromium instead of Remotion's own browser.
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
@@ -7,14 +8,16 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { bundle } from "@remotion/bundler";
 import { renderMedia, selectComposition } from "@remotion/renderer";
-import { SCENES, VOICE_LINES, VO_OFFSET_S } from "../src/script.ts";
+import { pickVideo } from "./videos.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const video = pickVideo(process.argv.slice(2));
+const { VOICE_LINES, SCENES, VO_OFFSET_S } = await import(video.scriptFile);
 const out = join(root, "out");
-const tmp = join(out, ".tmp");
-const FINAL = join(out, "kabsi-promo-01-9x16-v1.mp4");
-const POSTER = join(out, "kabsi-promo-01-poster.png");
-const POSTER_AT_S = 28.4; // end card fully built, nothing mid-animation
+const tmp = join(out, `.tmp-${video.id}`);
+const FINAL = join(out, video.out);
+const POSTER = join(out, video.poster);
+const POSTER_AT_S = video.posterAtS; // end card fully built, nothing mid-animation
 
 const run = (cmd, args, opts = {}) => {
   const r = spawnSync(cmd, args, { stdio: opts.capture ? "pipe" : "inherit", encoding: "utf8", cwd: root });
@@ -26,13 +29,13 @@ const run = (cmd, args, opts = {}) => {
 };
 
 // 1. Rules first.
-run("node", ["scripts/check-script.mjs"]);
+run("node", ["scripts/check-script.mjs", video.id]);
 
 // 2. Voice, if it has not been generated.
-const wavs = VOICE_LINES.map((l) => join(root, "assets", "voice", `${l.id}.wav`));
-if (!wavs.every(existsSync) || !existsSync(join(root, "src", "generated", "voice.json"))) {
-  run("node", ["scripts/voice.mjs"]);
-  run("node", ["scripts/check-script.mjs"]);
+const wavs = VOICE_LINES.map((l) => join(root, "assets", video.voiceDir, `${l.id}.wav`));
+if (!wavs.every(existsSync) || !existsSync(join(root, "src", "generated", video.voiceJson))) {
+  run("node", ["scripts/voice.mjs", video.id]);
+  run("node", ["scripts/check-script.mjs", video.id]);
 }
 
 rmSync(tmp, { recursive: true, force: true });
@@ -44,7 +47,7 @@ const serveUrl = await bundle({
   publicDir: join(root, "assets"),
 });
 const browserExecutable = process.env.CHROME_PATH || null;
-const composition = await selectComposition({ serveUrl, id: "KabsiPromo01", browserExecutable });
+const composition = await selectComposition({ serveUrl, id: video.composition, browserExecutable });
 const silent = join(tmp, "silent.mp4");
 let lastPct = -1;
 await renderMedia({
@@ -66,7 +69,7 @@ await renderMedia({
 const total = SCENES[SCENES.length - 1].to;
 const inputs = wavs.flatMap((w) => ["-i", w]);
 const delays = VOICE_LINES.map((l, i) => {
-  const ms = Math.round((SCENES.find((s) => s.id === l.id).from + VO_OFFSET_S) * 1000);
+  const ms = Math.round((SCENES.find((s) => s.id === l.id).from + (l.offset ?? VO_OFFSET_S)) * 1000);
   return `[${i}:a]adelay=${ms}|${ms},aresample=48000[a${i}]`;
 });
 const mix = `${delays.join(";")};${VOICE_LINES.map((_, i) => `[a${i}]`).join("")}amix=inputs=${VOICE_LINES.length}:normalize=0,apad=whole_dur=${total},atrim=0:${total},acompressor=threshold=0.05:ratio=4:attack=5:release=120:makeup=1[mix]`;

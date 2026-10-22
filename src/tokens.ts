@@ -15,6 +15,8 @@ export const colors = {
   green: "#1F8A5B",
   amber: "#B45309",
   amberSoft: "#FEF3C7",
+  // Promo 02: WhatsApp-style chat bubbles.
+  chatGreen: "#25D366",
 } as const;
 
 export const radii = {
