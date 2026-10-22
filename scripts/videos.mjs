@@ -45,7 +45,7 @@ export const VIDEOS = {
     posterAtS: 19.5,
     audioMode: "remotion",
     // Lines start at their scene unless the line before is still speaking; they must all end by maxEnd.
-    chain: { gap: 0.3, maxEnd: 21.9 },
+    chain: { gap: 0.8, maxEnd: 21.6 },
     minS: 21.5,
     maxS: 22.5,
   },

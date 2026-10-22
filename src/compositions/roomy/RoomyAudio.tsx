@@ -5,14 +5,14 @@ import { SCENES } from "../../scriptRoomy";
 import { TR } from "../../timelineRoomy";
 import { ASSETS, BGM_FILE } from "./assets";
 
-/** 15% under the voice, 60% in the pauses, a little more in the outro, soft fades at both ends. */
+/** 18% under the voice, 55% in the pauses and the outro, soft fades at both ends. */
 export const DUCK: LinearDuck = {
-  open: 0.6,
-  ducked: 0.15,
-  outroDucked: 0.28,
+  open: 0.55,
+  ducked: 0.18,
+  outroDucked: 0.18,
   outroFromS: SCENES[SCENES.length - 1].from,
-  attackS: 0.15,
-  releaseS: 0.45,
+  attackS: 0.25,
+  releaseS: 0.7,
   fadeInS: 0.5,
   fadeOutS: 0.9,
   totalS: TR.TOTAL_FRAMES / 30,

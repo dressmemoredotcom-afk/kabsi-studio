@@ -140,10 +140,13 @@ people's reviews, and keep the licence of each clip on record.
 ## Roomy Properties reel (RoomyApartmentReel)
 
 A 22 second luxury real estate reel for Roomy Properties (@roomyproperties): 1080 x 1920, 30 fps, 660 frames.
-Five scenes dissolve into each other: hook over the terrace photo (slow Ken Burns push), the walkthrough clip
-(source seconds 19 to 25, muted), the lounge and library, a 2 by 2 spec grid over a blurred bedroom, and the
-outro. Composition: `src/compositions/RoomyApartmentReel.tsx`. Copy and timings: `src/scriptRoomy.ts`. Brand colours,
-the frosted card and the fonts (Cormorant Garamond for headlines, Jost for labels, both OFL) are in `src/tokens.ts`.
+Five scenes dissolve into each other: the ruins view (slow push 1.00 to 1.06), the walkthrough clip (muted, from source
+second 19), the lounge and library (slow pan), the master suite (sharp, push 1.00 to 1.05) with one glass spec bar, and
+the outro with the logo. Copy lives in the lower third of each scene, left aligned on one baseline just above the Reels
+caption zone, over a black-to-clear gradient so the pictures stay clear. Composition:
+`src/compositions/RoomyApartmentReel.tsx`, scenes in `src/compositions/roomy/scenes.tsx`, copy and timings in
+`src/scriptRoomy.ts`. Brand colours, the frosted card and the fonts (Cormorant Garamond for headlines, Jost for labels,
+both OFL) are in `src/tokens.ts`.
 
 ```bash
 npm run render:roomy      # writes out/roomy-downtown-275sqm.mp4
@@ -161,13 +164,15 @@ to a generated ambient stand-in (`assets/audio/bgm/roomy-ambient-standin.mp3`, f
 The script prints what is missing. The walkthrough is drawn with `OffthreadVideo`, which decodes H.264 reliably in
 Remotion's headless Chrome.
 
-**Voice**: Kokoro `bf_emma` (`roomy-voice` in `kabsi.config.json`), one clip per line in `assets/roomy/voice/`.
-To use your own, put one file at `assets/roomy/voiceover.mp3`; it plays from frame 0 and replaces the Kokoro lines.
-The five lines are about 25 seconds of speech at a natural pace, so they are spoken at 1.35x (`roomy-voice-speed`) to
-fit 22 seconds. `node scripts/voice.mjs 04 --fit` re-checks the fit if the copy changes.
+**Voice**: Kokoro `bf_emma` at 0.88x (`roomy-voice` and `roomy-voice-speed` in `kabsi.config.json`), one clip per line
+in `assets/roomy/voice/`. The script is five short lines, scheduled so each line starts after its scene cuts in (1 s
+lead-in where there is room) with at least 0.8 s of silence between lines (`chain` in `scripts/videos.mjs`). The library
+line is the longest, so it is the one that limits how slow the voice can go: `node scripts/voice.mjs 04 --fit` re-checks
+the fit if the copy or speed changes. To use your own voice, put one file at `assets/roomy/voiceover.mp3`; it plays from
+frame 0 and replaces the Kokoro lines.
 
-**Music mix**: 15% under the voice, 60% in the pauses, 28% under the voice in the outro, 0.5 s fade in, 0.9 s fade out
-(`DUCK` in `src/compositions/roomy/RoomyAudio.tsx`).
+**Music mix**: 18% under the voice, 55% in the pauses and the outro, 0.5 s fade in, 0.9 s fade out (`DUCK` in
+`src/compositions/roomy/RoomyAudio.tsx`).
 
 ## Layout
 

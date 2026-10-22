@@ -31,9 +31,9 @@ export const RoomyApartmentReel: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: roomy.charcoal }}>
       {layer(hook, 0, <HookScene frame={frame} from={hook.fromF} to={hook.toF} />)}
-      {layer(terrace, 1, <TerraceScene frame={frame} from={terrace.fromF} />)}
+      {layer(terrace, 1, <TerraceScene frame={frame} from={terrace.fromF} to={terrace.toF} />)}
       {layer(library, 2, <LibraryScene frame={frame} from={library.fromF} to={library.toF} />)}
-      {layer(specs, 3, <SpecsScene frame={frame} from={specs.fromF} />)}
+      {layer(specs, 3, <SpecsScene frame={frame} from={specs.fromF} to={specs.toF} />)}
       {layer(outro, 4, <OutroScene frame={frame} from={outro.fromF} />)}
       <RoomyAudio />
     </AbsoluteFill>

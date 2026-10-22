@@ -5,46 +5,28 @@ export type VoiceLine = {
   id: string;
   /** Spoken text. Numbers are written as words. */
   vo: string;
-  /** Seconds after the scene cuts in that the voice should start, when there is room. */
+  /** Seconds after the scene cuts in that the voice starts, when there is room. */
   offset?: number;
 };
 
+// Short on purpose: slow, calm delivery with room to breathe before and after every line.
 export const VOICE_LINES: VoiceLine[] = [
-  {
-    id: "hook",
-    vo: "Imagine waking up in the historic heart of Downtown Beirut, overlooking ancient Roman ruins.",
-    offset: 0.1,
-  },
-  {
-    id: "terrace",
-    vo: "Step out onto an expansive private teak terrace, built for true outdoor living.",
-    offset: 0.1,
-  },
-  {
-    id: "library",
-    vo: "Inside, two hundred and seventy-five square meters of architectural elegance, complete with a custom library.",
-    offset: 0.1,
-  },
-  {
-    id: "specs",
-    vo: "Featuring two master en-suite bedrooms and two dedicated parking spaces.",
-    offset: 0.1,
-  },
-  {
-    id: "outro",
-    vo: "For sale with Roomy Properties. Send a direct message to book your private tour.",
-    offset: 0.1,
-  },
+  { id: "hook", vo: "Downtown Beirut. Overlooking history.", offset: 1.0 },
+  { id: "terrace", vo: "A private terrace, directly above the ancient ruins.", offset: 1.0 },
+  { id: "library", vo: "Two hundred and seventy-five square meters of refined luxury.", offset: 0.3 },
+  { id: "specs", vo: "Two master suites, and dedicated private parking.", offset: 1.0 },
+  { id: "outro", vo: "Exclusively with Roomy Properties.", offset: 1.0 },
 ];
 
 /** Every string drawn on screen. */
 export const SCREEN = {
   hook: {
     pill: "DOWNTOWN BEIRUT",
-    title: ["Wake Up", "Over History."],
+    title: ["WAKE UP", "OVER HISTORY"],
+    subtext: "Front-row views of the ancient ruins",
   },
   terrace: {
-    badge: "EXPANSIVE TEAK TERRACE • PRIVATE RUINS VIEW",
+    badge: "EXPANSIVE TEAK TERRACE",
   },
   library: {
     value: "275 SQM",
@@ -53,11 +35,9 @@ export const SCREEN = {
   },
   specs: {
     badge: "FOR SALE • DOWNTOWN BEIRUT",
-    cells: [
-      { value: "275", label: "SQM" },
-      { value: "2", label: "MASTER SUITES" },
-      { value: "TEAK", label: "TERRACE" },
-      { value: "2", label: "PARKING SPOTS" },
+    rows: [
+      ["275 SQM", "2 MASTER SUITES"],
+      ["TEAK TERRACE", "2 PARKING SPOTS"],
     ],
   },
   outro: {
@@ -66,17 +46,16 @@ export const SCREEN = {
     wordmarkBottom: "PROPERTIES",
     slogan: "WHERE LUXURY MEETS CONVENIENCE",
     sloganLines: ["WHERE LUXURY", "MEETS CONVENIENCE"],
-    tagline: "Your Gateway to Luxury Living in Lebanon",
+    viewing: "SCHEDULE A PRIVATE VIEWING",
     cta: "DM or Call +961 71 203 398",
     handle: "@roomyproperties",
-    footer: "DM for Private Viewings",
   },
 } as const;
 
 /** Scene windows in seconds: 22 seconds, 660 frames at 30 fps. */
 export const SCENES = [
-  { id: "hook", from: 0, to: 4 },
-  { id: "terrace", from: 4, to: 10 },
+  { id: "hook", from: 0, to: 4.5 },
+  { id: "terrace", from: 4.5, to: 10 },
   { id: "library", from: 10, to: 14 },
   { id: "specs", from: 14, to: 18 },
   { id: "outro", from: 18, to: 22 },
