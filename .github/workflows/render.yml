@@ -10,8 +10,8 @@ on:
       video:
         description: Which video to render
         type: choice
-        options: ["03", "02", "01"]
-        default: "03"
+        options: ["roomy", "03", "02", "01"]
+        default: "roomy"
 
 jobs:
   build:
@@ -46,9 +46,17 @@ jobs:
         with:
           path: node_modules/@huggingface/transformers/.cache
           key: kokoro-82m-fp32
-      - name: Render
+      - name: Render a Kabsi promo
+        if: inputs.video != 'roomy'
         run: node scripts/render.mjs ${{ inputs.video }}
+      - name: Render the Roomy listing reel
+        if: inputs.video == 'roomy'
+        run: |
+          npm run render:roomy
+          npm run master:roomy
       - uses: actions/upload-artifact@v4
         with:
-          name: kabsi-promo-${{ inputs.video }}
-          path: out/kabsi-promo-${{ inputs.video }}-*
+          name: reel-${{ inputs.video }}
+          path: |
+            out/kabsi-promo-${{ inputs.video }}-*
+            out/roomy-listing.mp4

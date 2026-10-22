@@ -18,11 +18,11 @@
     "render:02": "node scripts/render.mjs 02",
     "render:03": "node scripts/render.mjs 03",
     "roomy:assets": "node scripts/roomy-assets.mjs",
-    "voice:04": "node scripts/voice.mjs 04",
+    "roomy:voice": "node scripts/roomy-voice.mjs",
     "prestudio": "node scripts/roomy-assets.mjs",
-    "prerender:roomy": "node scripts/roomy-assets.mjs && node scripts/voice.mjs 04 && node scripts/check-script.mjs 04",
-    "render:roomy": "remotion render RoomyApartmentReel out/roomy-downtown-275sqm.mp4",
-    "postrender:roomy": "node scripts/master-audio.mjs out/roomy-downtown-275sqm.mp4"
+    "prerender:roomy": "npm run typecheck && node scripts/roomy-assets.mjs && node scripts/roomy-voice.mjs && node scripts/check-script.mjs",
+    "render:roomy": "remotion render RoomyDynamicReel out/roomy-listing.mp4",
+    "master:roomy": "node scripts/master-audio.mjs out/roomy-listing.mp4"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.538",
@@ -31,7 +31,8 @@
     "kokoro-js": "1.2.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "remotion": "4.0.538"
+    "remotion": "4.0.538",
+    "zod": "4.5.4"
   },
   "devDependencies": {
     "@remotion/eslint-config-flat": "4.0.538",

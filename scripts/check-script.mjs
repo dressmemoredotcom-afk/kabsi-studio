@@ -6,6 +6,8 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { VIDEOS } from "./videos.mjs";
+import { RoomyListingSchema } from "../src/brands/roomy/schema.ts";
+import { FPS, OUTRO_FROM, planScenes, resolveVoScript, sceneCopy, voiceSignature } from "../src/brands/roomy/storyboard.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const failures = [];
@@ -82,16 +84,7 @@ for (const [id, video] of Object.entries(VIDEOS)) {
   }
   for (const s of SCENES) if (!VOICE_LINES.some((l) => l.id === s.id)) fail(`scene:${s.id}`, "scene has no voice line");
 
-  if (video.brand === "roomy") {
-    // Roomy Properties: its own brand, so only its own facts are pinned down.
-    const o = SCREEN.outro;
-    if (o.slogan !== "WHERE LUXURY MEETS CONVENIENCE") fail("screen:outro.slogan", "slogan changed");
-    if (o.sloganLines.join(" ") !== o.slogan) fail("screen:outro.sloganLines", "slogan lines differ from the slogan");
-    if (!o.cta.includes("+961 71 203 398")) fail("screen:outro.cta", "call to action must carry +961 71 203 398");
-    if (!/private viewing/i.test(o.cta)) fail("screen:outro.cta", "call to action must invite a private viewing");
-    if (o.handle !== "@roomyproperties") fail("screen:outro.handle", "handle must be @roomyproperties");
-    if (!/Roomy Properties/.test(VOICE_LINES[VOICE_LINES.length - 1].vo)) fail("vo", "the last line must name Roomy Properties");
-  } else {
+  {
     // Content rules, both videos.
     if (SCREEN.app.example !== "Example") fail("screen:app.example", 'screens must carry the "Example" tag');
     if (SCREEN.end.tagline !== "Your reviews and listing. Taken care of.") fail("screen:end.tagline", "brand line changed");
@@ -116,7 +109,7 @@ for (const [id, video] of Object.entries(VIDEOS)) {
   }
 
   // Timing, when the voice has been generated.
-  const voicePath = join(root, "src", "generated", video.voiceJson);
+  const voicePath = join(root, "src", "brands", "kabsi", "generated", video.voiceJson);
   let timing = "voice not generated yet, timing not checked";
   if (existsSync(voicePath)) {
     const { durations } = JSON.parse(readFileSync(voicePath, "utf8"));
@@ -152,6 +145,75 @@ for (const [id, video] of Object.entries(VIDEOS)) {
   );
 }
 
+// Roomy Properties listing: assets/roomy/listing.json must match the schema, read cleanly, and its voice must fit.
+{
+  const fail = (where, msg) => failures.push(`[roomy] ${where}: ${msg}`);
+  const file = join(root, "assets", "roomy", "listing.json");
+  let summary = "listing.json missing";
+  if (existsSync(file)) {
+    let raw;
+    try {
+      raw = JSON.parse(readFileSync(file, "utf8"));
+    } catch (e) {
+      fail("listing.json", `not valid JSON: ${e.message}`);
+    }
+    const parsed = raw && RoomyListingSchema.safeParse(raw);
+    if (parsed && !parsed.success) for (const issue of parsed.error.issues) fail(`listing.${issue.path.join(".")}`, issue.message);
+    if (parsed && parsed.success) {
+      const listing = parsed.data;
+      const script = resolveVoScript(listing);
+      const copy = sceneCopy(listing);
+      const strings = [
+        ["neighborhood", listing.neighborhood],
+        ["propertyTitle", listing.propertyTitle],
+        ["price", listing.price],
+        ["whatsappContact", listing.whatsappContact],
+        ["instagram", listing.instagram],
+        ...listing.specs.map((t, i) => [`specs[${i}]`, t]),
+        ...listing.media.flatMap((m, i) => [[`media[${i}].headline`, m.headline], [`media[${i}].subline`, m.subline]]),
+        ...copy.flatMap((c, i) => [[`scene ${i} badge`, c.topBadge], ...(c.bar ?? []).flat().map((t) => [`scene ${i} bar`, t])]),
+      ].filter(([, t]) => typeof t === "string" && t);
+      for (const [where, text] of strings) {
+        if (/[\u2012\u2013\u2014\u2015\u2212]/.test(text)) fail(where, `dash character in "${text}"`);
+        if (/\s-{1,2}\s|--/.test(text)) fail(where, `dash used as punctuation in "${text}"`);
+        if (/[!\uFF01\u00A1]/.test(text)) fail(where, `exclamation mark in "${text}"`);
+      }
+      script.forEach((text, i) => {
+        if (!text) return;
+        const where = `voice-over[${i}]`;
+        if (/\d/.test(text)) fail(where, `digits in voice-over, write numbers as words: "${text}"`);
+        if (/[\u2012\u2013\u2014\u2015\u2212!]/.test(text) || /\s-{1,2}\s|--/.test(text)) fail(where, `dash or exclamation mark in "${text}"`);
+        for (const [re, name] of banned) if (re.test(text)) fail(where, `banned "${name}" in "${text}"`);
+      });
+      for (const [i, m] of listing.media.entries()) {
+        const text = [m.headline, m.subline].filter(Boolean).join(" ");
+        for (const [re, name] of banned) if (re.test(text)) fail(`media[${i}]`, `banned "${name}" in "${text}"`);
+      }
+      // The stored voice must belong to this listing's script and end before the outro fades.
+      const voicePath = join(root, "src", "brands", "roomy", "generated", "roomy-voice.json");
+      let voiceNote = "voice not generated";
+      if (existsSync(voicePath)) {
+        const v = JSON.parse(readFileSync(voicePath, "utf8"));
+        if (v.signature !== voiceSignature(script)) fail("voice", "the stored voice does not match this listing's script. Run: node scripts/roomy-voice.mjs");
+        else {
+          let prevEnd = -Infinity;
+          for (const l of v.lines) {
+            if (l.startS < prevEnd + 0.5) fail(`voice scene ${l.scene}`, `starts at ${l.startS}s, too close to the line before (ends ${prevEnd.toFixed(2)}s)`);
+            prevEnd = l.startS + l.durS;
+          }
+          if (prevEnd > 21.6) fail("voice", `the last line ends at ${prevEnd.toFixed(2)}s, too late for a 22 s reel`);
+          voiceNote = v.lines.length ? `voice ${v.voice} at ${v.speed}x ends at ${prevEnd.toFixed(2)} s` : "your voiceover file";
+        }
+      }
+      const scenes = planScenes(listing.media.length);
+      const total = scenes.reduce((n, sc) => n + sc.frames, 0) + (660 - OUTRO_FROM);
+      if (total !== 660) fail("timeline", `scenes add up to ${total} frames, expected 660`);
+      summary = `"${listing.id}", ${listing.media.length} media item${listing.media.length === 1 ? "" : "s"} (${(scenes[0].frames / FPS).toFixed(1)} s first scene), ${strings.length} strings, ${voiceNote}`;
+    }
+  }
+  summaries.push(`[roomy] ${summary}`);
+}
+
 // Source rules, once: colours only from tokens.ts, no dashes anywhere in src.
 const files = [];
 (function list(dir) {
@@ -165,7 +227,7 @@ for (const f of files) {
   const rel = relative(root, f);
   const src = readFileSync(f, "utf8");
   if (/[–—]/.test(src)) failures.push(`${rel}: en or em dash in source`);
-  if (!rel.endsWith("tokens.ts")) {
+  if (!rel.endsWith("tokens.ts") && !rel.endsWith("core/frame.ts")) {
     if (/#[0-9a-fA-F]{3,8}\b/.test(src)) failures.push(`${rel}: hex colour outside src/tokens.ts`);
     if (/\b(rgb|rgba|hsl|hsla)\(/i.test(src)) failures.push(`${rel}: raw colour function outside src/tokens.ts`);
   }

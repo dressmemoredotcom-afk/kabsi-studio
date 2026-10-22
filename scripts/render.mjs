@@ -34,7 +34,7 @@ run("node", ["scripts/check-script.mjs", video.id]);
 // 2. Voice, if it has not been generated.
 const wavs = VOICE_LINES.map((l) => join(root, "assets", video.voiceDir, `${l.id}.wav`));
 // Videos with real-voice support always re-measure: a file dropped into assets/voice must be picked up.
-if (video.realVoice || !wavs.every(existsSync) || !existsSync(join(root, "src", "generated", video.voiceJson))) {
+if (video.realVoice || !wavs.every(existsSync) || !existsSync(join(root, "src", "brands", "kabsi", "generated", video.voiceJson))) {
   run("node", ["scripts/voice.mjs", video.id]);
   run("node", ["scripts/check-script.mjs", video.id]);
 }

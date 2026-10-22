@@ -10,13 +10,13 @@ approves everything. Brand line: "Your reviews and listing. Taken care of."
 
 | Id | Composition | Script | Voice | Output |
 | --- | --- | --- | --- | --- |
-| 01 | `KabsiPromo01` | `src/script.ts` | `af_heart`, calm | `out/kabsi-promo-01-9x16-v1.mp4` |
-| 02 | `KabsiPromo02` | `src/script02.ts` | `af_sarah` at 1.15x | `out/kabsi-promo-02-9x16-v2.mp4` |
-| 03 | `PromoVideoV3` | `src/script03.ts` | `af_sarah` at 1.2x (placeholder) or your own files | `out/kabsi-promo-03-9x16-v3.mp4` |
+| 01 | `KabsiPromo01` | `src/brands/kabsi/script.ts` | `af_heart`, calm | `out/kabsi-promo-01-9x16-v1.mp4` |
+| 02 | `KabsiPromo02` | `src/brands/kabsi/script02.ts` | `af_sarah` at 1.15x | `out/kabsi-promo-02-9x16-v2.mp4` |
+| 03 | `PromoVideoV3` | `src/brands/kabsi/script03.ts` | `af_sarah` at 1.2x (placeholder) or your own files | `out/kabsi-promo-03-9x16-v3.mp4` |
 
 Video 03 is the production template: about 20 seconds, with a three-track Remotion mix (voice, music, sound
 effects), word-by-word kinetic captions, a realistic phone mockup with a glass notification banner, and a slot for
-external b-roll. Its composition is `src/compositions/PromoVideoV3.tsx`.
+external b-roll. Its composition is `src/brands/kabsi/compositions/PromoVideoV3.tsx`.
 
 **Rendered files are not committed.** `out/*.mp4`, `out/*.png` and temporary render files are git-ignored. Render
 locally, or run the `render` workflow from the Actions tab and download the artifact.
@@ -49,6 +49,7 @@ Other commands:
 | `npm run check` | Rule check for every video (banned phrases, dashes, tokens, timing). |
 | `npm run build` | Type check, lint, rule check, then a Remotion bundle build. Must pass before a push. |
 | `npm run typecheck`, `npm run lint` | The first two steps of build, on their own. |
+| `npm run roomy:assets`, `npm run roomy:voice` | The two Roomy preparation steps on their own. |
 | `npm run audio` | Regenerate the stock music loop and sound effects in `assets/audio/`. |
 | `npm run voice`, `voice:02`, `voice:03` | Regenerate that video's voice lines and their measured durations. |
 | `npm run studio` | Remotion Studio, to scrub and preview. |
@@ -58,7 +59,7 @@ from the Actions tab (pick the video) and uploads the files as an artifact. The 
 
 ## Change the script
 
-Everything spoken or shown lives in the video's script file (**`src/script.ts`**, **`src/script02.ts`** or **`src/script03.ts`**):
+Everything spoken or shown lives in the video's script file (**`src/brands/kabsi/script.ts`**, **`script02.ts`** or **`script03.ts`**):
 
 - `VOICE_LINES`: each voice-over line (numbers written as words) and its caption chunks. Captions joined must
   equal the line.
@@ -71,7 +72,7 @@ each line's measured audio length, split across the chunks by character count, s
 The check fails if a line runs past its scene or the video leaves its length range (28 to 30 seconds for 01 and 02,
 18 to 22 for 03).
 
-Colours, radii and shadows come only from `src/tokens.ts`; the check fails on a hex colour anywhere else. Videos 02
+Colours, radii and shadows come only from the brand's `tokens.ts` (`src/brands/kabsi/tokens.ts`, `src/brands/roomy/tokens.ts`); the check fails on a hex colour anywhere else. Videos 02
 and 03 use one extra colour there, `chatGreen` (#25D366), for chat bubbles, and 03 adds the phone and glass shadows.
 
 ### Voice
@@ -94,15 +95,15 @@ on-screen string, and also scans `src/` for dashes and stray colours.
 
 ## Audio: voice, music and sound effects (video 03)
 
-The composition mixes three tracks, in `src/audio/`:
+The composition mixes three tracks, in `src/core/audio/`:
 
 1. **Voice-over**: one clip per script line, placed on its scene.
 2. **Background music**: `assets/audio/bgm/kabsi-upbeat-loop.mp3`, looped. It ducks to -20 dB under every voice
    line (dropping 0.12 s before the voice starts), comes back up to -11 dB in the gaps and across transitions,
    swells to -8 dB once the last line ends, and fades in and out. The levels are in `DEFAULT_DUCK` in
-   `src/audio/mix.ts`. The loop is normalised to about -1 dBFS, so these are levels relative to that.
+   `src/core/audio/mix.ts`. The loop is normalised to about -1 dBFS, so these are levels relative to that.
 3. **Sound effects**: `sfx-pop`, `sfx-whoosh`, `sfx-whatsapp-ping`, `sfx-click`, `sfx-success` and `sfx-star` in
-   `assets/audio/sfx/`, fired on exact frames from the cue list `SFX_CUES` in `src/compositions/v3/events.ts`.
+   `assets/audio/sfx/`, fired on exact frames from the cue list `SFX_CUES` in `src/brands/kabsi/compositions/v3/events.ts`.
    Picture and sound read the same event times, so they cannot drift apart.
 
 After Remotion renders the mix, `scripts/render.mjs` normalises it to -14 LUFS (two-pass loudnorm) with a limiter
@@ -127,68 +128,77 @@ are timed by their share of the line's characters. If a take is longer than its 
 
 ### Captions
 
-`src/components/KineticCaptions.tsx` shows one phrase at a time on a soft black box. The word being spoken turns
+`src/brands/kabsi/components/KineticCaptions.tsx` shows one phrase at a time on a soft black box. The word being spoken turns
 Kabsi yellow with a small scale pop. Videos 02 and 03 use it.
 
 ### External clips (b-roll, talking heads, screen captures)
 
-Put an MP4 in `assets/video/` and add an entry to `BROLL` in `src/compositions/PromoVideoV3.tsx`:
+Put an MP4 in `assets/video/` and add an entry to `BROLL` in `src/brands/kabsi/compositions/PromoVideoV3.tsx`:
 `{ file: "cafe-counter.mp4", fromS: 0, toS: 3 }`. The clip plays full frame under the UI, captions and audio mix, and
 is silent by default. Any clip must follow the same rules as the script: no claims from the banned list, no real
 people's reviews, and keep the licence of each clip on record.
 
-## Roomy Properties reel (RoomyApartmentReel)
+## Roomy Properties: the dynamic listing reel (RoomyDynamicReel)
 
-A 28 second luxury real estate reel for Roomy Properties (@roomyproperties): 1080 x 1920, 30 fps, 840 frames.
-Five scenes dissolve into each other: the ruins view (photo, slow push 1.00 to 1.05), the grand salon (walkthrough
-seconds 1 to 7), the terrace (walkthrough seconds 19 to 25), the master suite (sharp photo, push 1.00 to 1.05), and
-the outro with the logo. Both clips are muted and come from `apartment-walkthrough.mp4`. Copy sits in the lower third
-of each scene, left aligned on one baseline just above the Reels caption zone, over a black-to-clear gradient. The
-spec overlays are glass bars. Composition: `src/compositions/RoomyApartmentReel.tsx`, scenes in
-`src/compositions/roomy/scenes.tsx`, copy and timings in `src/scriptRoomy.ts` (the reel's length is the end of the last
-scene there). Brand colours, the frosted card and the fonts (Cormorant Garamond for headlines, Jost for labels, both
-OFL) are in `src/tokens.ts`.
+One composition that builds a 22 second luxury Instagram Reel (1080 x 1920, 30 fps, 660 frames) from
+`assets/roomy/listing.json`, whatever mix of photos and clips it lists: one to eight items, interior or exterior, with or
+without a bedroom. Change the file, run one command.
 
 ```bash
-npm run render:roomy      # writes out/roomy-downtown-275sqm.mp4
+npm run render:roomy      # typecheck, find the assets, make the voice, check the rules, render out/roomy-listing.mp4
+npm run master:roomy      # bring the audio to -14 LUFS, true peak under -1 dB
 ```
 
-`render:roomy` is `remotion render RoomyApartmentReel out/roomy-downtown-275sqm.mp4`, plus hooks that npm runs around it:
-before, `scripts/roomy-assets.mjs` records which files exist, the Kokoro voice is made (or reused) and the rules are
-checked; after, `scripts/master-audio.mjs` normalises the audio to -14 LUFS with the video stream copied untouched.
+**The listing** (`assets/roomy/listing.json`, shape in `src/brands/roomy/schema.ts`): `neighborhood`, `propertyTitle`, an
+optional `price`, `specs` (for example `["310 SQM", "3 SUITES", "TERRACE", "2 PARKING"]`), `media` (each a `photo` or a
+`video` with `src`, an optional `startAtSecond` for clips, and an optional `headline` and `subline`), an optional
+`voScript`, and `whatsappContact`. A `src` is relative to `assets/roomy/`, or starts with `/` to point elsewhere under
+`assets/`. A mistake in the file stops the render with a plain message saying which field is wrong.
 
-**Assets** go in `assets/roomy/` (`roomy-logo.png`, `terrace-ruins`, `living-room-library`, `master-bedroom` as
-`.jpg`, `.jpeg` or `.png`, and `apartment-walkthrough.mp4`) and `assets/audio/bgm/luxury-house.mp3`. They are read
-through `staticFile()`. Each one has a fallback, so a missing file never breaks the render: photos and the clip fall
-back to a teal-to-charcoal backdrop with arches, the logo to a typographic ROOMY / PROPERTIES wordmark, and the music
-to a generated ambient stand-in (`assets/audio/bgm/roomy-ambient-standin.mp3`, from `node scripts/make-audio.mjs roomy`).
-The script prints what is missing. The walkthrough is drawn with `OffthreadVideo`, which decodes H.264 reliably in
-Remotion's headless Chrome.
+**The pacing** (`src/brands/roomy/storyboard.ts`): the outro takes the last 4 seconds (120 frames). The 540 frames before
+it are shared evenly: each of N items gets `floor(540 / N)` frames and the first takes the remainder. Scenes dissolve
+into each other over 12 frames.
 
-**Voice**: Kokoro `bf_emma` at 0.85x (`roomy-voice` and `roomy-voice-speed` in `kabsi.config.json`), one clip per line
-in `assets/roomy/voice/`. The script is five short lines, each placed inside its own scene with at least 1 s of
-silence between lines (`chain` in `scripts/videos.mjs`). `node scripts/voice.mjs 04 --fit` re-checks the fit if the copy
-or speed changes. To use your own voice, put one file at `assets/roomy/voiceover.mp3`; it plays from
-frame 0 and replaces the Kokoro lines.
+**What each scene says**: the first scene shows the neighborhood badge and a serif headline (the item's own, else the
+property title). The last shows a `FOR SALE` badge, with the price when there is one. Middle scenes show a glass bar
+with the item's own headline and subline or, if it has none, its share of the specs. A one-item reel carries the specs on
+its only scene. Copy sits in the lower third over a charcoal gradient (85% at the bottom edge, clear by 55%); the
+distance from the bottom is `layout.lowerThirdBottom` in `src/brands/roomy/tokens.ts`.
 
-**Music mix**: 18% under the voice, 55% in the pauses and the outro, 0.5 s fade in, 0.9 s fade out, smooth ramps either side of every line (`DUCK` in
-`src/compositions/roomy/RoomyAudio.tsx`).
+**Pictures**: photos fill the frame and move slowly, pushing in (1.00 to 1.06) on even scenes and pulling out (1.06 to
+1.00) on odd ones, with a sideways drift on landscape photos. Clips play muted from `startAtSecond`, filling the frame.
+A missing file shows a branded placeholder instead of failing the render. `node scripts/roomy-assets.mjs` lists what it
+found.
+
+**Logo**: `assets/roomy/roomy-logo.png` (or `Transparent.png`) in the outro, on a soft light plate because the artwork is
+dark teal. If the file carries a tagline under the artwork, the outro crops it off without altering the file; a logo with
+no tagline is shown whole. Until a logo is added, a typographic ROOMY PROPERTIES wordmark stands in.
+
+**Voice**: Kokoro `bf_emma` (`roomy-voice` and `roomy-voice-speed` in `kabsi.config.json`). Lines come from `voScript`
+(one per media item in order, an empty string for a silent scene, and one more for the outro) or, if there is none, are
+written from the neighborhood, title and specs, with numbers spelled out. Each line starts after its scene cuts in and
+after a pause from the line before. If they do not fit in 22 seconds the voice speeds up a little, and as a last resort
+lines in the middle scenes are dropped. `node scripts/roomy-voice.mjs` shows the result. A ready-made
+`assets/roomy/voiceover.mp3` replaces the Kokoro voice.
+
+**Music**: `assets/audio/bgm/luxury-house.mp3`, or the generated ambient stand-in until you add it. 15% under the voice,
+55% in the pauses, across scene changes and in the outro, with soft ramps and fades (`DUCK` in
+`src/brands/roomy/RoomyAudio.tsx`).
 
 ## Layout
 
 ```
-src/compositions/  PromoVideoV3 and its scenes (v3/)
-src/components/    shared pieces: PhoneMockup, whatsapp (banner, chat), QrStand, KineticCaptions, BRollLayer
-src/audio/         the mixer: AudioMix, ducking maths (mix.ts), sound-effect catalogue (sfx.ts)
-src/lib/           createTimeline: script plus measured voice to frames
-src/               video 01 (Promo.tsx, script.ts), tokens.ts; src/v2/ is video 02 (script02.ts)
-src/generated/     voice*.json: measured length of each voice line (written by the voice scripts)
-assets/fonts/      Lalezar and Readex Pro, with their OFL licence files
+src/core/          shared by every brand: anim.ts (springs), audio/ (the mixer and ducking), timeline.ts, frame.ts
+src/brands/roomy/  Roomy Properties: tokens, schema, storyboard, DynamicReel, RoomyAudio, components/
+src/brands/kabsi/  Kabsi: Promo (video 01), v2/ (video 02), compositions/ (PromoVideoV3), components/, tokens, scripts
+src/Root.tsx       registers every composition: RoomyDynamicReel, KabsiPromo01, KabsiPromo02, PromoVideoV3
+assets/fonts/      Lalezar, Readex Pro, Cormorant Garamond and Jost, with their OFL licence files
 assets/audio/      bgm/ music loops, sfx/ sound effects
-assets/voice/      incoming voice files (v3/ holds video 03's; Kokoro placeholders there are git-ignored)
+assets/roomy/      listing.json and the Roomy photos, clips and logo
+assets/voice/      incoming voice files for Kabsi video 03
 assets/video/      external clips for the b-roll layer
-scripts/        voice.mjs, check-script.mjs, render.mjs
-out/            finished video, poster, check frames, voice test samples
+scripts/           check-script, voice, render, roomy-assets, roomy-voice, make-audio, master-audio
+out/               finished video (git-ignored)
 ```
 
 `assets/` is Remotion's public directory.
@@ -207,6 +217,7 @@ Everything used here allows commercial use at no cost.
 | FFmpeg | LGPL / GPL (this build has libx264) | Used as a command-line tool; it is not redistributed here. |
 | Chromium / Chrome Headless Shell | BSD-style | Used by Remotion to draw frames. |
 | Cormorant Garamond, Jost (Roomy reel) | SIL Open Font License 1.1 | `assets/fonts/OFL-CormorantGaramond.txt`, `OFL-Jost.txt`. From the google/fonts repository. |
+| Zod | MIT | Checks `listing.json`. |
 | TypeScript, ESLint | Apache 2.0, MIT | Dev only. |
 | Music loop and sound effects in `assets/audio/` | Generated by `scripts/make-audio.mjs` | Original synthesis, no third-party material. |
 | Lalezar (titles) | SIL Open Font License 1.1 | `assets/fonts/OFL-Lalezar.txt`. From the google/fonts repository. |

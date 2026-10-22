@@ -1,10 +1,11 @@
-// One entry per video. Scripts take the id as their first argument (default "01").
+// One entry per Kabsi video. Scripts take the id as their first argument (default "01").
+// (The Roomy reel is driven by assets/roomy/listing.json instead: see scripts/roomy-assets.mjs and roomy-voice.mjs.)
 //   audioMode "ffmpeg":   the voice is mixed and encoded by scripts/render.mjs (promos 01 and 02).
 //   audioMode "remotion": the composition carries voice, music and SFX tracks; ffmpeg only normalises and encodes.
 //   realVoice: true: files in assets/<voiceDir> (mp3, wav or m4a, named after the line id) beat Kokoro placeholders.
 export const VIDEOS = {
   "01": {
-    scriptFile: "../src/script.ts",
+    scriptFile: "../src/brands/kabsi/script.ts",
     composition: "KabsiPromo01",
     voiceKey: "kabsi-voice",
     speedKey: "voice-speed",
@@ -18,7 +19,7 @@ export const VIDEOS = {
     maxS: 30,
   },
   "02": {
-    scriptFile: "../src/script02.ts",
+    scriptFile: "../src/brands/kabsi/script02.ts",
     composition: "KabsiPromo02",
     voiceKey: "kabsi-voice-upbeat",
     speedKey: "voice-speed-upbeat",
@@ -31,26 +32,8 @@ export const VIDEOS = {
     minS: 28,
     maxS: 30,
   },
-  "04": {
-    // Roomy Properties reel. Another brand: the Kabsi content rules do not apply, the generic wording rules do.
-    brand: "roomy",
-    scriptFile: "../src/scriptRoomy.ts",
-    composition: "RoomyApartmentReel",
-    voiceKey: "roomy-voice",
-    speedKey: "roomy-voice-speed",
-    voiceDir: "roomy/voice",
-    voiceJson: "voice04.json",
-    out: "roomy-downtown-275sqm.mp4",
-    poster: "roomy-downtown-poster.png",
-    posterAtS: 26.0,
-    audioMode: "remotion",
-    // Lines start at their scene unless the line before is still speaking; they must all end by maxEnd.
-    chain: { gap: 1.0, maxEnd: 27.0 },
-    minS: 27.5,
-    maxS: 28.5,
-  },
   "03": {
-    scriptFile: "../src/script03.ts",
+    scriptFile: "../src/brands/kabsi/script03.ts",
     composition: "PromoVideoV3",
     voiceKey: "kabsi-voice-upbeat",
     speedKey: "voice-speed-v3",
