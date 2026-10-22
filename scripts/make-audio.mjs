@@ -1,13 +1,15 @@
 // Synthesises the stock sound design: one background-music loop and the UI sound effects.
 // Everything is generated from scratch (sine, saw and filtered noise), so there is nothing to license.
 // To use licensed or hand-made audio instead, overwrite the files in assets/audio/ with the same names.
-//   npm run audio
+//   npm run audio          everything
+//   node scripts/make-audio.mjs roomy    only the ambient stand-in for the Roomy reel
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const ONLY_ROOMY = process.argv[2] === "roomy";
 const SR = 44100;
 const TAU = Math.PI * 2;
 
@@ -191,6 +193,7 @@ const star = () => {
   return b;
 };
 
+if (!ONLY_ROOMY) {
 encode(pop(), sfxDir, "sfx-pop");
 encode(whoosh(), sfxDir, "sfx-whoosh");
 encode(ping(), sfxDir, "sfx-whatsapp-ping");
@@ -291,5 +294,108 @@ for (let b = 0; b < BARS; b++) {
 }
 bgm.normalize(0.89);
 encode(bgm, bgmDir, "kabsi-upbeat-loop", 3);
+}
+
+// ---------- Roomy reel: chilled house stand-in, 16 bars at 100 BPM (Fmaj7 Em7 Dm9 Cmaj7, twice) ----------
+// A placeholder for assets/audio/bgm/luxury-house.mp3. Soft pads that pump gently with a quiet kick,
+// a warm sub bass, brushed hats and a bell-like arpeggio in the second half.
+{
+  const RB = 100;
+  const rbeat = 60 / RB;
+  const rbar = rbeat * 4;
+  const RBARS = 16;
+  const rlen = rbar * RBARS;
+  const pads = new Stereo(rlen);
+  const rest = new Stereo(rlen);
+  const kicks = [];
+
+  const softKick = () => {
+    let ph = 0;
+    return signal(0.4, (t) => {
+      ph += (TAU * (44 + 70 * Math.exp(-t * 20))) / SR;
+      return Math.sin(ph) * Math.exp(-t * 7) * attack(t, 0.003);
+    });
+  };
+  const brush = (len, decay) => {
+    let prev = 0;
+    return signal(len, (t) => {
+      const n = noise();
+      const hp = n - prev * 0.8;
+      prev = n;
+      return hp * Math.exp(-t * decay);
+    });
+  };
+  const pad = (m, dur) => {
+    const f = midi(m);
+    let p1 = 0;
+    let p2 = 0;
+    let p3 = 0;
+    let y = 0;
+    return signal(dur, (t) => {
+      p1 = (p1 + (f * 1.0035) / SR) % 1;
+      p2 = (p2 + f / SR) % 1;
+      p3 = (p3 + (f * 0.9965) / SR) % 1;
+      y += 0.05 * ((p1 + p2 + p3 - 1.5) * 0.66 - y);
+      const env = Math.min(1, t / 1.1) * Math.min(1, (dur - t) / 1.4);
+      return y * env;
+    });
+  };
+  const bell = (m) => {
+    const f = midi(m);
+    return signal(0.9, (t) => (Math.sin(TAU * f * t) + 0.4 * Math.sin(TAU * f * 2.01 * t) * Math.exp(-t * 9)) * Math.exp(-t * 4.5) * attack(t, 0.004) * (1 + 0.08 * Math.sin(TAU * 5 * t)));
+  };
+
+  const chords = [
+    { root: 29, tones: [53, 57, 60, 64] }, // Fmaj7
+    { root: 28, tones: [52, 55, 59, 62] }, // Em7
+    { root: 26, tones: [50, 53, 57, 60, 64] }, // Dm9
+    { root: 36, tones: [48, 52, 55, 59] }, // Cmaj7
+  ];
+
+  for (let b = 0; b < RBARS; b++) {
+    const chord = chords[Math.floor(b / 2) % 4];
+    const t0 = b * rbar;
+    if (b % 2 === 0) {
+      chord.tones.forEach((m, i) => pads.add(t0, pad(m, rbar * 2 + 0.8), { wrap: true, gain: 0.16, pan: (i - 1.5) * 0.4 }));
+    }
+    for (let k = 0; k < 4; k++) {
+      const t = t0 + k * rbeat;
+      kicks.push(t);
+      rest.add(t, softKick(), { wrap: true, gain: 0.5 });
+      rest.add(t + rbeat / 2, brush(0.07, 80), { wrap: true, gain: 0.07, pan: k % 2 ? 0.3 : -0.3 });
+      if (k === 1 || k === 3) rest.add(t, brush(0.25, 16), { wrap: true, gain: 0.05, pan: 0.15 });
+      for (const q of [0.25, 0.75]) rest.add(t + q * rbeat, brush(0.04, 140), { wrap: true, gain: 0.025, pan: q > 0.5 ? 0.4 : -0.4 });
+    }
+    // Sub bass: root on the beat and a soft answer on the "and" of two.
+    [[0, 0], [1.5, 12]].forEach(([beatPos, up]) => {
+      const f = midi(chord.root + up);
+      rest.add(t0 + beatPos * rbeat, signal(0.55, (t) => Math.sin(TAU * f * t) * Math.exp(-t * 3.5) * attack(t, 0.01)), { wrap: true, gain: 0.5 });
+    });
+    if (b >= 8) {
+      for (let p = 0; p < 8; p++) {
+        const m = chord.tones[(p * 3) % chord.tones.length] + 12;
+        rest.add(t0 + p * (rbeat / 2) + rbeat / 4, bell(m), { wrap: true, gain: 0.07, pan: p % 2 ? 0.55 : -0.55 });
+      }
+    }
+  }
+
+  // Pump the pads under each kick, then mix.
+  const pump = (i) => {
+    const t = i / SR;
+    let since = Infinity;
+    for (const k of kicks) {
+      const d = ((t - k) % rlen + rlen) % rlen;
+      if (d < since) since = d;
+    }
+    return 1 - 0.38 * Math.exp(-since * 7);
+  };
+  for (let i = 0; i < pads.n; i++) {
+    const g = pump(i);
+    rest.l[i] += pads.l[i] * g;
+    rest.r[i] += pads.r[i] * g;
+  }
+  rest.normalize(0.89);
+  encode(rest, bgmDir, "roomy-ambient-standin", 3);
+}
 
 rmSync(tmp, { recursive: true, force: true });

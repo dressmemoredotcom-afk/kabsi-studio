@@ -57,3 +57,27 @@ export const bgmDb = (tS: number, voice: readonly Span[], cfg: DuckConfig): numb
   // Fades go to silence, not just to a lower dB.
   return fade <= 0.001 ? -90 : db + 20 * Math.log10(fade);
 };
+
+export type LinearDuck = {
+  /** Music volume (0 to 1) in the pauses. */
+  open: number;
+  /** Music volume while the voice speaks. */
+  ducked: number;
+  /** Music volume while the voice speaks in the outro, which is allowed to stay a little higher. */
+  outroDucked: number;
+  outroFromS: number;
+  attackS: number;
+  releaseS: number;
+  fadeInS: number;
+  fadeOutS: number;
+  totalS: number;
+};
+
+/** Music volume as a plain 0 to 1 gain, for a mix specified in percent: 15% under the voice, 60% in the pauses. */
+export const bgmLinear = (tS: number, voice: readonly Span[], cfg: LinearDuck): number => {
+  const d = duckAmount(tS, voice, cfg.attackS, cfg.releaseS);
+  const under = tS >= cfg.outroFromS ? cfg.outroDucked : cfg.ducked;
+  const level = cfg.open + (under - cfg.open) * d;
+  const fade = Math.min(smooth(tS / cfg.fadeInS), smooth((cfg.totalS - tS) / cfg.fadeOutS));
+  return level * fade;
+};

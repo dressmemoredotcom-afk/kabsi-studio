@@ -16,7 +16,13 @@
     "audio": "node scripts/make-audio.mjs",
     "render": "node scripts/render.mjs 01",
     "render:02": "node scripts/render.mjs 02",
-    "render:03": "node scripts/render.mjs 03"
+    "render:03": "node scripts/render.mjs 03",
+    "roomy:assets": "node scripts/roomy-assets.mjs",
+    "voice:04": "node scripts/voice.mjs 04",
+    "prestudio": "node scripts/roomy-assets.mjs",
+    "prerender:roomy": "node scripts/roomy-assets.mjs && node scripts/voice.mjs 04 && node scripts/check-script.mjs 04",
+    "render:roomy": "remotion render RoomyApartmentReel out/roomy-downtown-275sqm.mp4",
+    "postrender:roomy": "node scripts/master-audio.mjs out/roomy-downtown-275sqm.mp4"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.538",

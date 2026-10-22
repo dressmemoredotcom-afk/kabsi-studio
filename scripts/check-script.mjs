@@ -45,7 +45,7 @@ const collect = (mod) => {
   const strings = [];
   mod.VOICE_LINES.forEach((l) => {
     strings.push({ where: `vo:${l.id}`, text: l.vo, vo: true });
-    l.captions.forEach((c, i) => strings.push({ where: `caption:${l.id}#${i + 1}`, text: c }));
+    (l.captions ?? []).forEach((c, i) => strings.push({ where: `caption:${l.id}#${i + 1}`, text: c }));
   });
   (function walk(node, path) {
     if (typeof node === "string") strings.push({ where: `screen:${path}`, text: node });
@@ -76,31 +76,43 @@ for (const [id, video] of Object.entries(VIDEOS)) {
 
   // Captions must be the voice-over, split. Chunks stay short enough for two lines at most.
   for (const l of VOICE_LINES) {
+    if (!l.captions) continue; // reels without burned-in captions
     if (l.captions.join(" ") !== l.vo) fail(`caption:${l.id}`, "captions joined do not equal the voice-over line");
     if (l.captions.some((c) => c.length > 60)) fail(`caption:${l.id}`, "caption chunk over 60 characters (two lines max)");
   }
   for (const s of SCENES) if (!VOICE_LINES.some((l) => l.id === s.id)) fail(`scene:${s.id}`, "scene has no voice line");
 
-  // Content rules, both videos.
-  if (SCREEN.app.example !== "Example") fail("screen:app.example", 'screens must carry the "Example" tag');
-  if (SCREEN.end.tagline !== "Your reviews and listing. Taken care of.") fail("screen:end.tagline", "brand line changed");
-  if (!/Not affiliated with Google\./i.test(SCREEN.end.small) || !/^Early access\./.test(SCREEN.end.small)) fail("screen:end.small", "small print must say early access and not affiliated with Google");
-  if (!strings.some((s) => s.vo && /Taken care of/.test(s.text))) fail("vo", "brand line missing from the voice-over");
-  // Video 01 shows its hook verbatim; video 02 splits it across colours and drops "your" and "listing".
-  if (id === "03") {
-    const hook = SCREEN.hook.lines.join(" ");
-    if (!hook.includes(SCREEN.hook.keyWord)) fail("screen:hook", "key word not in the hook");
-    if (!/Google/.test(hook)) fail("screen:hook", "hook must name Google in words");
-    if (SCREEN.app.business !== "Harbour Lane Coffee") fail("screen:app.business", "business must be Harbour Lane Coffee");
-    if (!/kabsi\.co/i.test(SCREEN.end.cta)) fail("screen:end.cta", "call to action must point to kabsi.co");
-  } else if (id === "01") {
-    if (SCREEN.hook.lines.join(" ") !== VOICE_LINES[0].vo) fail("screen:hook", "hook text differs from the hook voice-over");
-    if (!SCREEN.hook.lines.join(" ").includes(SCREEN.hook.keyWord)) fail("screen:hook", "key word not in the hook");
-    if (SCREEN.app.business !== "Harbour Lane Coffee") fail("screen:app.business", "business must be Harbour Lane Coffee");
+  if (video.brand === "roomy") {
+    // Roomy Properties: its own brand, so only its own facts are pinned down.
+    const o = SCREEN.outro;
+    if (o.slogan !== "WHERE LUXURY MEETS CONVENIENCE") fail("screen:outro.slogan", "slogan changed");
+    if (o.sloganLines.join(" ") !== o.slogan) fail("screen:outro.sloganLines", "slogan lines differ from the slogan");
+    if (o.tagline !== "Your Gateway to Luxury Living in Lebanon") fail("screen:outro.tagline", "tagline changed");
+    if (!o.cta.includes("+961 71 203 398")) fail("screen:outro.cta", "call to action must carry +961 71 203 398");
+    if (o.handle !== "@roomyproperties") fail("screen:outro.handle", "handle must be @roomyproperties");
+    if (!/Roomy Properties/.test(VOICE_LINES[VOICE_LINES.length - 1].vo)) fail("vo", "the last line must name Roomy Properties");
   } else {
-    const hook = [SCREEN.hook.white, ...SCREEN.hook.yellow].join(" ");
-    if (!/Google Maps/.test(hook)) fail("screen:hook", "hook must name Google Maps in words");
-    if (SCREEN.app.business !== "Harbour Lane Coffee") fail("screen:app.business", "business must be Harbour Lane Coffee");
+    // Content rules, both videos.
+    if (SCREEN.app.example !== "Example") fail("screen:app.example", 'screens must carry the "Example" tag');
+    if (SCREEN.end.tagline !== "Your reviews and listing. Taken care of.") fail("screen:end.tagline", "brand line changed");
+    if (!/Not affiliated with Google\./i.test(SCREEN.end.small) || !/^Early access\./.test(SCREEN.end.small)) fail("screen:end.small", "small print must say early access and not affiliated with Google");
+    if (!strings.some((s) => s.vo && /Taken care of/.test(s.text))) fail("vo", "brand line missing from the voice-over");
+    // Video 01 shows its hook verbatim; video 02 splits it across colours and drops "your" and "listing".
+    if (id === "03") {
+      const hook = SCREEN.hook.lines.join(" ");
+      if (!hook.includes(SCREEN.hook.keyWord)) fail("screen:hook", "key word not in the hook");
+      if (!/Google/.test(hook)) fail("screen:hook", "hook must name Google in words");
+      if (SCREEN.app.business !== "Harbour Lane Coffee") fail("screen:app.business", "business must be Harbour Lane Coffee");
+      if (!/kabsi\.co/i.test(SCREEN.end.cta)) fail("screen:end.cta", "call to action must point to kabsi.co");
+    } else if (id === "01") {
+      if (SCREEN.hook.lines.join(" ") !== VOICE_LINES[0].vo) fail("screen:hook", "hook text differs from the hook voice-over");
+      if (!SCREEN.hook.lines.join(" ").includes(SCREEN.hook.keyWord)) fail("screen:hook", "key word not in the hook");
+      if (SCREEN.app.business !== "Harbour Lane Coffee") fail("screen:app.business", "business must be Harbour Lane Coffee");
+    } else {
+      const hook = [SCREEN.hook.white, ...SCREEN.hook.yellow].join(" ");
+      if (!/Google Maps/.test(hook)) fail("screen:hook", "hook must name Google Maps in words");
+      if (SCREEN.app.business !== "Harbour Lane Coffee") fail("screen:app.business", "business must be Harbour Lane Coffee");
+    }
   }
 
   // Timing, when the voice has been generated.
@@ -110,13 +122,30 @@ for (const [id, video] of Object.entries(VIDEOS)) {
     const { durations } = JSON.parse(readFileSync(voicePath, "utf8"));
     const total = SCENES[SCENES.length - 1].to;
     if (total < video.minS || total > video.maxS) fail("timeline", `total ${total}s is outside ${video.minS} to ${video.maxS} s`);
-    for (const l of VOICE_LINES) {
-      const scene = SCENES.find((s) => s.id === l.id);
-      const end = scene.from + (l.offset ?? 0.2) + durations[l.id];
-      if (durations[l.id] === undefined) fail(`voice:${l.id}`, "no measured duration");
-      else if (end > scene.to + 0.01) fail(`voice:${l.id}`, `ends at ${end.toFixed(2)}s, after its scene ends at ${scene.to}s`);
+    if (video.chain) {
+      // Lines are scheduled one after another; they must not overlap and must all finish in time.
+      const { starts = {} } = JSON.parse(readFileSync(voicePath, "utf8"));
+      let prevEnd = -Infinity;
+      for (const l of VOICE_LINES) {
+        const start = starts[l.id];
+        const end = start + durations[l.id];
+        if (start === undefined || durations[l.id] === undefined) fail(`voice:${l.id}`, "no scheduled start or duration, run the voice script");
+        else {
+          if (start < prevEnd) fail(`voice:${l.id}`, `starts at ${start}s while the line before is still speaking until ${prevEnd.toFixed(2)}s`);
+          if (end > video.chain.maxEnd) fail(`voice:${l.id}`, `ends at ${end.toFixed(2)}s, after the ${video.chain.maxEnd}s limit`);
+          prevEnd = end;
+        }
+      }
+      timing = `${total} s total, voice ends at ${prevEnd.toFixed(2)} s with no overlaps`;
+    } else {
+      for (const l of VOICE_LINES) {
+        const scene = SCENES.find((s) => s.id === l.id);
+        const end = scene.from + (l.offset ?? 0.2) + durations[l.id];
+        if (durations[l.id] === undefined) fail(`voice:${l.id}`, "no measured duration");
+        else if (end > scene.to + 0.01) fail(`voice:${l.id}`, `ends at ${end.toFixed(2)}s, after its scene ends at ${scene.to}s`);
+      }
+      timing = `${total} s total, every line fits its scene`;
     }
-    timing = `${total} s total, every line fits its scene`;
   }
   summaries.push(
     `[${id}] ${strings.length} strings (${strings.filter((s) => s.vo).length} voice-over lines), ${timing}`,

@@ -1,0 +1,25 @@
+{
+  "voice": "bf_emma",
+  "speed": 1.35,
+  "durations": {
+    "hook": 3.517,
+    "terrace": 2.802,
+    "library": 4.097,
+    "specs": 2.814,
+    "outro": 3.113
+  },
+  "files": {
+    "hook": "roomy/voice/hook.wav",
+    "terrace": "roomy/voice/terrace.wav",
+    "library": "roomy/voice/library.wav",
+    "specs": "roomy/voice/specs.wav",
+    "outro": "roomy/voice/outro.wav"
+  },
+  "starts": {
+    "hook": 0.1,
+    "terrace": 4.1,
+    "library": 10.1,
+    "specs": 14.497,
+    "outro": 18.1
+  }
+}

@@ -11,3 +11,4 @@ out/.tmp*
 assets/voice/**/*.placeholder.wav
 assets/voice01/
 assets/voice/**/*.placeholder.txt
+assets/roomy/voice/

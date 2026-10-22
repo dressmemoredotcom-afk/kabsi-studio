@@ -38,6 +38,22 @@ export const fonts = {
   body: '"Readex Pro", sans-serif',
 } as const;
 
+/** Roomy Properties (@roomyproperties): the luxury real estate reel. A separate brand from Kabsi. */
+export const roomy = {
+  deepTeal: "#245766",
+  turquoise: "#3CBAC5",
+  charcoal: "#231F20",
+  white: "#FFFFFF",
+  /** Frosted card fill and border. */
+  frosted: "rgba(35, 31, 32, 0.78)",
+  frostedBorder: "1px solid rgba(60, 186, 197, 0.35)",
+  textShadow: "0 4px 32px rgba(0,0,0,0.5)",
+  fonts: {
+    display: '"Cormorant Garamond", serif',
+    ui: '"Jost", sans-serif',
+  },
+} as const;
+
 /** A token colour with transparency, e.g. the caption box (black at 62%). */
 export const alpha = (hex: string, a: number): string => {
   const n = parseInt(hex.slice(1), 16);

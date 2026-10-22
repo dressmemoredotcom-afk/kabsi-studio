@@ -3,7 +3,8 @@ import { FRAME } from "../tokens";
 export type VoiceLineDef = {
   id: string;
   vo: string;
-  captions: string[];
+  /** Optional: reels without burned-in captions leave this out. */
+  captions?: string[];
   /** Seconds after the scene cuts in that the voice starts. */
   offset?: number;
 };
@@ -15,6 +16,8 @@ export type VoiceData = {
   speed: number;
   durations: Record<string, number>;
   files?: Record<string, string>;
+  /** Scheduled start of each line, in seconds, when lines are chained so they never overlap. */
+  starts?: Record<string, number>;
   words?: Record<string, WordStamp[]>;
 };
 export type CaptionWord = { text: string; startF: number; endF: number };
@@ -47,7 +50,7 @@ export const createTimeline = (
     if (!sc) throw new Error(`No scene for voice line ${line.id}`);
     const dur = voice.durations[line.id];
     if (dur === undefined) throw new Error(`No measured duration for ${line.id}. Run the voice script.`);
-    const start = sc.from + (line.offset ?? 0.1);
+    const start = voice.starts?.[line.id] ?? sc.from + (line.offset ?? 0.1);
     return {
       ...line,
       file: voice.files?.[line.id],
@@ -79,14 +82,15 @@ export const createTimeline = (
   };
 
   const captionChunks: CaptionChunk[] = lines.flatMap((line) => {
-    const total = line.captions.reduce((n, c) => n + c.length, 0);
+    const captions = line.captions ?? [];
+    const total = captions.reduce((n, c) => n + c.length, 0);
     const stamps = voice.words?.[line.id];
     const stampsUsable = stamps && stamps.length === line.vo.split(" ").length;
     let used = 0;
     let wordCursor = 0;
-    return line.captions.map((text, i) => {
+    return captions.map((text, i) => {
       const parts = text.split(" ");
-      const last = i === line.captions.length - 1;
+      const last = i === captions.length - 1;
       let start = line.start + (used / total) * line.dur;
       used += text.length;
       let audioEnd = line.start + (used / total) * line.dur;

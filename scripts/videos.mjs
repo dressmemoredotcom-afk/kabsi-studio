@@ -31,6 +31,24 @@ export const VIDEOS = {
     minS: 28,
     maxS: 30,
   },
+  "04": {
+    // Roomy Properties reel. Another brand: the Kabsi content rules do not apply, the generic wording rules do.
+    brand: "roomy",
+    scriptFile: "../src/scriptRoomy.ts",
+    composition: "RoomyApartmentReel",
+    voiceKey: "roomy-voice",
+    speedKey: "roomy-voice-speed",
+    voiceDir: "roomy/voice",
+    voiceJson: "voice04.json",
+    out: "roomy-downtown-275sqm.mp4",
+    poster: "roomy-downtown-poster.png",
+    posterAtS: 19.5,
+    audioMode: "remotion",
+    // Lines start at their scene unless the line before is still speaking; they must all end by maxEnd.
+    chain: { gap: 0.3, maxEnd: 21.9 },
+    minS: 21.5,
+    maxS: 22.5,
+  },
   "03": {
     scriptFile: "../src/script03.ts",
     composition: "PromoVideoV3",
