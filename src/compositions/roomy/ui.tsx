@@ -129,3 +129,26 @@ export const Badge: React.FC<{ text: string; style?: React.CSSProperties }> = ({
     {text}
   </div>
 );
+
+/**
+ * The spec bar: translucent glass holding rows of short items, all one type style, with turquoise dots between
+ * items. Rows reveal one after the other. Sits in a lower third.
+ */
+export const GlassBar: React.FC<{ frame: number; atS: number; rows: readonly (readonly string[])[] }> = ({ frame, atS, rows }) => (
+  <Reveal frame={frame} atS={atS} style={{ width: "100%" }}>
+    <div style={{ ...glass, borderRadius: radii.large, padding: "28px 20px", display: "flex", flexDirection: "column", gap: 20, width: "100%", boxSizing: "border-box" }}>
+      {rows.map((row, r) => (
+        <Reveal key={r} frame={frame} atS={atS + 0.3 + r * 0.35} dy={14}>
+          <div style={{ ...TYPE.label, letterSpacing: "0.13em", fontSize: 26, color: roomy.white, display: "flex", justifyContent: "center", alignItems: "center", gap: 20, whiteSpace: "nowrap" }}>
+            {row.map((item, i) => (
+              <React.Fragment key={item}>
+                {i > 0 && <span style={{ width: 9, height: 9, borderRadius: radii.pill, background: roomy.turquoise, flexShrink: 0 }} />}
+                <span>{item}</span>
+              </React.Fragment>
+            ))}
+          </div>
+        </Reveal>
+      ))}
+    </div>
+  </Reveal>
+);

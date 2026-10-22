@@ -4,7 +4,7 @@ import { SCREEN as COPY } from "../../scriptRoomy";
 import { alpha, radii, roomy, shadows } from "../../tokens";
 import { clampRange, lerp } from "../../anim";
 import { ASSETS, assetUrl } from "./assets";
-import { Badge, BASELINE_BOTTOM, BottomScrim, glass, MARGIN_X, PlaceholderBackdrop, Photo, Reveal, TYPE } from "./ui";
+import { Badge, BASELINE_BOTTOM, BottomScrim, glass, GlassBar, MARGIN_X, PlaceholderBackdrop, Photo, Reveal, TYPE } from "./ui";
 
 const ease = Easing.inOut(Easing.cubic);
 /** Frames a scene stays under the next one while it fades in. */
@@ -19,7 +19,7 @@ const topLeft: React.CSSProperties = { position: "absolute", left: MARGIN_X, top
 
 /** Scene 1: the ruins, kept clear. A slow push (1.00 to 1.06), a place badge up top, the title in the lower third. */
 export const HookScene: React.FC<{ frame: number; from: number; to: number }> = ({ frame, from, to }) => {
-  const scale = interpolate(frame, [from, to + OVERLAP], [1, 1.06], { easing: ease, extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const scale = interpolate(frame, [from, to + OVERLAP], [1, 1.05], { easing: ease, extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const rule = clampRange(frame / 30, 0.7, 1.7);
   return (
     <>
@@ -49,8 +49,19 @@ export const HookScene: React.FC<{ frame: number; from: number; to: number }> = 
   );
 };
 
-/** Scene 2: the walkthrough clip, muted, from source second 19, with one frosted badge. */
-export const TerraceScene: React.FC<{ frame: number; from: number; to: number }> = ({ frame, from, to }) => {
+/**
+ * Scenes 2 and 3: a muted clip from the walkthrough with one glass bar. `trimBefore` is the source frame the clip
+ * starts on (30 is second 1, 570 is second 19). Each scene plays 180 frames, plus the frames that run while the
+ * next scene dissolves in.
+ */
+export const ClipScene: React.FC<{
+  frame: number;
+  from: number;
+  to: number;
+  trimBefore: number;
+  rows: readonly (readonly string[])[];
+  variant: number;
+}> = ({ frame, from, to, trimBefore, rows, variant }) => {
   const video = assetUrl(ASSETS.walkthrough);
   const length = to - from + OVERLAP;
   return (
@@ -60,8 +71,7 @@ export const TerraceScene: React.FC<{ frame: number; from: number; to: number }>
         <Sequence from={from} durationInFrames={length}>
           <OffthreadVideo
             src={video}
-            // Source frames from 570 (19 s). The scene is 165 frames, so it plays 19.0 s to 24.5 s, plus the dissolve.
-            trimBefore={570}
+            trimBefore={trimBefore}
             durationInFrames={length}
             muted
             volume={0}
@@ -69,40 +79,11 @@ export const TerraceScene: React.FC<{ frame: number; from: number; to: number }>
           />
         </Sequence>
       ) : (
-        <PlaceholderBackdrop frame={frame} variant={1} />
+        <PlaceholderBackdrop frame={frame} variant={variant} />
       )}
       <BottomScrim strength={0.7} />
       <LowerThird>
-        <Reveal frame={frame} atS={from / 30 + 0.9}>
-          <Badge text={COPY.terrace.badge} />
-        </Reveal>
-      </LowerThird>
-    </>
-  );
-};
-
-/** Scene 3: the lounge and library with a slow pan from the sofa to the shelves. Figure and label in the lower third. */
-export const LibraryScene: React.FC<{ frame: number; from: number; to: number }> = ({ frame, from, to }) => {
-  const k = interpolate(frame, [from, to + OVERLAP], [0, 1], { easing: ease, extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const s = from / 30;
-  return (
-    <>
-      <div style={{ position: "absolute", inset: 0, transform: `scale(${lerp(k, 1.04, 1.09)})` }}>
-        <Photo src={assetUrl(ASSETS.library)} frame={frame} variant={2} objectPosition={`${lerp(k, 52, 86)}% 50%`} />
-      </div>
-      <BottomScrim strength={0.9} reach={72} />
-      <LowerThird gap={18}>
-        <Reveal frame={frame} atS={s + 0.5}>
-          <div style={{ ...TYPE.display, fontSize: 112, lineHeight: "112px" }}>{COPY.library.value}</div>
-        </Reveal>
-        <Reveal frame={frame} atS={s + 0.8}>
-          <div style={{ ...TYPE.label, fontSize: 28, letterSpacing: "0.26em", color: roomy.turquoise }}>{COPY.library.label}</div>
-        </Reveal>
-        <Reveal frame={frame} atS={s + 1.2} style={{ marginTop: 14 }}>
-          <div style={{ ...glass, ...TYPE.label, textTransform: "none", letterSpacing: "0.08em", fontSize: 29, color: roomy.white, padding: "16px 32px", borderRadius: radii.pill, whiteSpace: "nowrap" }}>
-            {COPY.library.pill}
-          </div>
-        </Reveal>
+        <GlassBar frame={frame} atS={from / 30 + 0.9} rows={rows} />
       </LowerThird>
     </>
   );
@@ -124,22 +105,7 @@ export const SpecsScene: React.FC<{ frame: number; from: number; to: number }> =
         </Reveal>
       </div>
       <LowerThird>
-        <Reveal frame={frame} atS={s + 0.6} style={{ width: "100%" }}>
-          <div style={{ ...glass, borderRadius: radii.large, padding: "30px 24px", display: "flex", flexDirection: "column", gap: 22, width: "100%", boxSizing: "border-box" }}>
-            {COPY.specs.rows.map((row, r) => (
-              <Reveal key={r} frame={frame} atS={s + 0.9 + r * 0.35} dy={14}>
-                <div style={{ ...TYPE.label, letterSpacing: "0.15em", fontSize: 29, color: roomy.white, display: "flex", justifyContent: "center", alignItems: "center", gap: 24, whiteSpace: "nowrap" }}>
-                  {row.map((item, i) => (
-                    <React.Fragment key={item}>
-                      {i > 0 && <span style={{ width: 9, height: 9, borderRadius: radii.pill, background: roomy.turquoise }} />}
-                      <span>{item}</span>
-                    </React.Fragment>
-                  ))}
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </Reveal>
+        <GlassBar frame={frame} atS={s + 0.9} rows={COPY.specs.bar} />
       </LowerThird>
     </>
   );
@@ -177,6 +143,8 @@ const Logo: React.FC<{ frame: number; atS: number }> = ({ frame, atS }) => {
 export const OutroScene: React.FC<{ frame: number; from: number }> = ({ frame, from }) => {
   const s = from / 30;
   const glow = 0.36 + 0.06 * Math.sin((frame / 30 - s) * 1.4);
+  // "Schedule a Private Viewing | +961 71 203 398": the invitation over the number, in one frosted pill.
+  const [ctaLead, ctaPhone] = COPY.outro.cta.split(" | ");
   return (
     <>
       <div style={{ position: "absolute", inset: 0, background: roomy.charcoal }} />
@@ -190,31 +158,26 @@ export const OutroScene: React.FC<{ frame: number; from: number }> = ({ frame, f
             </div>
           ))}
         </Reveal>
-        <Reveal frame={frame} atS={s + 1.5} style={{ marginTop: ASSETS.logo ? 56 : 84 }}>
-          <div style={{ ...TYPE.label, fontSize: 23, letterSpacing: "0.32em", paddingLeft: "0.32em", color: alpha(roomy.white, 0.7) }}>{COPY.outro.viewing}</div>
-        </Reveal>
-        <Reveal frame={frame} atS={s + 1.8} style={{ marginTop: 26 }}>
+        <Reveal frame={frame} atS={s + 1.6} style={{ marginTop: ASSETS.logo ? 56 : 84 }}>
           <div
             style={{
               ...glass,
               background: alpha(roomy.white, 0.08),
               border: `1px solid ${alpha(roomy.turquoise, 0.6)}`,
-              padding: "0 56px",
-              height: 108,
+              padding: "26px 64px 28px",
               display: "flex",
+              flexDirection: "column",
               alignItems: "center",
-              borderRadius: radii.pill,
-              fontFamily: roomy.fonts.ui,
-              fontWeight: 500,
-              fontSize: 39,
-              letterSpacing: "0.05em",
+              gap: 8,
+              borderRadius: 64,
               color: roomy.white,
             }}
           >
-            {COPY.outro.cta}
+            <div style={{ ...TYPE.label, fontSize: 24, letterSpacing: "0.28em", paddingLeft: "0.28em", color: alpha(roomy.white, 0.75) }}>{ctaLead}</div>
+            <div style={{ fontFamily: roomy.fonts.ui, fontWeight: 500, fontSize: 46, letterSpacing: "0.05em" }}>{ctaPhone}</div>
           </div>
         </Reveal>
-        <Reveal frame={frame} atS={s + 2.2} style={{ marginTop: 40 }}>
+        <Reveal frame={frame} atS={s + 2.2} style={{ marginTop: 36 }}>
           <div style={{ ...TYPE.label, fontSize: 24, letterSpacing: "0.2em", paddingLeft: "0.2em", color: alpha(roomy.white, 0.6) }}>{COPY.outro.handle}</div>
         </Reveal>
       </div>

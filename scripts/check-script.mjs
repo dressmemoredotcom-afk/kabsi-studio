@@ -88,7 +88,7 @@ for (const [id, video] of Object.entries(VIDEOS)) {
     if (o.slogan !== "WHERE LUXURY MEETS CONVENIENCE") fail("screen:outro.slogan", "slogan changed");
     if (o.sloganLines.join(" ") !== o.slogan) fail("screen:outro.sloganLines", "slogan lines differ from the slogan");
     if (!o.cta.includes("+961 71 203 398")) fail("screen:outro.cta", "call to action must carry +961 71 203 398");
-    if (!/private viewing/i.test(o.viewing)) fail("screen:outro.viewing", "must invite a private viewing");
+    if (!/private viewing/i.test(o.cta)) fail("screen:outro.cta", "call to action must invite a private viewing");
     if (o.handle !== "@roomyproperties") fail("screen:outro.handle", "handle must be @roomyproperties");
     if (!/Roomy Properties/.test(VOICE_LINES[VOICE_LINES.length - 1].vo)) fail("vo", "the last line must name Roomy Properties");
   } else {

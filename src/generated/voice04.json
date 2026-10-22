@@ -1,25 +1,25 @@
 {
   "voice": "bf_emma",
-  "speed": 0.88,
+  "speed": 0.85,
   "durations": {
-    "hook": 2.555,
-    "terrace": 3.189,
-    "library": 4.057,
-    "specs": 3.243,
-    "outro": 2.351
+    "hook": 2.643,
+    "salon": 4.943,
+    "terrace": 4.323,
+    "specs": 3.047,
+    "outro": 2.401
   },
   "files": {
     "hook": "roomy/voice/hook.wav",
+    "salon": "roomy/voice/salon.wav",
     "terrace": "roomy/voice/terrace.wav",
-    "library": "roomy/voice/library.wav",
     "specs": "roomy/voice/specs.wav",
     "outro": "roomy/voice/outro.wav"
   },
   "starts": {
     "hook": 1,
-    "terrace": 5.5,
-    "library": 10.3,
-    "specs": 15.157,
-    "outro": 19.2
+    "salon": 4.8,
+    "terrace": 10.8,
+    "specs": 17,
+    "outro": 23
   }
 }

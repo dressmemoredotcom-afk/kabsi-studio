@@ -42,12 +42,12 @@ export const VIDEOS = {
     voiceJson: "voice04.json",
     out: "roomy-downtown-275sqm.mp4",
     poster: "roomy-downtown-poster.png",
-    posterAtS: 19.5,
+    posterAtS: 26.0,
     audioMode: "remotion",
     // Lines start at their scene unless the line before is still speaking; they must all end by maxEnd.
-    chain: { gap: 0.8, maxEnd: 21.6 },
-    minS: 21.5,
-    maxS: 22.5,
+    chain: { gap: 1.0, maxEnd: 27.0 },
+    minS: 27.5,
+    maxS: 28.5,
   },
   "03": {
     scriptFile: "../src/script03.ts",
