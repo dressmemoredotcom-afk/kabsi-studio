@@ -12,7 +12,8 @@ Promise.all([
   }).load(),
 ])
   .then((faces) => {
-    faces.forEach((face) => document.fonts.add(face));
+    const fontSet = document.fonts as FontFaceSet & { add: (face: FontFace) => void };
+    faces.forEach((face) => fontSet.add(face));
     continueRender(handle);
   })
   .catch((err) => cancelRender(err));

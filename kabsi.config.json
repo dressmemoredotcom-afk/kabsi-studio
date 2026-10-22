@@ -4,5 +4,6 @@
   "model": "onnx-community/Kokoro-82M-v1.0-ONNX",
   "model-dtype": "fp32",
   "kabsi-voice-upbeat": "af_sarah",
-  "voice-speed-upbeat": 1.15
+  "voice-speed-upbeat": 1.15,
+  "voice-speed-v3": 1.2
 }

@@ -17,9 +17,7 @@ const scene = (id: string) => {
 
 export const Promo: React.FC = () => {
   const frame = useCurrentFrame();
-  const hook = scene("hook");
   const draft = scene("draft");
-  const approve = scene("approve");
   const protect = scene("protect");
   const report = scene("report");
   const end = scene("end");
@@ -57,7 +55,7 @@ export const Promo: React.FC = () => {
 
       {lines.map((l) => (
         <Sequence key={l.id} from={l.startF} durationInFrames={l.durF + 2}>
-          <Audio src={staticFile(`voice/${l.id}.wav`)} />
+          <Audio src={staticFile(`voice01/${l.id}.wav`)} />
         </Sequence>
       ))}
     </AbsoluteFill>

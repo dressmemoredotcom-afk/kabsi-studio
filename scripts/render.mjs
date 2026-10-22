@@ -33,7 +33,8 @@ run("node", ["scripts/check-script.mjs", video.id]);
 
 // 2. Voice, if it has not been generated.
 const wavs = VOICE_LINES.map((l) => join(root, "assets", video.voiceDir, `${l.id}.wav`));
-if (!wavs.every(existsSync) || !existsSync(join(root, "src", "generated", video.voiceJson))) {
+// Videos with real-voice support always re-measure: a file dropped into assets/voice must be picked up.
+if (video.realVoice || !wavs.every(existsSync) || !existsSync(join(root, "src", "generated", video.voiceJson))) {
   run("node", ["scripts/voice.mjs", video.id]);
   run("node", ["scripts/check-script.mjs", video.id]);
 }
@@ -56,7 +57,9 @@ await renderMedia({
   codec: "h264",
   crf: 12,
   colorSpace: "bt709",
-  muted: true,
+  muted: video.audioMode !== "remotion",
+  // Promos with a Remotion mix carry voice, music and SFX in this file; ffmpeg only normalises and encodes.
+  ...(video.audioMode === "remotion" ? { audioCodec: "aac", audioBitrate: "320k" } : {}),
   outputLocation: silent,
   browserExecutable,
   onProgress: ({ progress }) => {
@@ -65,8 +68,32 @@ await renderMedia({
   },
 });
 
-// 4. Voice track: place each line at its start, then loudness-normalise to -14 LUFS, peak at most -1 dBTP.
 const total = SCENES[SCENES.length - 1].to;
+
+if (video.audioMode === "remotion") {
+  // 4. Normalise the whole mix to -14 LUFS (two passes, so the gain is exact), peak at most -1 dBTP, and encode.
+  const LN3 = "I=-14:TP=-1:LRA=11";
+  const pass1 = run("ffmpeg", ["-hide_banner", "-nostats", "-i", silent, "-vn", "-af", `loudnorm=${LN3}:print_format=json`, "-f", "null", "-"], { capture: true });
+  const m = JSON.parse(pass1.stderr.slice(pass1.stderr.lastIndexOf("{"), pass1.stderr.lastIndexOf("}") + 1));
+  const norm =
+    `loudnorm=${LN3}:measured_I=${m.input_i}:measured_TP=${m.input_tp}:measured_LRA=${m.input_lra}:measured_thresh=${m.input_thresh}:offset=${m.target_offset}:linear=true,` +
+    "alimiter=limit=0.79:level=false,aresample=48000";
+  run("ffmpeg", [
+    "-y", "-loglevel", "error", "-i", silent,
+    "-map", "0:v", "-map", "0:a",
+    "-c:v", "libx264", "-preset", "slow", "-crf", "19", "-maxrate", "8M", "-bufsize", "16M",
+    "-profile:v", "high", "-pix_fmt", "yuv420p", "-r", "30", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
+    "-af", norm, "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2",
+    "-t", String(total), "-movflags", "+faststart",
+    FINAL,
+  ]);
+  run("ffmpeg", ["-y", "-loglevel", "error", "-ss", String(POSTER_AT_S), "-i", FINAL, "-frames:v", "1", POSTER]);
+  rmSync(tmp, { recursive: true, force: true });
+  console.log(`done: ${FINAL}\n      ${POSTER}`);
+  process.exit(0);
+}
+
+// 4. Voice track: place each line at its start, then loudness-normalise to -14 LUFS, peak at most -1 dBTP.
 const inputs = wavs.flatMap((w) => ["-i", w]);
 const delays = VOICE_LINES.map((l, i) => {
   const ms = Math.round((SCENES.find((s) => s.id === l.id).from + (l.offset ?? VO_OFFSET_S)) * 1000);

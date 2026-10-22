@@ -6,11 +6,17 @@
   "type": "module",
   "scripts": {
     "check": "node scripts/check-script.mjs",
+    "typecheck": "tsc -p .",
+    "lint": "eslint src --max-warnings=0",
+    "build": "npm run typecheck && npm run lint && npm run check && remotion bundle src/index.ts --out-dir=.build-bundle --public-dir=assets",
+    "studio": "remotion studio src/index.ts",
     "voice": "node scripts/voice.mjs 01",
     "voice:02": "node scripts/voice.mjs 02",
-    "studio": "remotion studio src/index.ts",
+    "voice:03": "node scripts/voice.mjs 03",
+    "audio": "node scripts/make-audio.mjs",
     "render": "node scripts/render.mjs 01",
-    "render:02": "node scripts/render.mjs 02"
+    "render:02": "node scripts/render.mjs 02",
+    "render:03": "node scripts/render.mjs 03"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.538",
@@ -22,7 +28,9 @@
     "remotion": "4.0.538"
   },
   "devDependencies": {
+    "@remotion/eslint-config-flat": "4.0.538",
     "@types/react": "18.3.31",
-    "typescript": "7.0.2"
+    "eslint": "9.39.5",
+    "typescript": "5.9.3"
   }
 }

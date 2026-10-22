@@ -87,7 +87,13 @@ for (const [id, video] of Object.entries(VIDEOS)) {
   if (!/Not affiliated with Google\./i.test(SCREEN.end.small) || !/^Early access\./.test(SCREEN.end.small)) fail("screen:end.small", "small print must say early access and not affiliated with Google");
   if (!strings.some((s) => s.vo && /Taken care of/.test(s.text))) fail("vo", "brand line missing from the voice-over");
   // Video 01 shows its hook verbatim; video 02 splits it across colours and drops "your" and "listing".
-  if (id === "01") {
+  if (id === "03") {
+    const hook = SCREEN.hook.lines.join(" ");
+    if (!hook.includes(SCREEN.hook.keyWord)) fail("screen:hook", "key word not in the hook");
+    if (!/Google/.test(hook)) fail("screen:hook", "hook must name Google in words");
+    if (SCREEN.app.business !== "Harbour Lane Coffee") fail("screen:app.business", "business must be Harbour Lane Coffee");
+    if (!/kabsi\.co/i.test(SCREEN.end.cta)) fail("screen:end.cta", "call to action must point to kabsi.co");
+  } else if (id === "01") {
     if (SCREEN.hook.lines.join(" ") !== VOICE_LINES[0].vo) fail("screen:hook", "hook text differs from the hook voice-over");
     if (!SCREEN.hook.lines.join(" ").includes(SCREEN.hook.keyWord)) fail("screen:hook", "key word not in the hook");
     if (SCREEN.app.business !== "Harbour Lane Coffee") fail("screen:app.business", "business must be Harbour Lane Coffee");
@@ -103,7 +109,7 @@ for (const [id, video] of Object.entries(VIDEOS)) {
   if (existsSync(voicePath)) {
     const { durations } = JSON.parse(readFileSync(voicePath, "utf8"));
     const total = SCENES[SCENES.length - 1].to;
-    if (total < 28 || total > 30) fail("timeline", `total ${total}s is outside 28 to 30 s`);
+    if (total < video.minS || total > video.maxS) fail("timeline", `total ${total}s is outside ${video.minS} to ${video.maxS} s`);
     for (const l of VOICE_LINES) {
       const scene = SCENES.find((s) => s.id === l.id);
       const end = scene.from + (l.offset ?? 0.2) + durations[l.id];

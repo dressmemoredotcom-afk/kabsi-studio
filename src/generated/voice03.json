@@ -1,0 +1,16 @@
+{
+  "voice": "af_sarah",
+  "speed": 1.2,
+  "durations": {
+    "hook": 1.94,
+    "whatsapp": 5.094,
+    "qr": 3.505,
+    "end": 4.971
+  },
+  "files": {
+    "hook": "voice/v3/hook.placeholder.wav",
+    "whatsapp": "voice/v3/whatsapp.placeholder.wav",
+    "qr": "voice/v3/qr.placeholder.wav",
+    "end": "voice/v3/end.placeholder.wav"
+  }
+}

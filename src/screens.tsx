@@ -3,7 +3,7 @@ import { interpolateColors } from "remotion";
 import { SCREEN as COPY } from "./script";
 import { colors, fonts, radii } from "./tokens";
 import { clampRange, lerp, pop, soft } from "./anim";
-import { sec, wordTime } from "./timeline";
+import { wordTime } from "./timeline";
 import { Check, ExampleTag, FingerDot, Pill, Shield, Stars, cardBase } from "./ui";
 
 const T = (frame: number) => frame / 30;

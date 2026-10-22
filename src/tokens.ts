@@ -28,6 +28,9 @@ export const radii = {
 export const shadows = {
   card: "0 6px 18px rgba(0,0,0,0.06)",
   lifted: "0 14px 30px rgba(0,0,0,0.09)",
+  // Phone mockup and glass banners (promo 03).
+  phone: "0 20px 50px rgba(0,0,0,0.3)",
+  glass: "0 8px 32px rgba(0,0,0,0.18)",
 } as const;
 
 export const fonts = {

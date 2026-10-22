@@ -2,18 +2,10 @@ import React from "react";
 import { colors, radii, shadows } from "../tokens";
 import { clampRange, lerp, pop } from "../anim";
 import { PHONE, SCREEN } from "../Phone";
+import { Rays } from "../components/Rays";
 import { BOUNCE, SNAP } from "./spring";
 
-/** Yellow field with slowly turning rays: movement behind everything. */
-export const Rays: React.FC<{ frame: number }> = ({ frame }) => (
-  <div
-    style={{
-      position: "absolute",
-      inset: -400,
-      background: `repeating-conic-gradient(from ${frame * 0.7}deg at 50% 50%, ${colors.yellow} 0deg 12deg, ${colors.yellowPressed} 12deg 24deg)`,
-    }}
-  />
-);
+export { Rays };
 
 /** Phone that zooms in with a bounce on the cut and punches slightly on each beat. */
 export const PhoneV2: React.FC<{
