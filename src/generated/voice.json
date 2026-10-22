@@ -1,0 +1,12 @@
+{
+  "voice": "af_heart",
+  "speed": 1,
+  "durations": {
+    "hook": 1.815,
+    "draft": 4.668,
+    "approve": 4.347,
+    "protect": 3.868,
+    "report": 1.752,
+    "end": 2.856
+  }
+}

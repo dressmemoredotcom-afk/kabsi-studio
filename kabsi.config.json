@@ -1,0 +1,6 @@
+{
+  "kabsi-voice": "af_heart",
+  "voice-speed": 1,
+  "model": "onnx-community/Kokoro-82M-v1.0-ONNX",
+  "model-dtype": "fp32"
+}
