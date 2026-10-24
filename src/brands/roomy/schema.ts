@@ -37,8 +37,8 @@ export const RoomyListingSchema = z
     voScript: z.array(z.string()).optional(),
     /** Length of the reel in seconds, outro included. 22 suits five items; allow about 3.5 seconds per item. */
     durationSeconds: z.number().min(15).max(60).default(22),
-    /** One to eight photos and clips. */
-    media: z.array(MediaItemSchema).min(1).max(8),
+    /** One to twelve photos and clips. */
+    media: z.array(MediaItemSchema).min(1).max(12),
     whatsappContact: z.string().default("+961 71 203 398"),
     instagram: z.string().default("@roomyproperties"),
   })

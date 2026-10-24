@@ -1,5 +1,5 @@
 {
-  "id": "sursock-580sqm",
+  "id": "sursock-580sqm-v3",
   "neighborhood": "SURSOCK, BEIRUT",
   "propertyTitle": "A RESIDENCE OF RARE SCALE",
   "specs": [
@@ -8,22 +8,23 @@
     "FULLY FURNISHED",
     "3 PARKING"
   ],
-  "durationSeconds": 30,
+  "durationSeconds": 40,
   "voScript": [
     "Sursock, Beirut. A residence of rare scale.",
     "Views of the city, the mountains, and the sea.",
-    "Five hundred and eighty square meters, fully furnished.",
+    "Five hundred and eighty square meters.",
+    "Warm, elegant interiors.",
     "A fully equipped kitchen.",
     "Room to gather, and room to entertain.",
+    "Fully furnished, and move-in ready.",
     "Four master bedrooms.",
     "And three parking spaces.",
     "Exclusively with Roomy Properties."
   ],
   "media": [
     {
-      "type": "video",
-      "src": "sursock/walkthrough-1.mp4",
-      "startAtSecond": 1,
+      "type": "photo",
+      "src": "sursock/photo-01.jpeg",
       "headline": "LIVE IN SURSOCK",
       "subline": "Light, space and an address to match"
     },
@@ -38,8 +39,14 @@
       "type": "video",
       "src": "sursock/walkthrough-1.mp4",
       "startAtSecond": 25,
-      "headline": "GRAND LIVING SALON",
-      "subline": "FULLY FURNISHED"
+      "headline": "580 SQM",
+      "subline": "GRAND LIVING SALON"
+    },
+    {
+      "type": "photo",
+      "src": "sursock/photo-03.jpeg",
+      "headline": "ELEGANT INTERIORS",
+      "subline": "WARM AND REFINED"
     },
     {
       "type": "video",
@@ -49,10 +56,15 @@
       "subline": "FULLY EQUIPPED"
     },
     {
-      "type": "video",
-      "src": "sursock/walkthrough-1.mp4",
-      "startAtSecond": 55.8,
+      "type": "photo",
+      "src": "sursock/photo-05.jpeg",
       "headline": "OPEN-PLAN DINING"
+    },
+    {
+      "type": "photo",
+      "src": "sursock/photo-10.jpeg",
+      "headline": "FULLY FURNISHED",
+      "subline": "MOVE-IN READY"
     },
     {
       "type": "video",

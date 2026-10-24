@@ -142,7 +142,7 @@ people's reviews, and keep the licence of each clip on record.
 ## Roomy Properties: the dynamic listing reel (RoomyDynamicReel)
 
 One composition that builds a 22 second luxury Instagram Reel (1080 x 1920, 30 fps, 660 frames) from
-a listing file, whatever mix of photos and clips it lists: one to eight items, interior or exterior, with or
+a listing file, whatever mix of photos and clips it lists: one to twelve items, interior or exterior, with or
 without a bedroom. Each listing is a file in `assets/roomy/listings/<id>.json`; one command makes its reel.
 
 ```bash

@@ -1,0 +1,83 @@
+{
+  "id": "sursock-580sqm-v3",
+  "neighborhood": "SURSOCK, BEIRUT",
+  "propertyTitle": "A RESIDENCE OF RARE SCALE",
+  "specs": [
+    "580 SQM",
+    "4 MASTER BEDROOMS",
+    "FULLY FURNISHED",
+    "3 PARKING"
+  ],
+  "durationSeconds": 40,
+  "voScript": [
+    "Sursock, Beirut. A residence of rare scale.",
+    "Views of the city, the mountains, and the sea.",
+    "Five hundred and eighty square meters.",
+    "Warm, elegant interiors.",
+    "A fully equipped kitchen.",
+    "Room to gather, and room to entertain.",
+    "Fully furnished, and move-in ready.",
+    "Four master bedrooms.",
+    "And three parking spaces.",
+    "Exclusively with Roomy Properties."
+  ],
+  "media": [
+    {
+      "type": "photo",
+      "src": "sursock/photo-01.jpeg",
+      "headline": "LIVE IN SURSOCK",
+      "subline": "Light, space and an address to match"
+    },
+    {
+      "type": "video",
+      "src": "sursock/walkthrough-1.mp4",
+      "startAtSecond": 16.8,
+      "headline": "PANORAMIC VIEWS",
+      "subline": "CITY, MOUNTAINS AND SEA"
+    },
+    {
+      "type": "video",
+      "src": "sursock/walkthrough-1.mp4",
+      "startAtSecond": 25,
+      "headline": "580 SQM",
+      "subline": "GRAND LIVING SALON"
+    },
+    {
+      "type": "photo",
+      "src": "sursock/photo-03.jpeg",
+      "headline": "ELEGANT INTERIORS",
+      "subline": "WARM AND REFINED"
+    },
+    {
+      "type": "video",
+      "src": "sursock/walkthrough-2.mp4",
+      "startAtSecond": 0.3,
+      "headline": "MARBLE KITCHEN",
+      "subline": "FULLY EQUIPPED"
+    },
+    {
+      "type": "photo",
+      "src": "sursock/photo-05.jpeg",
+      "headline": "OPEN-PLAN DINING"
+    },
+    {
+      "type": "photo",
+      "src": "sursock/photo-10.jpeg",
+      "headline": "FULLY FURNISHED",
+      "subline": "MOVE-IN READY"
+    },
+    {
+      "type": "video",
+      "src": "sursock/walkthrough-1.mp4",
+      "startAtSecond": 85.8,
+      "headline": "MASTER BEDROOMS",
+      "subline": "FOUR IN TOTAL"
+    },
+    {
+      "type": "video",
+      "src": "sursock/walkthrough-2.mp4",
+      "startAtSecond": 34.5
+    }
+  ],
+  "whatsappContact": "+961 71 203 398"
+}

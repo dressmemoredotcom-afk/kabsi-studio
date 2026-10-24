@@ -27,7 +27,7 @@ const voiceClips = (listing: RoomyListing): VoiceClip[] => {
 
 /**
  * Roomy Properties dynamic reel: 1080 x 1920, 30 fps, 22 seconds (660 frames) unless the listing sets durationSeconds,
- * for any listing with one to eight photos and clips. The last 4 seconds are the outro; the time before it is shared
+ * for any listing with one to twelve photos and clips. The last 4 seconds are the outro; the time before it is shared
  * evenly between the media items. Scenes dissolve into each other. Missing files fall back to a designed placeholder.
  */
 export const DynamicReel: React.FC<RoomyListing> = (listing) => {

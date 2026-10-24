@@ -1,7 +1,7 @@
 {
   "voice": "bf_emma",
   "speed": 0.85,
-  "signature": "8:acda0946",
+  "signature": "10:ae14f0aa",
   "lines": [
     {
       "scene": 0,
@@ -19,44 +19,58 @@
     },
     {
       "scene": 2,
-      "text": "Five hundred and eighty square meters, fully furnished.",
+      "text": "Five hundred and eighty square meters.",
       "file": "roomy/voice/vo-2.wav",
       "startS": 8.823,
-      "durS": 3.394
+      "durS": 2.556
     },
     {
       "scene": 3,
-      "text": "A fully equipped kitchen.",
+      "text": "Warm, elegant interiors.",
       "file": "roomy/voice/vo-3.wav",
-      "startS": 13.217,
-      "durS": 1.806
+      "startS": 12.8,
+      "durS": 2.142
     },
     {
       "scene": 4,
-      "text": "Room to gather, and room to entertain.",
+      "text": "A fully equipped kitchen.",
       "file": "roomy/voice/vo-4.wav",
-      "startS": 16.023,
-      "durS": 2.46
+      "startS": 16.8,
+      "durS": 1.806
     },
     {
       "scene": 5,
-      "text": "Four master bedrooms.",
+      "text": "Room to gather, and room to entertain.",
       "file": "roomy/voice/vo-5.wav",
-      "startS": 19.483,
-      "durS": 1.75
+      "startS": 20.8,
+      "durS": 2.46
     },
     {
       "scene": 6,
-      "text": "And three parking spaces.",
+      "text": "Fully furnished, and move-in ready.",
       "file": "roomy/voice/vo-6.wav",
-      "startS": 23.1,
-      "durS": 2.012
+      "startS": 24.8,
+      "durS": 2.213
     },
     {
       "scene": 7,
-      "text": "Exclusively with Roomy Properties.",
+      "text": "Four master bedrooms.",
       "file": "roomy/voice/vo-7.wav",
-      "startS": 27,
+      "startS": 28.8,
+      "durS": 1.75
+    },
+    {
+      "scene": 8,
+      "text": "And three parking spaces.",
+      "file": "roomy/voice/vo-8.wav",
+      "startS": 32.8,
+      "durS": 2.012
+    },
+    {
+      "scene": 9,
+      "text": "Exclusively with Roomy Properties.",
+      "file": "roomy/voice/vo-9.wav",
+      "startS": 37,
       "durS": 2.401
     }
   ]
