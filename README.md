@@ -49,7 +49,8 @@ Other commands:
 | `npm run check` | Rule check for every video (banned phrases, dashes, tokens, timing). |
 | `npm run build` | Type check, lint, rule check, then a Remotion bundle build. Must pass before a push. |
 | `npm run typecheck`, `npm run lint` | The first two steps of build, on their own. |
-| `npm run roomy:assets`, `npm run roomy:voice` | The two Roomy preparation steps on their own. |
+| `npm run render:roomy -- <id>`, `npm run roomy:use -- <id>` | Render a Roomy listing reel, or just make it the active one. |
+| `npm run roomy:assets`, `npm run roomy:voice` | The two Roomy preparation steps on their own (for the active listing). |
 | `npm run audio` | Regenerate the stock music loop and sound effects in `assets/audio/`. |
 | `npm run voice`, `voice:02`, `voice:03` | Regenerate that video's voice lines and their measured durations. |
 | `npm run studio` | Remotion Studio, to scrub and preview. |
@@ -141,15 +142,19 @@ people's reviews, and keep the licence of each clip on record.
 ## Roomy Properties: the dynamic listing reel (RoomyDynamicReel)
 
 One composition that builds a 22 second luxury Instagram Reel (1080 x 1920, 30 fps, 660 frames) from
-`assets/roomy/listing.json`, whatever mix of photos and clips it lists: one to eight items, interior or exterior, with or
-without a bedroom. Change the file, run one command.
+a listing file, whatever mix of photos and clips it lists: one to eight items, interior or exterior, with or
+without a bedroom. Each listing is a file in `assets/roomy/listings/<id>.json`; one command makes its reel.
 
 ```bash
-npm run render:roomy      # typecheck, find the assets, make the voice, check the rules, render out/roomy-listing.mp4
-npm run master:roomy      # bring the audio to -14 LUFS, true peak under -1 dB
+npm run render:roomy -- sursock-580sqm   # typecheck, find the assets, make the voice, check the rules, render, master audio
+npm run roomy:use -- sursock-580sqm      # only make a listing the one Studio shows
 ```
 
-**The listing** (`assets/roomy/listing.json`, shape in `src/brands/roomy/schema.ts`): `neighborhood`, `propertyTitle`, an
+The reel lands in `out/roomy-<id>.mp4`, mastered to -14 LUFS with true peak under -1 dB. The chosen listing is copied to
+`assets/roomy/listing.json` (what Studio and the scripts read). Edit the file in `listings/`, never that copy; the check
+fails if they differ.
+
+**The listing** (`assets/roomy/listings/<id>.json`, shape in `src/brands/roomy/schema.ts`): `neighborhood`, `propertyTitle`, an
 optional `price`, `specs` (for example `["310 SQM", "3 SUITES", "TERRACE", "2 PARKING"]`), `media` (each a `photo` or a
 `video` with `src`, an optional `startAtSecond` for clips, and an optional `headline` and `subline`), an optional
 `voScript`, and `whatsappContact`. A `src` is relative to `assets/roomy/`, or starts with `/` to point elsewhere under
@@ -194,7 +199,7 @@ src/brands/kabsi/  Kabsi: Promo (video 01), v2/ (video 02), compositions/ (Promo
 src/Root.tsx       registers every composition: RoomyDynamicReel, KabsiPromo01, KabsiPromo02, PromoVideoV3
 assets/fonts/      Lalezar, Readex Pro, Cormorant Garamond and Jost, with their OFL licence files
 assets/audio/      bgm/ music loops, sfx/ sound effects
-assets/roomy/      listing.json and the Roomy photos, clips and logo
+assets/roomy/      listings/<id>.json, the active listing.json, and the Roomy photos, clips and logo
 assets/voice/      incoming voice files for Kabsi video 03
 assets/video/      external clips for the b-roll layer
 scripts/           check-script, voice, render, roomy-assets, roomy-voice, make-audio, master-audio

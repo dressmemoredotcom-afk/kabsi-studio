@@ -9,32 +9,39 @@
   "bgmStandin": "audio/bgm/roomy-ambient-standin.mp3",
   "voiceover": null,
   "media": {
-    "terrace-ruins.jpeg": {
-      "file": "roomy/terrace-ruins.jpeg",
+    "sursock/photo-01.jpeg": {
+      "file": "roomy/sursock/photo-01.jpeg",
       "kind": "photo",
-      "width": 1280,
-      "height": 960,
+      "width": 960,
+      "height": 1280,
       "durationS": 0.04
     },
-    "apartment-walkthrough.mp4": {
-      "file": "roomy/apartment-walkthrough.mp4",
-      "kind": "video",
-      "width": 464,
-      "height": 832,
-      "durationS": 45.021678
-    },
-    "living-room-library.jpeg": {
-      "file": "roomy/living-room-library.jpeg",
+    "sursock/photo-03.jpeg": {
+      "file": "roomy/sursock/photo-03.jpeg",
       "kind": "photo",
-      "width": 1280,
-      "height": 960,
+      "width": 960,
+      "height": 1280,
       "durationS": 0.04
     },
-    "master-bedroom.jpeg": {
-      "file": "roomy/master-bedroom.jpeg",
+    "sursock/photo-05.jpeg": {
+      "file": "roomy/sursock/photo-05.jpeg",
       "kind": "photo",
-      "width": 1280,
-      "height": 960,
+      "width": 960,
+      "height": 1280,
+      "durationS": 0.04
+    },
+    "sursock/photo-10.jpeg": {
+      "file": "roomy/sursock/photo-10.jpeg",
+      "kind": "photo",
+      "width": 960,
+      "height": 1280,
+      "durationS": 0.04
+    },
+    "sursock/photo-02.jpeg": {
+      "file": "roomy/sursock/photo-02.jpeg",
+      "kind": "photo",
+      "width": 960,
+      "height": 1280,
       "durationS": 0.04
     }
   }

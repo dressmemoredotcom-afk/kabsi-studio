@@ -12,6 +12,10 @@ on:
         type: choice
         options: ["roomy", "03", "02", "01"]
         default: "roomy"
+      listing:
+        description: Roomy listing id (assets/roomy/listings/<id>.json), used when video is roomy
+        type: string
+        default: "sursock-580sqm"
 
 jobs:
   build:
@@ -51,12 +55,10 @@ jobs:
         run: node scripts/render.mjs ${{ inputs.video }}
       - name: Render the Roomy listing reel
         if: inputs.video == 'roomy'
-        run: |
-          npm run render:roomy
-          npm run master:roomy
+        run: npm run render:roomy -- ${{ inputs.listing }}
       - uses: actions/upload-artifact@v4
         with:
           name: reel-${{ inputs.video }}
           path: |
             out/kabsi-promo-${{ inputs.video }}-*
-            out/roomy-listing.mp4
+            out/roomy-*.mp4

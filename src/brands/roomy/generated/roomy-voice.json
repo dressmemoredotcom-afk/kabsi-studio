@@ -1,42 +1,49 @@
 {
   "voice": "bf_emma",
-  "speed": 0.88,
-  "signature": "6:7f46c3bb",
+  "speed": 0.85,
+  "signature": "6:1cd84411",
   "lines": [
     {
       "scene": 0,
-      "text": "Downtown Beirut. Overlooking history.",
+      "text": "Sursock, Beirut. A residence of rare scale.",
       "file": "roomy/voice/vo-0.wav",
       "startS": 0.8,
-      "durS": 2.555
+      "durS": 3.179
     },
     {
       "scene": 1,
-      "text": "Two hundred and seventy-five square meters of refined living.",
+      "text": "Five hundred and eighty square meters.",
       "file": "roomy/voice/vo-1.wav",
-      "startS": 4.4,
-      "durS": 3.904
+      "startS": 4.979,
+      "durS": 2.556
+    },
+    {
+      "scene": 2,
+      "text": "Fully furnished, and fully equipped.",
+      "file": "roomy/voice/vo-2.wav",
+      "startS": 8.535,
+      "durS": 2.281
     },
     {
       "scene": 3,
-      "text": "A teak terrace, directly above the Roman ruins.",
+      "text": "Four master bedrooms, and three parking spaces.",
       "file": "roomy/voice/vo-3.wav",
-      "startS": 11.6,
-      "durS": 3.015
+      "startS": 11.816,
+      "durS": 3.041
     },
     {
       "scene": 4,
-      "text": "Two master suites, and private parking.",
+      "text": "Move in, and simply live.",
       "file": "roomy/voice/vo-4.wav",
-      "startS": 15.615,
-      "durS": 2.436
+      "startS": 15.857,
+      "durS": 2.015
     },
     {
       "scene": 5,
       "text": "Exclusively with Roomy Properties.",
       "file": "roomy/voice/vo-5.wav",
-      "startS": 19.051,
-      "durS": 2.351
+      "startS": 19,
+      "durS": 2.401
     }
   ]
 }

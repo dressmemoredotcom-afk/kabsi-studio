@@ -158,6 +158,11 @@ for (const [id, video] of Object.entries(VIDEOS)) {
       fail("listing.json", `not valid JSON: ${e.message}`);
     }
     const parsed = raw && RoomyListingSchema.safeParse(raw);
+    // listing.json is a copy of assets/roomy/listings/<id>.json; an edit made only to the copy would be lost on the next switch.
+    const source = raw && join(root, "assets", "roomy", "listings", `${raw.id}.json`);
+    if (source && existsSync(source) && readFileSync(source, "utf8") !== readFileSync(file, "utf8")) {
+      fail("listing.json", `differs from listings/${raw.id}.json. Edit the file in listings/ and run: node scripts/roomy-reel.mjs --use ${raw.id}`);
+    }
     if (parsed && !parsed.success) for (const issue of parsed.error.issues) fail(`listing.${issue.path.join(".")}`, issue.message);
     if (parsed && parsed.success) {
       const listing = parsed.data;

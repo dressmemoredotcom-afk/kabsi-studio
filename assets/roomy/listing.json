@@ -1,50 +1,49 @@
 {
-  "id": "downtown-275sqm",
-  "neighborhood": "DOWNTOWN BEIRUT",
-  "propertyTitle": "ARCHITECTURAL RESIDENCE",
+  "id": "sursock-580sqm",
+  "neighborhood": "SURSOCK, BEIRUT",
+  "propertyTitle": "A RESIDENCE OF RARE SCALE",
   "specs": [
-    "275 SQM",
-    "2 MASTER SUITES",
-    "TEAK TERRACE",
-    "2 PARKING"
+    "580 SQM",
+    "4 MASTER BEDROOMS",
+    "FULLY FURNISHED",
+    "3 PARKING"
   ],
   "voScript": [
-    "Downtown Beirut. Overlooking history.",
-    "Two hundred and seventy-five square meters of refined living.",
-    "",
-    "A teak terrace, directly above the Roman ruins.",
-    "Two master suites, and private parking.",
+    "Sursock, Beirut. A residence of rare scale.",
+    "Five hundred and eighty square meters.",
+    "Fully furnished, and fully equipped.",
+    "Four master bedrooms, and three parking spaces.",
+    "Move in, and simply live.",
     "Exclusively with Roomy Properties."
   ],
   "media": [
     {
       "type": "photo",
-      "src": "terrace-ruins.jpeg",
-      "headline": "WAKE UP OVER HISTORY",
-      "subline": "Front-row views of the ancient ruins"
-    },
-    {
-      "type": "video",
-      "src": "apartment-walkthrough.mp4",
-      "startAtSecond": 1,
-      "headline": "275 SQM GRAND SALON",
-      "subline": "BESPOKE LIBRARY"
+      "src": "sursock/photo-01.jpeg",
+      "headline": "LIVE IN SURSOCK",
+      "subline": "Light, space and an address to match"
     },
     {
       "type": "photo",
-      "src": "living-room-library.jpeg",
-      "headline": "FLOOR-TO-CEILING LIBRARY"
-    },
-    {
-      "type": "video",
-      "src": "apartment-walkthrough.mp4",
-      "startAtSecond": 19,
-      "headline": "EXPANSIVE TEAK TERRACE",
-      "subline": "PRIVATE RUINS VIEW"
+      "src": "sursock/photo-03.jpeg",
+      "headline": "GRAND LIVING SALON",
+      "subline": "FULLY FURNISHED"
     },
     {
       "type": "photo",
-      "src": "master-bedroom.jpeg"
+      "src": "sursock/photo-05.jpeg",
+      "headline": "DINING AREA",
+      "subline": "FULLY EQUIPPED"
+    },
+    {
+      "type": "photo",
+      "src": "sursock/photo-10.jpeg",
+      "headline": "OPEN-PLAN LIVING",
+      "subline": "BUILT FOR ENTERTAINING"
+    },
+    {
+      "type": "photo",
+      "src": "sursock/photo-02.jpeg"
     }
   ],
   "whatsappContact": "+961 71 203 398"

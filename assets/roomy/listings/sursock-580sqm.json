@@ -1,0 +1,50 @@
+{
+  "id": "sursock-580sqm",
+  "neighborhood": "SURSOCK, BEIRUT",
+  "propertyTitle": "A RESIDENCE OF RARE SCALE",
+  "specs": [
+    "580 SQM",
+    "4 MASTER BEDROOMS",
+    "FULLY FURNISHED",
+    "3 PARKING"
+  ],
+  "voScript": [
+    "Sursock, Beirut. A residence of rare scale.",
+    "Five hundred and eighty square meters.",
+    "Fully furnished, and fully equipped.",
+    "Four master bedrooms, and three parking spaces.",
+    "Move in, and simply live.",
+    "Exclusively with Roomy Properties."
+  ],
+  "media": [
+    {
+      "type": "photo",
+      "src": "sursock/photo-01.jpeg",
+      "headline": "LIVE IN SURSOCK",
+      "subline": "Light, space and an address to match"
+    },
+    {
+      "type": "photo",
+      "src": "sursock/photo-03.jpeg",
+      "headline": "GRAND LIVING SALON",
+      "subline": "FULLY FURNISHED"
+    },
+    {
+      "type": "photo",
+      "src": "sursock/photo-05.jpeg",
+      "headline": "DINING AREA",
+      "subline": "FULLY EQUIPPED"
+    },
+    {
+      "type": "photo",
+      "src": "sursock/photo-10.jpeg",
+      "headline": "OPEN-PLAN LIVING",
+      "subline": "BUILT FOR ENTERTAINING"
+    },
+    {
+      "type": "photo",
+      "src": "sursock/photo-02.jpeg"
+    }
+  ],
+  "whatsappContact": "+961 71 203 398"
+}

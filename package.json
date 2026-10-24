@@ -20,9 +20,8 @@
     "roomy:assets": "node scripts/roomy-assets.mjs",
     "roomy:voice": "node scripts/roomy-voice.mjs",
     "prestudio": "node scripts/roomy-assets.mjs",
-    "prerender:roomy": "npm run typecheck && node scripts/roomy-assets.mjs && node scripts/roomy-voice.mjs && node scripts/check-script.mjs",
-    "render:roomy": "remotion render RoomyDynamicReel out/roomy-listing.mp4",
-    "master:roomy": "node scripts/master-audio.mjs out/roomy-listing.mp4"
+    "roomy:use": "node scripts/roomy-reel.mjs --use",
+    "render:roomy": "node scripts/roomy-reel.mjs"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.538",
