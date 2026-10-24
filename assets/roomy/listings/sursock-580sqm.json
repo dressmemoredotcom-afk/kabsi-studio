@@ -16,13 +16,14 @@
     "A fully equipped kitchen.",
     "Room to gather, and room to entertain.",
     "Four master bedrooms.",
-    "Three parking spaces, and ready to live in.",
+    "And three parking spaces.",
     "Exclusively with Roomy Properties."
   ],
   "media": [
     {
-      "type": "photo",
-      "src": "sursock/photo-01.jpeg",
+      "type": "video",
+      "src": "sursock/walkthrough-1.mp4",
+      "startAtSecond": 1,
       "headline": "LIVE IN SURSOCK",
       "subline": "Light, space and an address to match"
     },
@@ -34,8 +35,9 @@
       "subline": "CITY, MOUNTAINS AND SEA"
     },
     {
-      "type": "photo",
-      "src": "sursock/photo-03.jpeg",
+      "type": "video",
+      "src": "sursock/walkthrough-1.mp4",
+      "startAtSecond": 25,
       "headline": "GRAND LIVING SALON",
       "subline": "FULLY FURNISHED"
     },
@@ -47,8 +49,9 @@
       "subline": "FULLY EQUIPPED"
     },
     {
-      "type": "photo",
-      "src": "sursock/photo-05.jpeg",
+      "type": "video",
+      "src": "sursock/walkthrough-1.mp4",
+      "startAtSecond": 55.8,
       "headline": "OPEN-PLAN DINING"
     },
     {

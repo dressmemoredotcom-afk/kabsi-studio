@@ -1,7 +1,7 @@
 {
   "voice": "bf_emma",
   "speed": 0.85,
-  "signature": "8:cc753271",
+  "signature": "8:acda0946",
   "lines": [
     {
       "scene": 0,
@@ -47,10 +47,10 @@
     },
     {
       "scene": 6,
-      "text": "Three parking spaces, and ready to live in.",
+      "text": "And three parking spaces.",
       "file": "roomy/voice/vo-6.wav",
       "startS": 23.1,
-      "durS": 2.696
+      "durS": 2.012
     },
     {
       "scene": 7,
