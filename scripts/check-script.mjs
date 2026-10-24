@@ -7,7 +7,7 @@ import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { VIDEOS } from "./videos.mjs";
 import { RoomyListingSchema } from "../src/brands/roomy/schema.ts";
-import { FPS, OUTRO_FROM, planScenes, resolveVoScript, sceneCopy, voiceSignature } from "../src/brands/roomy/storyboard.ts";
+import { FPS, outroFrom, planScenes, resolveVoScript, sceneCopy, totalFrames, voiceSignature } from "../src/brands/roomy/storyboard.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const failures = [];
@@ -167,6 +167,7 @@ for (const [id, video] of Object.entries(VIDEOS)) {
     if (parsed && parsed.success) {
       const listing = parsed.data;
       const script = resolveVoScript(listing);
+      const total = totalFrames(listing);
       const copy = sceneCopy(listing);
       const strings = [
         ["neighborhood", listing.neighborhood],
@@ -199,20 +200,20 @@ for (const [id, video] of Object.entries(VIDEOS)) {
       let voiceNote = "voice not generated";
       if (existsSync(voicePath)) {
         const v = JSON.parse(readFileSync(voicePath, "utf8"));
-        if (v.signature !== voiceSignature(script)) fail("voice", "the stored voice does not match this listing's script. Run: node scripts/roomy-voice.mjs");
+        if (v.signature !== voiceSignature(script, listing.durationSeconds)) fail("voice", "the stored voice does not match this listing's script. Run: node scripts/roomy-voice.mjs");
         else {
           let prevEnd = -Infinity;
           for (const l of v.lines) {
             if (l.startS < prevEnd + 0.5) fail(`voice scene ${l.scene}`, `starts at ${l.startS}s, too close to the line before (ends ${prevEnd.toFixed(2)}s)`);
             prevEnd = l.startS + l.durS;
           }
-          if (prevEnd > 21.6) fail("voice", `the last line ends at ${prevEnd.toFixed(2)}s, too late for a 22 s reel`);
+          if (prevEnd > total / FPS - 0.4) fail("voice", `the last line ends at ${prevEnd.toFixed(2)}s, too late for a ${total / FPS} s reel`);
           voiceNote = v.lines.length ? `voice ${v.voice} at ${v.speed}x ends at ${prevEnd.toFixed(2)} s` : "your voiceover file";
         }
       }
-      const scenes = planScenes(listing.media.length);
-      const total = scenes.reduce((n, sc) => n + sc.frames, 0) + (660 - OUTRO_FROM);
-      if (total !== 660) fail("timeline", `scenes add up to ${total} frames, expected 660`);
+      const scenes = planScenes(listing.media.length, total);
+      const sum = scenes.reduce((n, sc) => n + sc.frames, 0) + (total - outroFrom(total));
+      if (sum !== total) fail("timeline", `scenes add up to ${sum} frames, expected ${total}`);
       summary = `"${listing.id}", ${listing.media.length} media item${listing.media.length === 1 ? "" : "s"} (${(scenes[0].frames / FPS).toFixed(1)} s first scene), ${strings.length} strings, ${voiceNote}`;
     }
   }

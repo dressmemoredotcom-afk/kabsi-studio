@@ -16,6 +16,13 @@
       "height": 1280,
       "durationS": 0.04
     },
+    "sursock/walkthrough-1.mp4": {
+      "file": "roomy/sursock/walkthrough-1.mp4",
+      "kind": "video",
+      "width": 480,
+      "height": 848,
+      "durationS": 97.02
+    },
     "sursock/photo-03.jpeg": {
       "file": "roomy/sursock/photo-03.jpeg",
       "kind": "photo",
@@ -23,22 +30,15 @@
       "height": 1280,
       "durationS": 0.04
     },
+    "sursock/walkthrough-2.mp4": {
+      "file": "roomy/sursock/walkthrough-2.mp4",
+      "kind": "video",
+      "width": 480,
+      "height": 848,
+      "durationS": 44.580862
+    },
     "sursock/photo-05.jpeg": {
       "file": "roomy/sursock/photo-05.jpeg",
-      "kind": "photo",
-      "width": 960,
-      "height": 1280,
-      "durationS": 0.04
-    },
-    "sursock/photo-10.jpeg": {
-      "file": "roomy/sursock/photo-10.jpeg",
-      "kind": "photo",
-      "width": 960,
-      "height": 1280,
-      "durationS": 0.04
-    },
-    "sursock/photo-02.jpeg": {
-      "file": "roomy/sursock/photo-02.jpeg",
       "kind": "photo",
       "width": 960,
       "height": 1280,

@@ -1,7 +1,7 @@
 {
   "voice": "bf_emma",
   "speed": 0.85,
-  "signature": "6:1cd84411",
+  "signature": "8:cc753271",
   "lines": [
     {
       "scene": 0,
@@ -12,37 +12,51 @@
     },
     {
       "scene": 1,
-      "text": "Five hundred and eighty square meters.",
+      "text": "Views of the city, the mountains, and the sea.",
       "file": "roomy/voice/vo-1.wav",
       "startS": 4.979,
-      "durS": 2.556
+      "durS": 2.844
     },
     {
       "scene": 2,
-      "text": "Fully furnished, and fully equipped.",
+      "text": "Five hundred and eighty square meters, fully furnished.",
       "file": "roomy/voice/vo-2.wav",
-      "startS": 8.535,
-      "durS": 2.281
+      "startS": 8.823,
+      "durS": 3.394
     },
     {
       "scene": 3,
-      "text": "Four master bedrooms, and three parking spaces.",
+      "text": "A fully equipped kitchen.",
       "file": "roomy/voice/vo-3.wav",
-      "startS": 11.816,
-      "durS": 3.041
+      "startS": 13.217,
+      "durS": 1.806
     },
     {
       "scene": 4,
-      "text": "Move in, and simply live.",
+      "text": "Room to gather, and room to entertain.",
       "file": "roomy/voice/vo-4.wav",
-      "startS": 15.857,
-      "durS": 2.015
+      "startS": 16.023,
+      "durS": 2.46
     },
     {
       "scene": 5,
-      "text": "Exclusively with Roomy Properties.",
+      "text": "Four master bedrooms.",
       "file": "roomy/voice/vo-5.wav",
-      "startS": 19,
+      "startS": 19.483,
+      "durS": 1.75
+    },
+    {
+      "scene": 6,
+      "text": "Three parking spaces, and ready to live in.",
+      "file": "roomy/voice/vo-6.wav",
+      "startS": 23.1,
+      "durS": 2.696
+    },
+    {
+      "scene": 7,
+      "text": "Exclusively with Roomy Properties.",
+      "file": "roomy/voice/vo-7.wav",
+      "startS": 27,
       "durS": 2.401
     }
   ]

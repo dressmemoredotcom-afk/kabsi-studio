@@ -5,7 +5,7 @@ import { clampRange } from "../../core/anim";
 import { roomyTokens as T } from "./tokens";
 import { RoomyListing } from "./schema";
 import { ASSETS, assetUrl, type MediaAsset } from "./assets";
-import { OVERLAP, OUTRO_FROM, planScenes, resolveVoScript, sceneCopy, voiceSignature } from "./storyboard";
+import { OVERLAP, outroFrom, planScenes, resolveVoScript, sceneCopy, totalFrames, voiceSignature } from "./storyboard";
 import { RoomyAudio, type VoiceClip } from "./RoomyAudio";
 import voice from "./generated/roomy-voice.json";
 import { EditorialBadge } from "./components/EditorialBadge";
@@ -22,17 +22,19 @@ const MISSING: MediaAsset = { file: null, kind: "photo", width: 0, height: 0, du
 /** The stored voice track is used only while it still matches this listing's script. */
 const voiceClips = (listing: RoomyListing): VoiceClip[] => {
   const script = resolveVoScript(listing);
-  return voice.signature === voiceSignature(script) ? (voice.lines as VoiceClip[]) : [];
+  return voice.signature === voiceSignature(script, listing.durationSeconds) ? (voice.lines as VoiceClip[]) : [];
 };
 
 /**
- * Roomy Properties dynamic reel: 1080 x 1920, 30 fps, 22 seconds (660 frames) for any listing with one to eight
- * photos and clips. The last 4 seconds are the outro; the 18 seconds before are shared evenly between the media
- * items. Scenes dissolve into each other. Missing files fall back to a designed placeholder.
+ * Roomy Properties dynamic reel: 1080 x 1920, 30 fps, 22 seconds (660 frames) unless the listing sets durationSeconds,
+ * for any listing with one to eight photos and clips. The last 4 seconds are the outro; the time before it is shared
+ * evenly between the media items. Scenes dissolve into each other. Missing files fall back to a designed placeholder.
  */
 export const DynamicReel: React.FC<RoomyListing> = (listing) => {
   const frame = useCurrentFrame();
-  const plan = planScenes(listing.media.length);
+  const total = totalFrames(listing);
+  const OUTRO_FROM = outroFrom(total);
+  const plan = planScenes(listing.media.length, total);
   const copy = sceneCopy(listing);
 
   return (
@@ -75,7 +77,7 @@ export const DynamicReel: React.FC<RoomyListing> = (listing) => {
         </AbsoluteFill>
       )}
 
-      <RoomyAudio clips={voiceClips(listing)} />
+      <RoomyAudio clips={voiceClips(listing)} total={total} />
     </AbsoluteFill>
   );
 };

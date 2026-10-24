@@ -2,14 +2,14 @@
 //   node scripts/roomy-voice.mjs
 // Lines come from "voScript" in the listing, or are written from the neighborhood, title and specs (see
 // resolveVoScript in src/brands/roomy/storyboard.ts). Each line starts after its scene cuts in, never before the line
-// before it has finished plus a pause. If the lines do not fit in 22 seconds the voice speeds up a little, and as a
+// before it has finished plus a pause. If the lines do not fit in the reel the voice speeds up a little, and as a
 // last resort the lines in the middle are dropped. The result goes to src/brands/roomy/generated/roomy-voice.json.
 // A ready-made assets/roomy/voiceover.mp3 skips all of this.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { RoomyListingSchema } from "../src/brands/roomy/schema.ts";
-import { FPS, OUTRO_FROM, planScenes, resolveVoScript, voiceSignature } from "../src/brands/roomy/storyboard.ts";
+import { FPS, outroFrom, planScenes, resolveVoScript, totalFrames, voiceSignature } from "../src/brands/roomy/storyboard.ts";
 import { makeTts, probeDuration, toWav, trim } from "./lib/tts.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -19,14 +19,15 @@ const listing = RoomyListingSchema.parse(JSON.parse(readFileSync(join(root, "ass
 const LEAD = 0.8; // seconds after a scene cuts in before its line starts
 const OUTRO_LEAD = 1.0;
 const GAP = 1.0; // pause between lines
-const MAX_END = 21.5; // the last line must be done this long into the 22 s reel
+const total = totalFrames(listing);
+const MAX_END = total / FPS - 0.5; // the last line must be done half a second before the reel ends
 const voice = config["roomy-voice"];
 const baseSpeed = config["roomy-voice-speed"];
 const outFile = join(root, "src", "brands", "roomy", "generated", "roomy-voice.json");
 mkdirSync(dirname(outFile), { recursive: true });
 
 const script = resolveVoScript(listing);
-const signature = voiceSignature(script);
+const signature = voiceSignature(script, listing.durationSeconds);
 
 if (["mp3", "wav", "m4a"].some((e) => existsSync(join(root, "assets", "roomy", `voiceover.${e}`)))) {
   writeFileSync(outFile, JSON.stringify({ voice: "your voiceover file", speed: 1, signature, lines: [] }, null, 2) + "\n");
@@ -34,8 +35,8 @@ if (["mp3", "wav", "m4a"].some((e) => existsSync(join(root, "assets", "roomy", `
   process.exit(0);
 }
 
-const plan = planScenes(listing.media.length);
-const sceneStart = (scene) => (scene === listing.media.length ? OUTRO_FROM : plan[scene].from) / FPS;
+const plan = planScenes(listing.media.length, total);
+const sceneStart = (scene) => (scene === listing.media.length ? outroFrom(total) : plan[scene].from) / FPS;
 const outDir = join(root, "assets", "roomy", "voice");
 mkdirSync(outDir, { recursive: true });
 const getTts = makeTts(config);
@@ -83,7 +84,7 @@ for (;;) {
   if (placed.length) break;
   // Still too long at the top speed: drop the latest line that sits in a middle scene.
   const middle = lines.filter((l) => l.scene > 0 && l.scene < listing.media.length);
-  if (!middle.length) throw new Error("The first and last voice lines alone do not fit in 22 seconds. Shorten voScript.");
+  if (!middle.length) throw new Error(`The first and last voice lines alone do not fit in ${(total / FPS).toFixed(0)} seconds. Shorten voScript.`);
   const drop = middle[middle.length - 1];
   dropped.push(drop.scene);
   console.log(`dropping the line for scene ${drop.scene} to fit: "${drop.text}"`);

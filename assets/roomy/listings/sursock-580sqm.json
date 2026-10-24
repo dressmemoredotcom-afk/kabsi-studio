@@ -8,12 +8,15 @@
     "FULLY FURNISHED",
     "3 PARKING"
   ],
+  "durationSeconds": 30,
   "voScript": [
     "Sursock, Beirut. A residence of rare scale.",
-    "Five hundred and eighty square meters.",
-    "Fully furnished, and fully equipped.",
-    "Four master bedrooms, and three parking spaces.",
-    "Move in, and simply live.",
+    "Views of the city, the mountains, and the sea.",
+    "Five hundred and eighty square meters, fully furnished.",
+    "A fully equipped kitchen.",
+    "Room to gather, and room to entertain.",
+    "Four master bedrooms.",
+    "Three parking spaces, and ready to live in.",
     "Exclusively with Roomy Properties."
   ],
   "media": [
@@ -24,26 +27,41 @@
       "subline": "Light, space and an address to match"
     },
     {
+      "type": "video",
+      "src": "sursock/walkthrough-1.mp4",
+      "startAtSecond": 16.8,
+      "headline": "PANORAMIC VIEWS",
+      "subline": "CITY, MOUNTAINS AND SEA"
+    },
+    {
       "type": "photo",
       "src": "sursock/photo-03.jpeg",
       "headline": "GRAND LIVING SALON",
       "subline": "FULLY FURNISHED"
     },
     {
-      "type": "photo",
-      "src": "sursock/photo-05.jpeg",
-      "headline": "DINING AREA",
+      "type": "video",
+      "src": "sursock/walkthrough-2.mp4",
+      "startAtSecond": 0.3,
+      "headline": "MARBLE KITCHEN",
       "subline": "FULLY EQUIPPED"
     },
     {
       "type": "photo",
-      "src": "sursock/photo-10.jpeg",
-      "headline": "OPEN-PLAN LIVING",
-      "subline": "BUILT FOR ENTERTAINING"
+      "src": "sursock/photo-05.jpeg",
+      "headline": "OPEN-PLAN DINING"
     },
     {
-      "type": "photo",
-      "src": "sursock/photo-02.jpeg"
+      "type": "video",
+      "src": "sursock/walkthrough-1.mp4",
+      "startAtSecond": 84,
+      "headline": "MASTER BEDROOMS",
+      "subline": "FOUR IN TOTAL"
+    },
+    {
+      "type": "video",
+      "src": "sursock/walkthrough-2.mp4",
+      "startAtSecond": 34.5
     }
   ],
   "whatsappContact": "+961 71 203 398"

@@ -3,23 +3,29 @@
 import type { RoomyListing } from "./schema";
 
 export const FPS = 30;
-/** Every reel is 22 seconds, 660 frames. */
-export const TOTAL_FRAMES = 660;
+/** A reel is 22 seconds (660 frames) unless the listing sets durationSeconds. */
+export const DEFAULT_SECONDS = 22;
+export const TOTAL_FRAMES = DEFAULT_SECONDS * FPS;
 /** The outro is always the last 4 seconds. */
 export const OUTRO_FRAMES = 120;
 /** Frames a scene stays under the next one while it dissolves in. */
 export const OVERLAP = 12;
-export const CONTENT_FRAMES = TOTAL_FRAMES - OUTRO_FRAMES;
+
+/** Frames in a listing's reel. */
+export const totalFrames = (listing: { durationSeconds: number }): number => Math.round(listing.durationSeconds * FPS);
+/** The frame the outro starts on. */
+export const outroFrom = (total: number): number => total - OUTRO_FRAMES;
 
 export type ScenePlan = { index: number; from: number; frames: number };
 
 /**
- * Splits the 18 seconds before the outro evenly between the media items. Each gets floor(540 / N) frames and the
- * first scene takes the remainder, so the scenes always add up to exactly 540 frames.
+ * Splits the time before the outro evenly between the media items. Each gets floor(content / N) frames and the first
+ * scene takes the remainder, so the scenes always add up to exactly the frames before the outro (540 for 22 seconds).
  */
-export const planScenes = (count: number): ScenePlan[] => {
-  const each = Math.floor(CONTENT_FRAMES / count);
-  const remainder = CONTENT_FRAMES - each * count;
+export const planScenes = (count: number, total: number = TOTAL_FRAMES): ScenePlan[] => {
+  const content = outroFrom(total);
+  const each = Math.floor(content / count);
+  const remainder = content - each * count;
   let from = 0;
   return Array.from({ length: count }, (_, index) => {
     const frames = each + (index === 0 ? remainder : 0);
@@ -29,7 +35,6 @@ export const planScenes = (count: number): ScenePlan[] => {
   });
 };
 
-export const OUTRO_FROM = CONTENT_FRAMES;
 
 /* ----------------------------- on-screen copy ----------------------------- */
 
@@ -154,9 +159,9 @@ export const resolveVoScript = (listing: RoomyListing): string[] => {
 };
 
 /** A short fingerprint of the voice-over, so a stored voice track is only used when it still matches the listing. */
-export const voiceSignature = (lines: string[]): string => {
+export const voiceSignature = (lines: string[], seconds: number = DEFAULT_SECONDS): string => {
   let h = 5381;
-  const text = lines.join("\u0001");
+  const text = lines.join("\u0001") + `\u0002${seconds}`;
   for (let i = 0; i < text.length; i++) h = ((h << 5) + h + text.charCodeAt(i)) | 0;
   return `${lines.length}:${(h >>> 0).toString(16)}`;
 };
