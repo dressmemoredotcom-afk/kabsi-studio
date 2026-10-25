@@ -9,6 +9,8 @@ export type MediaAsset = {
   height: number;
   /** Video length in seconds. */
   durationS: number;
+  /** For video with black bars burned into the picture: where the real picture is. Left out when there are none. */
+  content?: { x: number; y: number; width: number; height: number };
 };
 
 /** The logo file, its size, and the row where an artwork-plus-tagline logo should be cropped to drop the tagline. */

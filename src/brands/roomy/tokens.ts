@@ -25,6 +25,8 @@ export const roomyTokens = {
     display: '"Cormorant Garamond", serif',
     /** Jost: uppercase labels, pills and spec lines. */
     ui: '"Jost", sans-serif',
+    /** Amiri: a classical Naskh serif for the Arabic name of the neighborhood. */
+    arabic: '"Amiri", serif',
   },
   layout: {
     /** Left edge of all lower-third copy. */
@@ -37,11 +39,6 @@ export const roomyTokens = {
     lowerThirdBottom: 684,
     /** The dark gradient behind lower-third copy reaches this far up the frame, in percent. */
     scrimReach: 55,
-    /**
-     * Where horizontal footage plays: a window across the full width, this far from the top and this tall, with
-     * soft edges, above a blurred copy of the same footage. The window ends above the lower-third copy.
-     */
-    landscapeWindow: { top: 150, height: 1060, feather: 90 },
   },
   /** Charcoal at 85%, the strongest point of the lower-third gradient. */
   scrim: alpha(palette.charcoal, 0.85),

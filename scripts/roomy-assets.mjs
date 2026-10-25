@@ -62,11 +62,29 @@ const taglineCropY = (rel, height) => {
   return null;
 };
 
+/**
+ * Black bars burned into a clip (a wide picture on a taller canvas, say) would show as dark stripes once the clip
+ * fills the frame. ffmpeg's cropdetect finds the real picture; null when there are no bars worth removing.
+ */
+const detectContent = (rel, width, height) => {
+  const r = spawnSync("ffmpeg", ["-hide_banner", "-nostats", "-t", "30", "-i", join(root, "assets", rel), "-vf", "cropdetect=limit=24:round=2:reset=0", "-an", "-f", "null", "-"], { encoding: "utf8", maxBuffer: 1 << 26 });
+  const counts = {};
+  for (const m of (r.stderr ?? "").matchAll(/crop=(\d+):(\d+):(\d+):(\d+)/g)) counts[m[0]] = (counts[m[0]] ?? 0) + 1;
+  const best = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  if (!best) return null;
+  const [w, h, x, y] = best[0].slice(5).split(":").map(Number);
+  const bars = (width - w) / width > 0.02 || (height - h) / height > 0.02;
+  if (!bars || w < width * 0.6 || h < height * 0.6) return null;
+  return { x, y, width: w, height: h };
+};
+
 const media = {};
 for (const item of listing.media) {
   if (media[item.src]) continue;
   const file = resolve(mediaAssetPath(item.src), item.type === "photo" ? IMG : VID);
-  media[item.src] = { file, kind: item.type, ...(file ? probe(file) : { width: 0, height: 0, durationS: 0 }) };
+  const info = file ? probe(file) : { width: 0, height: 0, durationS: 0 };
+  const content = file && item.type === "video" ? detectContent(file, info.width, info.height) : null;
+  media[item.src] = { file, kind: item.type, ...info, ...(content ? { content } : {}) };
 }
 
 // The logo may be called roomy-logo.* or Transparent.png.
@@ -93,7 +111,7 @@ mkdirSync(out, { recursive: true });
 writeFileSync(join(out, "roomy-assets.json"), JSON.stringify(manifest, null, 2) + "\n");
 
 console.log(`roomy assets: listing "${listing.id}", ${listing.media.length} media item${listing.media.length === 1 ? "" : "s"}`);
-for (const [src, m] of Object.entries(media)) console.log(`  ${m.file ? "ok     " : "MISSING"} ${src}${m.file && m.file !== mediaAssetPath(src) ? `  (found as ${m.file})` : ""}${m.file ? `  ${m.width}x${m.height}${m.durationS ? `, ${m.durationS.toFixed(1)} s` : ""}` : "  (a placeholder is used)"}`);
+for (const [src, m] of Object.entries(media)) console.log(`  ${m.file ? "ok     " : "MISSING"} ${src}${m.file && m.file !== mediaAssetPath(src) ? `  (found as ${m.file})` : ""}${m.file ? `  ${m.width}x${m.height}${m.durationS ? `, ${m.durationS.toFixed(1)} s` : ""}${m.content ? `, black bars cropped to ${m.content.width}x${m.content.height}` : ""}` : "  (a placeholder is used)"}`);
 console.log(`  ${logo ? "ok     " : "MISSING"} logo${logo ? `  ${logo.file}${logo.taglineCropY ? `  (tagline found, cropped below row ${logo.taglineCropY} of ${logo.height})` : ""}` : "  (a typographic wordmark is used)"}`);
 console.log(`  music: ${manifest.bgm ?? (manifest.bgmStandin ? "generated ambient stand-in (add assets/audio/bgm/luxury-house.mp3 to replace it)" : "none")}`);
 if (manifest.voiceover) console.log(`  voice-over: your file ${manifest.voiceover}`);

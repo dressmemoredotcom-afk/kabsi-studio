@@ -50,6 +50,54 @@ export function makeTts(config) {
   };
 }
 
+/**
+ * Place names the voice reads wrongly from their spelling, as the sounds to say instead (IPA, the symbols the voice
+ * model takes). "Ashrafieh" is the Beirut neighborhood الأشرفية, said ash-ra-FEE-yeh; spelled out, the engine drops
+ * the ending and says "ash-ruh-fi". Bump LEXICON_VERSION when an entry changes so cached lines are made again.
+ */
+export const LEXICON = { ashrafieh: "ˌaʃɹafˈiːjɛ" };
+export const LEXICON_VERSION = 1;
+
+const PUNCTUATION = /(\s*[;:,.!?¡¿—…"«»“”(){}[\]]+\s*)+/g;
+const LEXICON_WORDS = new RegExp(`\\b(${Object.keys(LEXICON).join("|")})\\b`, "gi");
+
+/**
+ * Speaks `text` with the voice, using LEXICON for the words in it. Text without such a word goes through the voice
+ * model's own text handling untouched. Otherwise the text is turned into sounds piece by piece and the lexicon
+ * words are put in as written above.
+ */
+export async function speak(tts, text, { voice, speed }) {
+  if (!LEXICON_WORDS.test(text)) {
+    LEXICON_WORDS.lastIndex = 0;
+    return tts.generate(text, { voice, speed });
+  }
+  LEXICON_WORDS.lastIndex = 0;
+  const { phonemize } = await import("phonemizer");
+  const language = voice.startsWith("a") ? "en-us" : "en";
+  const sounds = async (chunk) => {
+    const parts = [];
+    let last = 0;
+    for (const m of chunk.matchAll(PUNCTUATION)) {
+      if (last < m.index) parts.push(chunk.slice(last, m.index));
+      parts.push({ keep: m[0] });
+      last = m.index + m[0].length;
+    }
+    if (last < chunk.length) parts.push(chunk.slice(last));
+    const out = await Promise.all(parts.map(async (p) => (typeof p === "string" ? (p.trim() ? (await phonemize(p, language)).join(" ") : p) : p.keep)));
+    return out.join("").replace(/ʲ/g, "j").replace(/r/g, "ɹ").replace(/x/g, "k").replace(/ɬ/g, "l");
+  };
+  let phonemes = "";
+  let at = 0;
+  for (const m of text.matchAll(LEXICON_WORDS)) {
+    if (at < m.index) phonemes += await sounds(text.slice(at, m.index));
+    phonemes += LEXICON[m[1].toLowerCase()];
+    at = m.index + m[0].length;
+  }
+  if (at < text.length) phonemes += await sounds(text.slice(at));
+  const { input_ids } = tts.tokenizer(phonemes.trim(), { truncation: true });
+  return tts.generate_from_ids(input_ids, { voice, speed });
+}
+
 export const probeDuration = (file) => {
   const r = spawnSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", file], { encoding: "utf8" });
   const d = Number(r.stdout.trim());

@@ -60,9 +60,11 @@ export const DynamicReel: React.FC<RoomyListing> = (listing) => {
                 frames={length}
                 startAtSecond={item.startAtSecond}
                 playbackRate={item.playbackRate}
+                focusX={item.focusX}
                 durationS={asset.durationS}
                 width={asset.width}
                 height={asset.height}
+                content={asset.content}
                 index={i}
               />
             )}
@@ -70,7 +72,7 @@ export const DynamicReel: React.FC<RoomyListing> = (listing) => {
             {text.topBadge && (
               <div style={{ position: "absolute", left: T.layout.marginX, top: 300 }}>
                 <Reveal frame={frame} atFrame={from + 12} dy={-16}>
-                  <EditorialBadge text={text.topBadge} />
+                  <EditorialBadge text={text.topBadge} ar={text.topBadgeAr} />
                 </Reveal>
               </div>
             )}

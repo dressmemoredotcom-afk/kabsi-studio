@@ -10,7 +10,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { RoomyListingSchema } from "../src/brands/roomy/schema.ts";
 import { FPS, outroFrom, planScenes, resolveVoScript, totalFrames, voiceSignature } from "../src/brands/roomy/storyboard.ts";
-import { makeTts, probeDuration, toWav, trim } from "./lib/tts.mjs";
+import { LEXICON_VERSION, makeTts, probeDuration, speak as say, toWav, trim } from "./lib/tts.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const config = JSON.parse(readFileSync(join(root, "kabsi.config.json"), "utf8"));
@@ -45,10 +45,10 @@ const getTts = makeTts(config);
 const speak = async (scene, text, speed) => {
   const wav = join(outDir, `vo-${scene}.wav`);
   const stamp = join(outDir, `vo-${scene}.txt`);
-  const signatureText = `${voice}|${speed}|${text}`;
+  const signatureText = `${voice}|${speed}|${text}|lexicon${LEXICON_VERSION}`;
   if (existsSync(wav) && existsSync(stamp) && readFileSync(stamp, "utf8") === signatureText) return { file: `roomy/voice/vo-${scene}.wav`, durS: probeDuration(wav) };
   const tts = await getTts();
-  const audio = await tts.generate(text, { voice, speed });
+  const audio = await say(tts, text, { voice, speed });
   const samples = trim(audio.audio, audio.sampling_rate);
   writeFileSync(wav, toWav(samples, audio.sampling_rate));
   writeFileSync(stamp, signatureText);

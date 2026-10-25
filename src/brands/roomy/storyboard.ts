@@ -41,6 +41,8 @@ export const planScenes = (count: number, total: number = TOTAL_FRAMES): ScenePl
 export type SceneCopy = {
   /** Small badge at the top left. */
   topBadge?: string;
+  /** The same place in Arabic, shown beside the badge text. */
+  topBadgeAr?: string;
   /** Serif headline in the lower third (first scene). */
   headline?: string;
   /** Italic line under the headline. */
@@ -76,6 +78,7 @@ export const sceneCopy = (listing: RoomyListing): SceneCopy[] => {
     const copy: SceneCopy = {};
     if (i === 0) {
       copy.topBadge = listing.neighborhood;
+      copy.topBadgeAr = listing.neighborhoodAr;
       copy.headline = item.headline || listing.propertyTitle;
       // The price shows on the last scene's badge; a one-scene reel has no other place for it.
       copy.subline = item.subline || (n === 1 ? listing.price : undefined);

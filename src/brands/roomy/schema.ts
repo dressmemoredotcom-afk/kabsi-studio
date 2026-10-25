@@ -16,6 +16,8 @@ export const MediaItemSchema = z.discriminatedUnion("type", [
     startAtSecond: z.number().default(0),
     /** Playback speed. Below 1 slows a short shot so it fills its scene; 0.7 to 1 stays smooth. */
     playbackRate: z.number().min(0.5).max(1.5).default(1),
+    /** Which part of horizontal footage stays in the vertical frame: 0 is the left edge, 50 the centre, 100 the right. */
+    focusX: z.number().min(0).max(100).default(50),
     headline: z.string().optional(),
     subline: z.string().optional(),
   }),
@@ -26,6 +28,8 @@ export const RoomyListingSchema = z
     id: z.string().default("listing"),
     /** e.g. "DOWNTOWN BEIRUT", "ACHRAFIEH" */
     neighborhood: z.string(),
+    /** The neighborhood in Arabic, shown beside it in the badge on the first scene, e.g. "الأشرفية". */
+    neighborhoodAr: z.string().optional(),
     /** e.g. "ARCHITECTURAL RESIDENCE" */
     propertyTitle: z.string(),
     /** e.g. "$1,250,000" or "PRICE UPON REQUEST". Left out, no price is shown. */

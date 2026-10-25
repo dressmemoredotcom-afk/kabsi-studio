@@ -1,14 +1,14 @@
 {
   "voice": "bf_emma",
   "speed": 0.85,
-  "signature": "11:ec3c2988",
+  "signature": "11:17b965af",
   "lines": [
     {
       "scene": 0,
       "text": "A rare gem, in the heart of Ashrafieh.",
       "file": "roomy/voice/vo-0.wav",
       "startS": 0.8,
-      "durS": 2.495
+      "durS": 2.697
     },
     {
       "scene": 1,
@@ -61,10 +61,10 @@
     },
     {
       "scene": 8,
-      "text": "Add a floor, up to eight hundred square meters.",
+      "text": "Details from another era.",
       "file": "roomy/voice/vo-8.wav",
       "startS": 34.4,
-      "durS": 2.862
+      "durS": 1.962
     },
     {
       "scene": 9,

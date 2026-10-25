@@ -14,7 +14,13 @@
       "kind": "video",
       "width": 848,
       "height": 480,
-      "durationS": 62.554558
+      "durationS": 62.554558,
+      "content": {
+        "x": 0,
+        "y": 26,
+        "width": 848,
+        "height": 428
+      }
     }
   }
 }
