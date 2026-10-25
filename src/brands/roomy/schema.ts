@@ -14,6 +14,8 @@ export const MediaItemSchema = z.discriminatedUnion("type", [
     src: z.string(),
     /** Trim start, in seconds. */
     startAtSecond: z.number().default(0),
+    /** Playback speed. Below 1 slows a short shot so it fills its scene; 0.7 to 1 stays smooth. */
+    playbackRate: z.number().min(0.5).max(1.5).default(1),
     headline: z.string().optional(),
     subline: z.string().optional(),
   }),

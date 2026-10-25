@@ -53,7 +53,18 @@ export const DynamicReel: React.FC<RoomyListing> = (listing) => {
             {item.type === "photo" ? (
               <KenBurnsPhoto src={url} frame={frame} from={from} frames={length} index={i} width={asset.width} height={asset.height} />
             ) : (
-              <VideoClip src={url} frame={frame} from={from} frames={length} startAtSecond={item.startAtSecond} durationS={asset.durationS} index={i} />
+              <VideoClip
+                src={url}
+                frame={frame}
+                from={from}
+                frames={length}
+                startAtSecond={item.startAtSecond}
+                playbackRate={item.playbackRate}
+                durationS={asset.durationS}
+                width={asset.width}
+                height={asset.height}
+                index={i}
+              />
             )}
             <BottomScrim strength={text.headline ? 1 : 0.8} />
             {text.topBadge && (

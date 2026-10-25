@@ -1,83 +1,38 @@
 {
-  "id": "sursock-580sqm-v3",
-  "neighborhood": "SURSOCK, BEIRUT",
-  "propertyTitle": "A RESIDENCE OF RARE SCALE",
+  "id": "ashrafieh-traditional-house",
+  "neighborhood": "ASHRAFIEH, BEIRUT",
+  "propertyTitle": "TRADITIONAL HOUSE, BUILT IN 1920",
   "specs": [
-    "580 SQM",
-    "4 MASTER BEDROOMS",
-    "FULLY FURNISHED",
-    "3 PARKING"
+    "408 SQM LAND",
+    "3 FLOORS",
+    "APPROX. 600 SQM BUILT UP",
+    "BUILT IN 1920"
   ],
-  "durationSeconds": 40,
+  "durationSeconds": 46,
   "voScript": [
-    "Sursock, Beirut. A residence of rare scale.",
-    "Views of the city, the mountains, and the sea.",
-    "Five hundred and eighty square meters.",
-    "Warm, elegant interiors.",
-    "A fully equipped kitchen.",
-    "Room to gather, and room to entertain.",
-    "Fully furnished, and move-in ready.",
-    "Four master bedrooms.",
-    "And three parking spaces.",
+    "A rare gem, in the heart of Ashrafieh.",
+    "A traditional house, built in nineteen twenty.",
+    "Authentic architecture, and timeless charm.",
+    "For lovers of heritage and character.",
+    "Three floors, two hundred square meters each.",
+    "About six hundred square meters, built up.",
+    "Arched windows, filled with light.",
+    "Bright rooms, with generous windows.",
+    "Add a floor, up to eight hundred square meters.",
+    "On four hundred and eight square meters of land.",
     "Exclusively with Roomy Properties."
   ],
   "media": [
-    {
-      "type": "photo",
-      "src": "sursock/photo-01.jpeg",
-      "headline": "LIVE IN SURSOCK",
-      "subline": "Light, space and an address to match"
-    },
-    {
-      "type": "video",
-      "src": "sursock/walkthrough-1.mp4",
-      "startAtSecond": 16.8,
-      "headline": "PANORAMIC VIEWS",
-      "subline": "CITY, MOUNTAINS AND SEA"
-    },
-    {
-      "type": "video",
-      "src": "sursock/walkthrough-1.mp4",
-      "startAtSecond": 25,
-      "headline": "580 SQM",
-      "subline": "GRAND LIVING SALON"
-    },
-    {
-      "type": "photo",
-      "src": "sursock/photo-03.jpeg",
-      "headline": "ELEGANT INTERIORS",
-      "subline": "WARM AND REFINED"
-    },
-    {
-      "type": "video",
-      "src": "sursock/walkthrough-2.mp4",
-      "startAtSecond": 0.3,
-      "headline": "MARBLE KITCHEN",
-      "subline": "FULLY EQUIPPED"
-    },
-    {
-      "type": "photo",
-      "src": "sursock/photo-05.jpeg",
-      "headline": "OPEN-PLAN DINING"
-    },
-    {
-      "type": "photo",
-      "src": "sursock/photo-10.jpeg",
-      "headline": "FULLY FURNISHED",
-      "subline": "MOVE-IN READY"
-    },
-    {
-      "type": "video",
-      "src": "sursock/walkthrough-1.mp4",
-      "startAtSecond": 85.8,
-      "headline": "MASTER BEDROOMS",
-      "subline": "FOUR IN TOTAL"
-    },
-    {
-      "type": "video",
-      "src": "sursock/walkthrough-2.mp4",
-      "startAtSecond": 34.5
-    }
+    { "type": "video", "src": "ashrafieh/walkthrough.mp4", "startAtSecond": 4.1, "headline": "A RARE GEM", "subline": "In the heart of Ashrafieh" },
+    { "type": "video", "src": "ashrafieh/walkthrough.mp4", "startAtSecond": 9.72, "playbackRate": 0.78, "headline": "TRADITIONAL HOUSE", "subline": "BUILT IN 1920" },
+    { "type": "video", "src": "ashrafieh/walkthrough.mp4", "startAtSecond": 18.2, "playbackRate": 0.9, "headline": "AUTHENTIC ARCHITECTURE", "subline": "TIMELESS CHARM" },
+    { "type": "video", "src": "ashrafieh/walkthrough.mp4", "startAtSecond": 27.0, "playbackRate": 0.95, "headline": "HERITAGE AND CHARACTER" },
+    { "type": "video", "src": "ashrafieh/walkthrough.mp4", "startAtSecond": 13.0, "headline": "3 FLOORS", "subline": "200 SQM EACH" },
+    { "type": "video", "src": "ashrafieh/walkthrough.mp4", "startAtSecond": 54.78, "playbackRate": 0.78, "headline": "APPROX. 600 SQM", "subline": "BUILT UP" },
+    { "type": "video", "src": "ashrafieh/walkthrough.mp4", "startAtSecond": 35.7, "playbackRate": 0.85, "headline": "ARCHED WINDOWS", "subline": "FILLED WITH LIGHT" },
+    { "type": "video", "src": "ashrafieh/walkthrough.mp4", "startAtSecond": 42.3, "headline": "BRIGHT ROOMS", "subline": "GENEROUS WINDOWS" },
+    { "type": "video", "src": "ashrafieh/walkthrough.mp4", "startAtSecond": 46.9, "playbackRate": 0.7, "headline": "ROOM TO GROW", "subline": "ADD A FLOOR, UP TO 800 SQM" },
+    { "type": "video", "src": "ashrafieh/walkthrough.mp4", "startAtSecond": 58.15, "playbackRate": 0.9 }
   ],
   "whatsappContact": "+961 71 203 398"
 }
