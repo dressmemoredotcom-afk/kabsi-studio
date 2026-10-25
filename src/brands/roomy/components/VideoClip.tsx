@@ -15,10 +15,10 @@ export const isLandscape = (width: number, height: number): boolean => width > h
  * the scene does. If the clip is too short to play that long from the requested start, the start moves earlier so it
  * never runs out. `playbackRate` below 1 slows a short shot so it can fill its scene.
  *
- * Upright footage fills the frame. Horizontal footage plays in an arched window (the shape of the old houses it is
- * usually shot in) at a size where it stays sharp, over a background drawn from the brand colours and tinted by the
- * shot itself, with the copy on clean ground beneath it. `focusX` (0 left, 50 centre, 100 right) picks which part of
- * the wide picture stays in view. Black bars burned into a file (see `content`) are left out.
+ * Upright footage fills the frame. Horizontal footage plays in a full-width window in the middle of the frame, at a
+ * size where it stays sharp. Its own picture, blown up and blurred, is the background, with a glow around the window
+ * and the copy on the soft ground beneath it. `focusX` (0 left, 50 centre, 100 right) picks which part of the wide
+ * picture stays in view. Black bars burned into a file (see `content`) are left out.
  */
 export const VideoClip: React.FC<{
   src: string | null;
@@ -63,37 +63,23 @@ export const VideoClip: React.FC<{
     );
   }
 
-  const A = T.layout.arch;
-  const left = (FRAME.width - A.width) / 2;
-  const radius = `${A.width / 2}px ${A.width / 2}px ${T.radii.large}px ${T.radii.large}px`;
-  const halo = (grow: number, opacity: number) => (
-    <div
-      key={grow}
-      style={{
-        position: "absolute",
-        left: left - grow,
-        top: A.top - grow,
-        width: A.width + grow * 2,
-        height: A.height + grow,
-        borderRadius: `${(A.width + grow * 2) / 2}px ${(A.width + grow * 2) / 2}px 0 0`,
-        border: `1.5px solid ${alpha(T.turquoise, opacity)}`,
-        borderBottom: "none",
-      }}
-    />
-  );
-
+  const W = T.layout.window;
   return (
     <Sequence from={from} durationInFrames={frames}>
       <div style={{ position: "absolute", inset: 0, overflow: "hidden", background: T.charcoal }}>
-        {/* The shot, blown up and blurred, gives the ground its colour; teal and charcoal keep it rich, not murky. */}
-        <div style={{ position: "absolute", inset: 0, overflow: "hidden", opacity: 0.9 }}>{clip(place(FRAME.width, FRAME.height, { transform: "scale(1.3)", filter: "blur(60px) saturate(1.25)" }))}</div>
-        <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to bottom, ${alpha(T.deepTeal, 0.72)} 0%, ${alpha(T.deepTeal, 0.62)} 40%, ${alpha(T.charcoal, 0.9)} 72%, ${alpha(T.charcoal, 0.97)} 100%)` }} />
-        <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse 75% 34% at 50% ${((A.top + A.height / 2) / FRAME.height) * 100}%, ${alpha(T.turquoise, 0.26)}, transparent 72%)` }} />
-        {halo(46, 0.2)}
-        {halo(22, 0.42)}
-        <div style={{ position: "absolute", left, top: A.top, width: A.width, height: A.height, borderRadius: radius, overflow: "hidden", boxShadow: `0 36px 90px ${alpha(T.charcoal, 0.65)}, 0 0 120px ${alpha(T.turquoise, 0.16)}`, WebkitBoxReflect: `below 10px linear-gradient(to bottom, transparent 70%, ${alpha(T.white, 0.14)} 100%)` }}>
-          {clip(place(A.width, A.height, { transform: `scale(${push})`, filter: "saturate(1.07) contrast(1.04)" }))}
-          <div style={{ position: "absolute", inset: 0, borderRadius: radius, border: `2px solid ${alpha(T.turquoise, 0.85)}` }} />
+        {/* The shot's own shadow: the picture enlarged and blurred fills the frame. */}
+        <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+          {clip(place(FRAME.width, FRAME.height, { transform: "scale(1.35)", filter: "blur(110px) brightness(0.82) saturate(1.8)" }))}
+        </div>
+        {/* A brighter glow right around the window. */}
+        <div style={{ position: "absolute", left: 0, top: W.top, width: FRAME.width, height: W.height, transform: "scale(1.06, 1.38)", filter: "blur(52px) saturate(1.5)", opacity: 0.9 }}>
+          {clip(place(FRAME.width, W.height))}
+        </div>
+        {/* Darker at the top and bottom, where the badge and the copy sit; a trace of brand teal ties it together. */}
+        <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to bottom, ${alpha(T.charcoal, 0.42)} 0%, ${alpha(T.charcoal, 0)} 24%, ${alpha(T.charcoal, 0)} 56%, ${alpha(T.charcoal, 0.55)} 80%, ${alpha(T.charcoal, 0.74)} 100%)` }} />
+        <div style={{ position: "absolute", inset: 0, background: alpha(T.deepTeal, 0.07) }} />
+        <div style={{ position: "absolute", left: 0, top: W.top, width: FRAME.width, height: W.height, overflow: "hidden", boxShadow: `0 28px 80px ${alpha(T.charcoal, 0.6)}` }}>
+          {clip(place(FRAME.width, W.height, { transform: `scale(${push})`, filter: "saturate(1.06) contrast(1.04)" }))}
         </div>
       </div>
     </Sequence>

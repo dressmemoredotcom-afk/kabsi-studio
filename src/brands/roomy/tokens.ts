@@ -40,11 +40,11 @@ export const roomyTokens = {
     /** The dark gradient behind lower-third copy reaches this far up the frame, in percent. */
     scrimReach: 55,
     /**
-     * The arched window that horizontal footage plays in (top edge, width and height in px). Its size sets how far
-     * the footage is enlarged, so it stays sharp: a 720 px tall arch shows 428 px of picture at about 1.7x. The
-     * lower-third copy sits below it, the place badge above it.
+     * Where horizontal footage plays: a full-width window, this far from the top and this tall (px). Its height sets
+     * how far the footage is enlarged, so it stays sharp: 640 px shows the 428 px picture at about 1.5x. The place
+     * badge sits above it and the lower-third copy below it.
      */
-    arch: { top: 380, width: 960, height: 660 },
+    window: { top: 440, height: 640 },
   },
   /** Charcoal at 85%, the strongest point of the lower-third gradient. */
   scrim: alpha(palette.charcoal, 0.85),

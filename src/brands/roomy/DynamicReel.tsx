@@ -48,8 +48,8 @@ export const DynamicReel: React.FC<RoomyListing> = (listing) => {
         const asset = ASSETS.media[item.src] ?? MISSING;
         const url = assetUrl(asset.file);
         const text = copy[i];
-        // Horizontal footage plays in the arched window, on its own background: no scrim, and the badge clears the arch.
-        const arch = item.type === "video" && asset.file !== null && isLandscape(asset.width, asset.height);
+        // Horizontal footage plays in a window on its own background: no scrim, and the badge sits above the window.
+        const framed = item.type === "video" && asset.file !== null && isLandscape(asset.width, asset.height);
         return (
           <AbsoluteFill key={`${i}-${item.src}`} style={{ opacity: fade }}>
             {item.type === "photo" ? (
@@ -70,9 +70,9 @@ export const DynamicReel: React.FC<RoomyListing> = (listing) => {
                 index={i}
               />
             )}
-            {!arch && <BottomScrim strength={text.headline ? 1 : 0.8} />}
+            {!framed && <BottomScrim strength={text.headline ? 1 : 0.8} />}
             {text.topBadge && (
-              <div style={{ position: "absolute", left: T.layout.marginX, top: arch ? 282 : 300 }}>
+              <div style={{ position: "absolute", left: T.layout.marginX, top: framed ? 282 : 300 }}>
                 <Reveal frame={frame} atFrame={from + 12} dy={-16}>
                   <EditorialBadge text={text.topBadge} ar={text.topBadgeAr} />
                 </Reveal>
