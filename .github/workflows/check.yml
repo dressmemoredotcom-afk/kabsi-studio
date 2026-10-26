@@ -1,0 +1,18 @@
+name: check
+
+# On every push: type check, lint, both brands' rule checks, the isolation and file-size checks, and a bundle of each
+# brand's entry (npm run build).
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build

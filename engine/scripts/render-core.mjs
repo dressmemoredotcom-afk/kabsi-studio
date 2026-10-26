@@ -1,129 +1,97 @@
-// One command: check the script, make the voice if missing, render with Remotion, mix and encode with FFmpeg.
-//   npm run render        video 01
-//   npm run render:02     video 02
+// Renders one composition to a finished MP4, for any brand.
+//   1. Remotion bundles the brand's entry and renders H.264 with its audio mix (PNG frames, BT.709).
+//   2. FFmpeg normalises the audio to -14 LUFS in two passes, with a limiter so the true peak stays under -1 dB, and
+//      encodes AAC. The video stream is copied untouched, so there is no second video encode.
+//   3. FFmpeg writes the poster frame from the finished file.
 // Env: CHROME_PATH to use an installed Chromium instead of Remotion's own browser.
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { bundle } from "@remotion/bundler";
 import { renderMedia, selectComposition } from "@remotion/renderer";
-import { pickVideo } from "./videos.mjs";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const video = pickVideo(process.argv.slice(2));
-const { VOICE_LINES, SCENES, VO_OFFSET_S } = await import(video.scriptFile);
-const out = join(root, "out");
-const tmp = join(out, `.tmp-${video.id}`);
-const FINAL = join(out, video.out);
-const POSTER = join(out, video.poster);
-const POSTER_AT_S = video.posterAtS; // end card fully built, nothing mid-animation
+export const LOUDNESS = "I=-14:TP=-1:LRA=11";
 
-const run = (cmd, args, opts = {}) => {
-  const r = spawnSync(cmd, args, { stdio: opts.capture ? "pipe" : "inherit", encoding: "utf8", cwd: root });
+export const run = (cmd, args, { capture = false, cwd } = {}) => {
+  const r = spawnSync(cmd, args, { stdio: capture ? "pipe" : "inherit", encoding: "utf8", cwd, maxBuffer: 1 << 26 });
   if (r.status !== 0) {
-    if (opts.capture) console.error(r.stderr);
+    if (capture) console.error(r.stderr);
     throw new Error(`${cmd} ${args.slice(0, 3).join(" ")} failed`);
   }
   return r;
 };
 
-// 1. Rules first.
-run("node", ["scripts/check-script.mjs", video.id]);
+/** Length of a file's video stream in seconds. */
+export const videoSeconds = (file) => {
+  const r = run("ffprobe", ["-v", "error", "-select_streams", "v:0", "-show_entries", "stream=duration", "-of", "csv=p=0", file], { capture: true });
+  return Number(r.stdout.trim());
+};
 
-// 2. Voice, if it has not been generated.
-const wavs = VOICE_LINES.map((l) => join(root, "assets", video.voiceDir, `${l.id}.wav`));
-// Videos with real-voice support always re-measure: a file dropped into assets/voice must be picked up.
-if (video.realVoice || !wavs.every(existsSync) || !existsSync(join(root, "src", "brands", "kabsi", "generated", video.voiceJson))) {
-  run("node", ["scripts/voice.mjs", video.id]);
-  run("node", ["scripts/check-script.mjs", video.id]);
-}
-
-rmSync(tmp, { recursive: true, force: true });
-mkdirSync(tmp, { recursive: true });
-
-// 3. Picture: Remotion renders a silent, high-quality intermediate.
-const serveUrl = await bundle({
-  entryPoint: join(root, "src", "index.ts"),
-  publicDir: join(root, "assets"),
-});
-const browserExecutable = process.env.CHROME_PATH || null;
-const composition = await selectComposition({ serveUrl, id: video.composition, browserExecutable });
-const silent = join(tmp, "silent.mp4");
-let lastPct = -1;
-await renderMedia({
-  composition,
-  serveUrl,
-  codec: "h264",
-  crf: 12,
-  colorSpace: "bt709",
-  muted: video.audioMode !== "remotion",
-  // Promos with a Remotion mix carry voice, music and SFX in this file; ffmpeg only normalises and encodes.
-  ...(video.audioMode === "remotion" ? { audioCodec: "aac", audioBitrate: "320k" } : {}),
-  outputLocation: silent,
-  browserExecutable,
-  onProgress: ({ progress }) => {
-    const pct = Math.floor(progress * 10) * 10;
-    if (pct > lastPct) console.log(`render ${(lastPct = pct)}%`);
-  },
-});
-
-const total = SCENES[SCENES.length - 1].to;
-
-if (video.audioMode === "remotion") {
-  // 4. Normalise the whole mix to -14 LUFS (two passes, so the gain is exact), peak at most -1 dBTP, and encode.
-  const LN3 = "I=-14:TP=-1:LRA=11";
-  const pass1 = run("ffmpeg", ["-hide_banner", "-nostats", "-i", silent, "-vn", "-af", `loudnorm=${LN3}:print_format=json`, "-f", "null", "-"], { capture: true });
+/**
+ * Normalises `input`'s audio to -14 LUFS (true peak under -1 dB) and writes `output` with the video stream copied.
+ * Digital silence cannot be measured, so a silent track is only re-encoded.
+ */
+export const masterAudio = (input, output) => {
+  const pass1 = run("ffmpeg", ["-hide_banner", "-nostats", "-i", input, "-vn", "-af", `loudnorm=${LOUDNESS}:print_format=json`, "-f", "null", "-"], { capture: true });
   const m = JSON.parse(pass1.stderr.slice(pass1.stderr.lastIndexOf("{"), pass1.stderr.lastIndexOf("}") + 1));
-  const norm =
-    `loudnorm=${LN3}:measured_I=${m.input_i}:measured_TP=${m.input_tp}:measured_LRA=${m.input_lra}:measured_thresh=${m.input_thresh}:offset=${m.target_offset}:linear=true,` +
-    "alimiter=limit=0.79:level=false,aresample=48000";
+  const silent = !Number.isFinite(Number(m.input_i));
+  const norm = silent
+    ? "aresample=48000"
+    : `loudnorm=${LOUDNESS}:measured_I=${m.input_i}:measured_TP=${m.input_tp}:measured_LRA=${m.input_lra}:measured_thresh=${m.input_thresh}:offset=${m.target_offset}:linear=true,` +
+      "alimiter=limit=0.79:level=false,aresample=48000";
+  // The audio must end with the picture: trim it to the video stream's length.
+  const seconds = videoSeconds(input);
   run("ffmpeg", [
-    "-y", "-loglevel", "error", "-i", silent,
-    "-map", "0:v", "-map", "0:a",
-    "-c:v", "libx264", "-preset", "slow", "-crf", "19", "-maxrate", "8M", "-bufsize", "16M",
-    "-profile:v", "high", "-pix_fmt", "yuv420p", "-r", "30", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
+    "-y", "-loglevel", "error", "-i", input,
+    "-map", "0:v", "-map", "0:a", "-c:v", "copy",
+    ...(Number.isFinite(seconds) ? ["-t", String(seconds)] : []),
     "-af", norm, "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2",
-    "-t", String(total), "-movflags", "+faststart",
-    FINAL,
+    "-movflags", "+faststart", output,
   ]);
-  run("ffmpeg", ["-y", "-loglevel", "error", "-ss", String(POSTER_AT_S), "-i", FINAL, "-frames:v", "1", POSTER]);
-  rmSync(tmp, { recursive: true, force: true });
-  console.log(`done: ${FINAL}\n      ${POSTER}`);
-  process.exit(0);
+  return { inputLufs: silent ? null : Number(m.input_i) };
+};
+
+/** One frame of `video` at `atS` seconds, as a PNG. */
+export const posterFrame = (video, atS, output) => {
+  run("ffmpeg", ["-y", "-loglevel", "error", "-ss", String(atS), "-i", video, "-frames:v", "1", output]);
+};
+
+/**
+ * Renders `composition` from `entry` with `publicDir` as Remotion's public dir, masters the audio and writes the
+ * poster. `posterAtS` defaults to the middle of the video. Returns the frame count, fps and length.
+ */
+export async function renderReel({ entry, publicDir, composition: id, inputProps = {}, outFile, posterFile, posterAtS, crf = 18 }) {
+  mkdirSync(dirname(outFile), { recursive: true });
+  const tmp = mkdtempSync(join(tmpdir(), "render-"));
+  try {
+    const serveUrl = await bundle({ entryPoint: entry, publicDir });
+    const browserExecutable = process.env.CHROME_PATH || null;
+    const composition = await selectComposition({ serveUrl, id, inputProps, browserExecutable });
+    const raw = join(tmp, "raw.mp4");
+    let lastPct = -1;
+    await renderMedia({
+      composition,
+      serveUrl,
+      inputProps,
+      codec: "h264",
+      crf,
+      imageFormat: "png",
+      colorSpace: "bt709",
+      enforceAudioTrack: true,
+      outputLocation: raw,
+      browserExecutable,
+      onProgress: ({ progress }) => {
+        const pct = Math.floor(progress * 10) * 10;
+        if (pct > lastPct) console.log(`render ${(lastPct = pct)}%`);
+      },
+    });
+    const { inputLufs } = masterAudio(raw, outFile);
+    const durationS = composition.durationInFrames / composition.fps;
+    if (posterFile) posterFrame(outFile, posterAtS ?? durationS / 2, posterFile);
+    console.log(`render: ${outFile}, ${composition.durationInFrames} frames, ${durationS} s` + (inputLufs === null ? ", silent" : `, audio ${inputLufs} LUFS to -14 LUFS`));
+    return { frames: composition.durationInFrames, fps: composition.fps, durationS };
+  } finally {
+    rmSync(tmp, { recursive: true, force: true });
+  }
 }
-
-// 4. Voice track: place each line at its start, then loudness-normalise to -14 LUFS, peak at most -1 dBTP.
-const inputs = wavs.flatMap((w) => ["-i", w]);
-const delays = VOICE_LINES.map((l, i) => {
-  const ms = Math.round((SCENES.find((s) => s.id === l.id).from + (l.offset ?? VO_OFFSET_S)) * 1000);
-  return `[${i}:a]adelay=${ms}|${ms},aresample=48000[a${i}]`;
-});
-const mix = `${delays.join(";")};${VOICE_LINES.map((_, i) => `[a${i}]`).join("")}amix=inputs=${VOICE_LINES.length}:normalize=0,apad=whole_dur=${total},atrim=0:${total},acompressor=threshold=0.05:ratio=4:attack=5:release=120:makeup=1[mix]`;
-const raw = join(tmp, "voice-raw.wav");
-run("ffmpeg", ["-y", "-loglevel", "error", ...inputs, "-filter_complex", mix, "-map", "[mix]", "-ac", "1", raw]);
-
-const LN = "I=-14:TP=-1:LRA=11";
-const voice = join(tmp, "voice.wav");
-run("ffmpeg", [
-  "-y", "-loglevel", "error", "-i", raw,
-  "-af", `loudnorm=${LN},alimiter=limit=0.891:level=false,aresample=48000`,
-  "-ac", "1", voice,
-]);
-
-// 5. Final encode: H.264 + AAC, faststart, under 20 MB.
-run("ffmpeg", [
-  "-y", "-loglevel", "error",
-  "-i", silent, "-i", voice,
-  "-map", "0:v", "-map", "1:a",
-  "-c:v", "libx264", "-preset", "slow", "-crf", "19", "-maxrate", "6M", "-bufsize", "12M",
-  "-profile:v", "high", "-pix_fmt", "yuv420p", "-r", "30", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
-  "-c:a", "aac", "-b:a", "128k", "-ar", "48000", "-ac", "1",
-  "-t", String(total), "-movflags", "+faststart",
-  FINAL,
-]);
-
-// 6. Poster: the clearest frame, straight from the final file.
-run("ffmpeg", ["-y", "-loglevel", "error", "-ss", String(POSTER_AT_S), "-i", FINAL, "-frames:v", "1", POSTER]);
-rmSync(tmp, { recursive: true, force: true });
-console.log(`done: ${FINAL}\n      ${POSTER}`);

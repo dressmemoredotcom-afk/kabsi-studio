@@ -1,6 +1,6 @@
 import React from "react";
 import { Easing, Img, interpolate } from "remotion";
-import { lerp } from "../../../core/anim";
+import { lerp } from "../../../engine/src/anim";
 import { PlaceholderBackdrop } from "./primitives";
 
 /**

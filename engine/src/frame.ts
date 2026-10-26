@@ -1,4 +1,4 @@
-// Shared by every brand: the 1080 x 1920 vertical frame, its safe area, and a helper for colours with transparency.
+// Brand-neutral: the 1080 x 1920 vertical frame, its safe area, and a helper for colours with transparency.
 
 /** A token colour with transparency, e.g. a caption box (black at 62%). */
 export const alpha = (hex: string, a: number): string => {

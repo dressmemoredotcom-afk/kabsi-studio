@@ -1,7 +1,7 @@
 import React from "react";
 import { alpha, colors, FRAME, fonts, radii, SAFE } from "../tokens";
-import { lerp, pop } from "../../../core/anim";
-import type { CaptionChunk } from "../../../core/timeline";
+import { lerp, pop } from "../../../engine/src/anim";
+import type { CaptionChunk } from "../../../engine/src/timeline";
 
 const POP = { damping: 11, stiffness: 380, mass: 0.5 };
 const IN = { damping: 15, stiffness: 340, mass: 0.5 };

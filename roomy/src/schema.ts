@@ -1,10 +1,10 @@
-// Shape of assets/roomy/listing.json: the one file that describes a listing reel.
+// Shape of roomy/listings/<id>.json: the one file that describes a listing reel.
 import { z } from "zod";
 
 export const MediaItemSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("photo"),
-    /** Relative to assets/roomy/, or an absolute asset path starting with "/" (from assets/). */
+    /** Relative to roomy/public/media/ (e.g. "sursock/photo-01.jpeg"), or a path from roomy/public/ starting with "/". */
     src: z.string(),
     headline: z.string().optional(),
     subline: z.string().optional(),
@@ -25,6 +25,7 @@ export const MediaItemSchema = z.discriminatedUnion("type", [
 
 export const RoomyListingSchema = z
   .object({
+    /** The file name in roomy/listings/, without .json. */
     id: z.string().default("listing"),
     /** e.g. "DOWNTOWN BEIRUT", "ACHRAFIEH" */
     neighborhood: z.string(),
@@ -60,5 +61,5 @@ export const RoomyListingSchema = z
 
 export type MediaItem = z.infer<typeof MediaItemSchema>;
 export type RoomyListing = z.infer<typeof RoomyListingSchema>;
-/** What a listing.json file may contain before defaults are filled in. */
+/** What a listing file may contain before defaults are filled in. */
 export type RoomyListingInput = z.input<typeof RoomyListingSchema>;

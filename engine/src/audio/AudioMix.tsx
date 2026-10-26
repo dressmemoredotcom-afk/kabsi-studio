@@ -9,7 +9,7 @@ export type VoiceClip = { src: string; startF: number; durF: number };
 /** Three tracks: voice-over, background music that ducks under it, and sound effects on exact frames. */
 export const AudioMix: React.FC<{
   voice: VoiceClip[];
-  /** File under assets/, e.g. "audio/bgm/kabsi-upbeat-loop.mp3". */
+  /** File under the brand's public dir, e.g. "audio/upbeat-loop.mp3". */
   bgm: string;
   duck: DuckConfig;
   sfx: SfxCue[];
@@ -24,8 +24,8 @@ export const AudioMix: React.FC<{
         </Sequence>
       ))}
       {sfx.map((cue, i) => (
-        <Sequence key={`${cue.name}-${i}`} from={cue.atFrame} durationInFrames={Math.ceil(FPS * 1.6)}>
-          <Audio src={sfxSrc(cue.name)} volume={dbToGain(cue.db ?? 0)} playbackRate={cue.rate ?? 1} />
+        <Sequence key={`${cue.src}-${i}`} from={cue.atFrame} durationInFrames={Math.ceil(FPS * 1.6)}>
+          <Audio src={sfxSrc(cue)} volume={dbToGain(cue.db ?? 0)} playbackRate={cue.rate ?? 1} />
         </Sequence>
       ))}
     </>

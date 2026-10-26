@@ -10,7 +10,7 @@ export type VoiceLineDef = {
 };
 export type SceneDef = { id: string; from: number; to: number };
 export type WordStamp = { text: string; start: number; end: number };
-/** What `npm run voice:NN` writes: measured lengths, which file each line plays, optional word timestamps. */
+/** What a brand's voice script writes: measured lengths, which file each line plays, optional word timestamps. */
 export type VoiceData = {
   voice: string;
   speed: number;

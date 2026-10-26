@@ -1,84 +1,205 @@
 {
-  "voice": "bf_emma",
-  "speed": 0.85,
-  "signature": "11:17b965af",
-  "lines": [
-    {
-      "scene": 0,
-      "text": "A rare gem, in the heart of Ashrafieh.",
-      "file": "roomy/voice/vo-0.wav",
-      "startS": 0.8,
-      "durS": 2.697
-    },
-    {
-      "scene": 1,
-      "text": "A traditional house, built in nineteen twenty.",
-      "file": "roomy/voice/vo-1.wav",
-      "startS": 5,
-      "durS": 2.89
-    },
-    {
-      "scene": 2,
-      "text": "Authentic architecture, and timeless charm.",
-      "file": "roomy/voice/vo-2.wav",
-      "startS": 9.2,
-      "durS": 2.751
-    },
-    {
-      "scene": 3,
-      "text": "For lovers of heritage and character.",
-      "file": "roomy/voice/vo-3.wav",
-      "startS": 13.4,
-      "durS": 2.349
-    },
-    {
-      "scene": 4,
-      "text": "Three floors, two hundred square meters each.",
-      "file": "roomy/voice/vo-4.wav",
-      "startS": 17.6,
-      "durS": 2.832
-    },
-    {
-      "scene": 5,
-      "text": "About six hundred square meters, built up.",
-      "file": "roomy/voice/vo-5.wav",
-      "startS": 21.8,
-      "durS": 2.805
-    },
-    {
-      "scene": 6,
-      "text": "Arched windows, filled with light.",
-      "file": "roomy/voice/vo-6.wav",
-      "startS": 26,
-      "durS": 2.23
-    },
-    {
-      "scene": 7,
-      "text": "Bright rooms, with generous windows.",
-      "file": "roomy/voice/vo-7.wav",
-      "startS": 30.2,
-      "durS": 2.357
-    },
-    {
-      "scene": 8,
-      "text": "Details from another era.",
-      "file": "roomy/voice/vo-8.wav",
-      "startS": 34.4,
-      "durS": 1.962
-    },
-    {
-      "scene": 9,
-      "text": "On four hundred and eight square meters of land.",
-      "file": "roomy/voice/vo-9.wav",
-      "startS": 38.6,
-      "durS": 2.844
-    },
-    {
-      "scene": 10,
-      "text": "Exclusively with Roomy Properties.",
-      "file": "roomy/voice/vo-10.wav",
-      "startS": 43,
-      "durS": 2.401
-    }
-  ]
+  "ashrafieh-traditional-house": {
+    "voice": "bf_emma",
+    "speed": 0.85,
+    "signature": "11:17b965af",
+    "lines": [
+      {
+        "scene": 0,
+        "text": "A rare gem, in the heart of Ashrafieh.",
+        "file": "voice/ashrafieh-traditional-house/vo-0.wav",
+        "startS": 0.8,
+        "durS": 2.697
+      },
+      {
+        "scene": 1,
+        "text": "A traditional house, built in nineteen twenty.",
+        "file": "voice/ashrafieh-traditional-house/vo-1.wav",
+        "startS": 5,
+        "durS": 2.89
+      },
+      {
+        "scene": 2,
+        "text": "Authentic architecture, and timeless charm.",
+        "file": "voice/ashrafieh-traditional-house/vo-2.wav",
+        "startS": 9.2,
+        "durS": 2.751
+      },
+      {
+        "scene": 3,
+        "text": "For lovers of heritage and character.",
+        "file": "voice/ashrafieh-traditional-house/vo-3.wav",
+        "startS": 13.4,
+        "durS": 2.349
+      },
+      {
+        "scene": 4,
+        "text": "Three floors, two hundred square meters each.",
+        "file": "voice/ashrafieh-traditional-house/vo-4.wav",
+        "startS": 17.6,
+        "durS": 2.832
+      },
+      {
+        "scene": 5,
+        "text": "About six hundred square meters, built up.",
+        "file": "voice/ashrafieh-traditional-house/vo-5.wav",
+        "startS": 21.8,
+        "durS": 2.805
+      },
+      {
+        "scene": 6,
+        "text": "Arched windows, filled with light.",
+        "file": "voice/ashrafieh-traditional-house/vo-6.wav",
+        "startS": 26,
+        "durS": 2.23
+      },
+      {
+        "scene": 7,
+        "text": "Bright rooms, with generous windows.",
+        "file": "voice/ashrafieh-traditional-house/vo-7.wav",
+        "startS": 30.2,
+        "durS": 2.357
+      },
+      {
+        "scene": 8,
+        "text": "Details from another era.",
+        "file": "voice/ashrafieh-traditional-house/vo-8.wav",
+        "startS": 34.4,
+        "durS": 1.962
+      },
+      {
+        "scene": 9,
+        "text": "On four hundred and eight square meters of land.",
+        "file": "voice/ashrafieh-traditional-house/vo-9.wav",
+        "startS": 38.6,
+        "durS": 2.844
+      },
+      {
+        "scene": 10,
+        "text": "Exclusively with Roomy Properties.",
+        "file": "voice/ashrafieh-traditional-house/vo-10.wav",
+        "startS": 43,
+        "durS": 2.401
+      }
+    ]
+  },
+  "downtown-275sqm": {
+    "voice": "bf_emma",
+    "speed": 0.88,
+    "signature": "6:ecda7d01",
+    "lines": [
+      {
+        "scene": 0,
+        "text": "Downtown Beirut. Overlooking history.",
+        "file": "voice/downtown-275sqm/vo-0.wav",
+        "startS": 0.8,
+        "durS": 2.555
+      },
+      {
+        "scene": 1,
+        "text": "Two hundred and seventy-five square meters of refined living.",
+        "file": "voice/downtown-275sqm/vo-1.wav",
+        "startS": 4.4,
+        "durS": 3.904
+      },
+      {
+        "scene": 3,
+        "text": "A teak terrace, directly above the Roman ruins.",
+        "file": "voice/downtown-275sqm/vo-3.wav",
+        "startS": 11.6,
+        "durS": 3.015
+      },
+      {
+        "scene": 4,
+        "text": "Two master suites, and private parking.",
+        "file": "voice/downtown-275sqm/vo-4.wav",
+        "startS": 15.615,
+        "durS": 2.436
+      },
+      {
+        "scene": 5,
+        "text": "Exclusively with Roomy Properties.",
+        "file": "voice/downtown-275sqm/vo-5.wav",
+        "startS": 19.051,
+        "durS": 2.351
+      }
+    ]
+  },
+  "sursock-580sqm-v3": {
+    "voice": "bf_emma",
+    "speed": 0.85,
+    "signature": "10:ae14f0aa",
+    "lines": [
+      {
+        "scene": 0,
+        "text": "Sursock, Beirut. A residence of rare scale.",
+        "file": "voice/sursock-580sqm-v3/vo-0.wav",
+        "startS": 0.8,
+        "durS": 3.179
+      },
+      {
+        "scene": 1,
+        "text": "Views of the city, the mountains, and the sea.",
+        "file": "voice/sursock-580sqm-v3/vo-1.wav",
+        "startS": 4.979,
+        "durS": 2.844
+      },
+      {
+        "scene": 2,
+        "text": "Five hundred and eighty square meters.",
+        "file": "voice/sursock-580sqm-v3/vo-2.wav",
+        "startS": 8.823,
+        "durS": 2.556
+      },
+      {
+        "scene": 3,
+        "text": "Warm, elegant interiors.",
+        "file": "voice/sursock-580sqm-v3/vo-3.wav",
+        "startS": 12.8,
+        "durS": 2.142
+      },
+      {
+        "scene": 4,
+        "text": "A fully equipped kitchen.",
+        "file": "voice/sursock-580sqm-v3/vo-4.wav",
+        "startS": 16.8,
+        "durS": 1.806
+      },
+      {
+        "scene": 5,
+        "text": "Room to gather, and room to entertain.",
+        "file": "voice/sursock-580sqm-v3/vo-5.wav",
+        "startS": 20.8,
+        "durS": 2.46
+      },
+      {
+        "scene": 6,
+        "text": "Fully furnished, and move-in ready.",
+        "file": "voice/sursock-580sqm-v3/vo-6.wav",
+        "startS": 24.8,
+        "durS": 2.213
+      },
+      {
+        "scene": 7,
+        "text": "Four master bedrooms.",
+        "file": "voice/sursock-580sqm-v3/vo-7.wav",
+        "startS": 28.8,
+        "durS": 1.75
+      },
+      {
+        "scene": 8,
+        "text": "And three parking spaces.",
+        "file": "voice/sursock-580sqm-v3/vo-8.wav",
+        "startS": 32.8,
+        "durS": 2.012
+      },
+      {
+        "scene": 9,
+        "text": "Exclusively with Roomy Properties.",
+        "file": "voice/sursock-580sqm-v3/vo-9.wav",
+        "startS": 37,
+        "durS": 2.401
+      }
+    ]
+  }
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { OffthreadVideo, Sequence } from "remotion";
-import { alpha, FRAME } from "../../../core/frame";
-import { clampRange } from "../../../core/anim";
+import { alpha, FRAME } from "../../../engine/src/frame";
+import { clampRange } from "../../../engine/src/anim";
 import { FPS } from "../storyboard";
 import type { MediaAsset } from "../assets";
 import { roomyTokens as T } from "../tokens";

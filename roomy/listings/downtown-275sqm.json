@@ -19,32 +19,32 @@
   "media": [
     {
       "type": "photo",
-      "src": "terrace-ruins.jpeg",
+      "src": "downtown/terrace-ruins.jpeg",
       "headline": "WAKE UP OVER HISTORY",
       "subline": "Front-row views of the ancient ruins"
     },
     {
       "type": "video",
-      "src": "apartment-walkthrough.mp4",
+      "src": "downtown/apartment-walkthrough.mp4",
       "startAtSecond": 1,
       "headline": "275 SQM GRAND SALON",
       "subline": "BESPOKE LIBRARY"
     },
     {
       "type": "photo",
-      "src": "living-room-library.jpeg",
+      "src": "downtown/living-room-library.jpeg",
       "headline": "FLOOR-TO-CEILING LIBRARY"
     },
     {
       "type": "video",
-      "src": "apartment-walkthrough.mp4",
+      "src": "downtown/apartment-walkthrough.mp4",
       "startAtSecond": 19,
       "headline": "EXPANSIVE TEAK TERRACE",
       "subline": "PRIVATE RUINS VIEW"
     },
     {
       "type": "photo",
-      "src": "master-bedroom.jpeg"
+      "src": "downtown/master-bedroom.jpeg"
     }
   ],
   "whatsappContact": "+961 71 203 398"

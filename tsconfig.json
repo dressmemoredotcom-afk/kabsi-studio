@@ -9,7 +9,14 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "lib": ["DOM", "ES2022"]
+    "lib": [
+      "DOM",
+      "ES2022"
+    ]
   },
-  "include": ["src"]
+  "include": [
+    "engine/src",
+    "kabsi/src",
+    "roomy/src"
+  ]
 }

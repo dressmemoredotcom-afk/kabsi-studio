@@ -1,4 +1,5 @@
-// Kokoro text-to-speech helpers shared by the voice scripts.
+// Kokoro text-to-speech helpers for the brands' voice scripts. The model is fixed here; each brand's config.json
+// picks only the voice and the speed.
 import { spawnSync } from "node:child_process";
 
 /** Mono 16-bit WAV bytes from float samples. */
@@ -41,37 +42,32 @@ export function trim(samples, rate) {
   return out;
 }
 
+/** Kokoro-82M (Apache 2.0), run on the CPU at full precision. */
+export const MODEL = "onnx-community/Kokoro-82M-v1.0-ONNX";
+export const MODEL_DTYPE = "fp32";
+
 /** A lazy loader: the model is only downloaded and started the first time a line is generated. */
-export function makeTts(config) {
+export function makeTts() {
   let promise = null;
   return () => {
-    promise ??= import("kokoro-js").then(({ KokoroTTS }) => KokoroTTS.from_pretrained(config.model, { dtype: config["model-dtype"], device: "cpu" }));
+    promise ??= import("kokoro-js").then(({ KokoroTTS }) => KokoroTTS.from_pretrained(MODEL, { dtype: MODEL_DTYPE, device: "cpu" }));
     return promise;
   };
 }
 
-/**
- * Place names the voice reads wrongly from their spelling, as the sounds to say instead (IPA, the symbols the voice
- * model takes). "Ashrafieh" is the Beirut neighborhood الأشرفية, said ash-ra-FEE-yeh; spelled out, the engine drops
- * the ending and says "ash-ruh-fi". Bump LEXICON_VERSION when an entry changes so cached lines are made again.
- */
-export const LEXICON = { ashrafieh: "ˌaʃɹafˈiːjɛ" };
-export const LEXICON_VERSION = 1;
-
 const PUNCTUATION = /(\s*[;:,.!?¡¿—…"«»“”(){}[\]]+\s*)+/g;
-const LEXICON_WORDS = new RegExp(`\\b(${Object.keys(LEXICON).join("|")})\\b`, "gi");
 
 /**
- * Speaks `text` with the voice, using LEXICON for the words in it. Text without such a word goes through the voice
- * model's own text handling untouched. Otherwise the text is turned into sounds piece by piece and the lexicon
- * words are put in as written above.
+ * Speaks `text` with the voice. `lexicon` maps words the voice reads wrongly from their spelling to the sounds to say
+ * instead (IPA, the symbols the voice model takes), e.g. { word: "wɜːd" }; each brand keeps its own. Text without such
+ * a word goes through the voice model's own text handling untouched. Otherwise the text is turned into sounds piece
+ * by piece and the lexicon words are put in as given.
  */
-export async function speak(tts, text, { voice, speed }) {
-  if (!LEXICON_WORDS.test(text)) {
-    LEXICON_WORDS.lastIndex = 0;
-    return tts.generate(text, { voice, speed });
-  }
-  LEXICON_WORDS.lastIndex = 0;
+export async function speak(tts, text, { voice, speed, lexicon = {} }) {
+  const keys = Object.keys(lexicon);
+  const words = keys.length ? new RegExp(`\\b(${keys.join("|")})\\b`, "gi") : null;
+  if (!words || !words.test(text)) return tts.generate(text, { voice, speed });
+  words.lastIndex = 0;
   const { phonemize } = await import("phonemizer");
   const language = voice.startsWith("a") ? "en-us" : "en";
   const sounds = async (chunk) => {
@@ -88,9 +84,9 @@ export async function speak(tts, text, { voice, speed }) {
   };
   let phonemes = "";
   let at = 0;
-  for (const m of text.matchAll(LEXICON_WORDS)) {
+  for (const m of text.matchAll(words)) {
     if (at < m.index) phonemes += await sounds(text.slice(at, m.index));
-    phonemes += LEXICON[m[1].toLowerCase()];
+    phonemes += lexicon[m[1].toLowerCase()];
     at = m.index + m[0].length;
   }
   if (at < text.length) phonemes += await sounds(text.slice(at));

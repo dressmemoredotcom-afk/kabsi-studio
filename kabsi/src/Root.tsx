@@ -1,11 +1,12 @@
 import React from "react";
-import { KabsiCompositions } from "./brands/kabsi";
-import { RoomyCompositions } from "./brands/roomy";
+import { Composition } from "remotion";
+import { FRAME } from "./tokens";
+import { KabsiKitTest } from "./videos/KabsiKitTest";
+import { COPY as KIT_TEST } from "./videos/kit-test.copy";
 
-/** Every composition, grouped by brand: Roomy Properties (RoomyDynamicReel) and Kabsi (KabsiPromo01, KabsiPromo02, PromoVideoV3). */
+/** Every Kabsi composition. Each video's id is its catalogue ID from docs/VIDEO-PLAN.md section 4. */
 export const Root: React.FC = () => (
   <>
-    <RoomyCompositions />
-    <KabsiCompositions />
+    <Composition id={KIT_TEST.id} component={KabsiKitTest} durationInFrames={KIT_TEST.seconds * FRAME.fps} fps={FRAME.fps} width={FRAME.width} height={FRAME.height} />
   </>
 );

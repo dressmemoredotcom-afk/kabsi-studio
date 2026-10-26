@@ -1,6 +1,6 @@
 import React from "react";
 import { Img } from "remotion";
-import { alpha } from "../../../core/frame";
+import { alpha } from "../../../engine/src/frame";
 import { roomyTokens as T } from "../tokens";
 import { assetUrl, type LogoAsset } from "../assets";
 import { glass, Reveal, TYPE } from "./primitives";
@@ -12,7 +12,7 @@ import { glass, Reveal, TYPE } from "./primitives";
 export const LOGO_HEIGHT = 330;
 
 /**
- * The logo image. When the file carries a tagline under the artwork (found by scripts/roomy-assets.mjs), the picture
+ * The logo image. When the file carries a tagline under the artwork (found by roomy/scripts/assets.mjs), the picture
  * is cropped just above it, so the outro shows the logo without the tagline and the file itself stays untouched.
  */
 const Logo: React.FC<{ frame: number; atFrame: number; logo: LogoAsset | null }> = ({ frame, atFrame, logo }) => {

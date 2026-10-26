@@ -1,58 +1,79 @@
-// Makes the voice-over for assets/roomy/listing.json with Kokoro and places each line on the storyboard.
-//   node scripts/roomy-voice.mjs
-// Lines come from "voScript" in the listing, or are written from the neighborhood, title and specs (see
-// resolveVoScript in src/brands/roomy/storyboard.ts). Each line starts after its scene cuts in, never before the line
-// before it has finished plus a pause. If the lines do not fit in the reel the voice speeds up a little, and as a
-// last resort the lines in the middle are dropped. The result goes to src/brands/roomy/generated/roomy-voice.json.
-// A ready-made assets/roomy/voiceover.mp3 skips all of this.
+// Makes the voice-over for one listing with Kokoro and places each line on the storyboard.
+//   node roomy/scripts/voice.mjs <id>
+// Lines come from "voScript" in roomy/listings/<id>.json, or are written from the neighborhood, title and specs (see
+// resolveVoScript in roomy/src/storyboard.ts). Each line starts after its scene cuts in, never before the line before
+// it has finished plus a pause. If the lines do not fit in the reel the voice speeds up a little, and as a last resort
+// the lines in the middle are dropped. The lines go to roomy/public/voice/<id>/ and their placement to the listing's
+// entry in roomy/src/generated/voice.json. A ready-made roomy/public/voice/<id>/voiceover.mp3 skips all of this.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { RoomyListingSchema } from "../src/brands/roomy/schema.ts";
-import { FPS, outroFrom, planScenes, resolveVoScript, totalFrames, voiceSignature } from "../src/brands/roomy/storyboard.ts";
-import { LEXICON_VERSION, makeTts, probeDuration, speak as say, toWav, trim } from "./lib/tts.mjs";
+import { RoomyListingSchema } from "../src/schema.ts";
+import { FPS, outroFrom, planScenes, resolveVoScript, totalFrames, voiceSignature } from "../src/storyboard.ts";
+import { makeTts, probeDuration, speak as say, toWav, trim } from "../../engine/scripts/tts.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const config = JSON.parse(readFileSync(join(root, "kabsi.config.json"), "utf8"));
-const listing = RoomyListingSchema.parse(JSON.parse(readFileSync(join(root, "assets", "roomy", "listing.json"), "utf8")));
+const config = JSON.parse(readFileSync(join(root, "config.json"), "utf8"));
+const id = process.argv[2];
+const listingFile = join(root, "listings", `${id}.json`);
+if (!id || !existsSync(listingFile)) {
+  console.error(`roomy voice: no listing "${id ?? ""}" in roomy/listings/`);
+  process.exit(1);
+}
+const listing = RoomyListingSchema.parse(JSON.parse(readFileSync(listingFile, "utf8")));
+
+/**
+ * Place names the voice reads wrongly from their spelling, as the sounds to say instead (IPA, the symbols the voice
+ * model takes). "Ashrafieh" is the Beirut neighborhood الأشرفية, said ash-ra-FEE-yeh; spelled out, the engine drops
+ * the ending and says "ash-ruh-fi". Bump LEXICON_VERSION when an entry changes so cached lines are made again.
+ */
+const LEXICON = { ashrafieh: "ˌaʃɹafˈiːjɛ" };
+const LEXICON_VERSION = 1;
 
 const LEAD = 0.8; // seconds after a scene cuts in before its line starts
 const OUTRO_LEAD = 1.0;
 const GAP = 1.0; // pause between lines
 const total = totalFrames(listing);
 const MAX_END = total / FPS - 0.5; // the last line must be done half a second before the reel ends
-const voice = config["roomy-voice"];
-const baseSpeed = config["roomy-voice-speed"];
-const outFile = join(root, "src", "brands", "roomy", "generated", "roomy-voice.json");
-mkdirSync(dirname(outFile), { recursive: true });
+const voice = config.voice;
+const baseSpeed = config["voice-speed"];
+const outFile = join(root, "src", "generated", "voice.json");
+const stored = existsSync(outFile) ? JSON.parse(readFileSync(outFile, "utf8")) : {};
+/** Writes this listing's entry; the other listings keep theirs. */
+const save = (entry) => {
+  mkdirSync(dirname(outFile), { recursive: true });
+  const all = { ...stored, [listing.id]: entry };
+  const sorted = Object.fromEntries(Object.keys(all).sort().map((k) => [k, all[k]]));
+  writeFileSync(outFile, JSON.stringify(sorted, null, 2) + "\n");
+};
 
 const script = resolveVoScript(listing);
 const signature = voiceSignature(script, listing.durationSeconds);
 
-if (["mp3", "wav", "m4a"].some((e) => existsSync(join(root, "assets", "roomy", `voiceover.${e}`)))) {
-  writeFileSync(outFile, JSON.stringify({ voice: "your voiceover file", speed: 1, signature, lines: [] }, null, 2) + "\n");
-  console.log("roomy voice: assets/roomy/voiceover is present, it is used instead of Kokoro");
+const outDir = join(root, "public", "voice", listing.id);
+if (["mp3", "wav", "m4a"].some((e) => existsSync(join(outDir, `voiceover.${e}`)))) {
+  save({ voice: "your voiceover file", speed: 1, signature, lines: [] });
+  console.log(`roomy voice: roomy/public/voice/${listing.id}/voiceover is present, it is used instead of Kokoro`);
   process.exit(0);
 }
 
 const plan = planScenes(listing.media.length, total);
 const sceneStart = (scene) => (scene === listing.media.length ? outroFrom(total) : plan[scene].from) / FPS;
-const outDir = join(root, "assets", "roomy", "voice");
 mkdirSync(outDir, { recursive: true });
-const getTts = makeTts(config);
+const getTts = makeTts();
 
 /** One line spoken at one speed. A line made from the same text, voice and speed is reused. */
 const speak = async (scene, text, speed) => {
   const wav = join(outDir, `vo-${scene}.wav`);
   const stamp = join(outDir, `vo-${scene}.txt`);
   const signatureText = `${voice}|${speed}|${text}|lexicon${LEXICON_VERSION}`;
-  if (existsSync(wav) && existsSync(stamp) && readFileSync(stamp, "utf8") === signatureText) return { file: `roomy/voice/vo-${scene}.wav`, durS: probeDuration(wav) };
+  if (existsSync(wav) && existsSync(stamp) && readFileSync(stamp, "utf8") === signatureText) return { file: `voice/${listing.id}/vo-${scene}.wav`, durS: probeDuration(wav) };
   const tts = await getTts();
-  const audio = await say(tts, text, { voice, speed });
+  const audio = await say(tts, text, { voice, speed, lexicon: LEXICON });
   const samples = trim(audio.audio, audio.sampling_rate);
   writeFileSync(wav, toWav(samples, audio.sampling_rate));
   writeFileSync(stamp, signatureText);
-  return { file: `roomy/voice/vo-${scene}.wav`, durS: Number((samples.length / audio.sampling_rate).toFixed(3)) };
+  return { file: `voice/${listing.id}/vo-${scene}.wav`, durS: Number((samples.length / audio.sampling_rate).toFixed(3)) };
 };
 
 /** Places the lines in order: at the scene start plus a lead, or after the line before and a pause. */
@@ -91,8 +112,8 @@ for (;;) {
   lines = lines.filter((l) => l !== drop);
 }
 
-writeFileSync(outFile, JSON.stringify({ voice, speed, signature, ...(dropped.length ? { dropped } : {}), lines: placed.map(({ scene, text, file, startS, durS }) => ({ scene, text, file, startS, durS })) }, null, 2) + "\n");
+save({ voice, speed, signature, ...(dropped.length ? { dropped } : {}), lines: placed.map(({ scene, text, file, startS, durS }) => ({ scene, text, file, startS, durS })) });
 const first = placed[0];
 const last = placed[placed.length - 1];
-console.log(`roomy voice: ${voice} at ${speed}x, ${placed.length} line${placed.length === 1 ? "" : "s"}, from ${first.startS.toFixed(2)} s to ${(last.startS + last.durS).toFixed(2)} s`);
+console.log(`roomy voice: "${listing.id}", ${voice} at ${speed}x, ${placed.length} line${placed.length === 1 ? "" : "s"}, from ${first.startS.toFixed(2)} s to ${(last.startS + last.durS).toFixed(2)} s`);
 for (const l of placed) console.log(`  scene ${l.scene} at ${l.startS.toFixed(2)} s (${l.durS.toFixed(2)} s): ${l.text}`);

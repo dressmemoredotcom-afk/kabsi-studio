@@ -1,56 +1,45 @@
-// One entry per Kabsi video. Scripts take the id as their first argument (default "01").
-// (The Roomy reel is driven by assets/roomy/listing.json instead: see scripts/roomy-assets.mjs and roomy-voice.mjs.)
-//   audioMode "ffmpeg":   the voice is mixed and encoded by scripts/render.mjs (promos 01 and 02).
-//   audioMode "remotion": the composition carries voice, music and SFX tracks; ffmpeg only normalises and encodes.
-//   realVoice: true: files in assets/<voiceDir> (mp3, wav or m4a, named after the line id) beat Kokoro placeholders.
-export const VIDEOS = {
-  "01": {
-    scriptFile: "../src/brands/kabsi/script.ts",
-    composition: "KabsiPromo01",
-    voiceKey: "kabsi-voice",
-    speedKey: "voice-speed",
-    voiceDir: "voice01",
-    voiceJson: "voice.json",
-    out: "kabsi-promo-01-9x16-v1.mp4",
-    poster: "kabsi-promo-01-poster.png",
-    posterAtS: 28.4,
-    audioMode: "ffmpeg",
-    minS: 28,
-    maxS: 30,
-  },
-  "02": {
-    scriptFile: "../src/brands/kabsi/script02.ts",
-    composition: "KabsiPromo02",
-    voiceKey: "kabsi-voice-upbeat",
-    speedKey: "voice-speed-upbeat",
-    voiceDir: "voice02",
-    voiceJson: "voice02.json",
-    out: "kabsi-promo-02-9x16-v2.mp4",
-    poster: "kabsi-promo-02-poster.png",
-    posterAtS: 28,
-    audioMode: "ffmpeg",
-    minS: 28,
-    maxS: 30,
-  },
-  "03": {
-    scriptFile: "../src/brands/kabsi/script03.ts",
-    composition: "PromoVideoV3",
-    voiceKey: "kabsi-voice-upbeat",
-    speedKey: "voice-speed-v3",
-    voiceDir: "voice/v3",
-    voiceJson: "voice03.json",
-    out: "kabsi-promo-03-9x16-v3.mp4",
-    poster: "kabsi-promo-03-poster.png",
-    posterAtS: 18.5,
-    audioMode: "remotion",
-    realVoice: true,
-    minS: 18,
-    maxS: 22,
-  },
-};
+// One Kabsi video from start to finish.
+//   node kabsi/scripts/render.mjs <ID>      e.g. KabsiKitTest
+// Checks the rules, makes the voice, renders with Remotion, masters the audio to -14 LUFS, and writes kabsi/out/<ID>/:
+// kabsi-<id>-<name>-1080x1920.mp4, the poster PNG, the contact sheets (2 frames a second) and, when the video has a
+// voice-over, script.txt with its lines.
+import { spawnSync } from "node:child_process";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { renderReel } from "../../engine/scripts/render-core.mjs";
+import { contactSheet } from "../../engine/scripts/contact-sheet.mjs";
+import { loadCopies } from "./check.mjs";
 
-export const pickVideo = (argv) => {
-  const id = argv.find((a) => /^\d\d$/.test(a)) ?? "01";
-  if (!VIDEOS[id]) throw new Error(`Unknown video ${id}`);
-  return { id, ...VIDEOS[id] };
+const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const id = process.argv[2];
+const copies = await loadCopies();
+const copy = copies.find((c) => c.id === id);
+if (!copy) {
+  console.error(`kabsi render: name a video. Known: ${copies.map((c) => c.id).join(", ")}`);
+  process.exit(1);
+}
+
+const run = (script) => {
+  const r = spawnSync("node", [join(root, "scripts", script), copy.id], { stdio: "inherit" });
+  if (r.status !== 0) process.exit(r.status ?? 1);
 };
+run("check.mjs");
+if (copy.voiceLines.length) {
+  run("voice.mjs");
+  run("check.mjs");
+}
+
+const outDir = join(root, "out", copy.id);
+mkdirSync(outDir, { recursive: true });
+const base = `kabsi-${copy.id.toLowerCase()}-${copy.name}-1080x1920`;
+const result = await renderReel({
+  entry: join(root, "src", "index.ts"),
+  publicDir: join(root, "public"),
+  composition: copy.id,
+  outFile: join(outDir, `${base}.mp4`),
+  posterFile: join(outDir, `${base}-poster.png`),
+});
+contactSheet(join(outDir, `${base}.mp4`), outDir);
+if (copy.voiceLines.length) writeFileSync(join(outDir, "script.txt"), copy.voiceLines.map((l) => l.vo).join("\n") + "\n");
+console.log(`kabsi: ${copy.id} done in kabsi/out/${copy.id}/ (${result.frames} frames, ${result.durationS} s)`);

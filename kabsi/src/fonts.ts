@@ -1,13 +1,13 @@
 import { cancelRender, continueRender, delayRender, staticFile } from "remotion";
 
-// Fonts live in assets/fonts, which is Remotion's public dir.
+// Fonts live in kabsi/public/brand/fonts; kabsi/public is Remotion's public dir for Kabsi.
 const handle = delayRender("Loading Lalezar and Readex Pro");
 
 Promise.all([
-  new FontFace("Lalezar", `url(${staticFile("fonts/Lalezar-Regular.ttf")})`, {
+  new FontFace("Lalezar", `url(${staticFile("brand/fonts/Lalezar-Regular.ttf")})`, {
     weight: "400",
   }).load(),
-  new FontFace("Readex Pro", `url(${staticFile("fonts/ReadexPro-Variable.ttf")})`, {
+  new FontFace("Readex Pro", `url(${staticFile("brand/fonts/ReadexPro-Variable.ttf")})`, {
     weight: "160 700",
   }).load(),
 ])

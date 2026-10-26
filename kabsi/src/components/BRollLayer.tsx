@@ -1,10 +1,10 @@
 import React from "react";
 import { OffthreadVideo, Sequence, staticFile } from "remotion";
-import { FPS, sec } from "../../../core/timeline";
+import { FPS, sec } from "../../../engine/src/timeline";
 
-/** An external clip from assets/video: AI b-roll, a talking head, a screen capture. */
+/** An external clip from kabsi/public/: footage in inputs/<ID>/, b-roll, a talking head, a screen capture. */
 export type BRollClip = {
-  /** File name inside assets/video, e.g. "cafe-counter.mp4". */
+  /** File under kabsi/public/, e.g. "inputs/W1/demo-chat.mp4". */
   file: string;
   fromS: number;
   toS: number;
@@ -22,7 +22,7 @@ export const BRollLayer: React.FC<{ clips: readonly BRollClip[] }> = ({ clips })
     {clips.map((c) => (
       <Sequence key={`${c.file}-${c.fromS}`} from={sec(c.fromS)} durationInFrames={Math.max(1, sec(c.toS - c.fromS))}>
         <OffthreadVideo
-          src={staticFile(`video/${c.file}`)}
+          src={staticFile(c.file)}
           startFrom={Math.round((c.startFromS ?? 0) * FPS)}
           volume={c.volume ?? 0}
           style={{ width: "100%", height: "100%", objectFit: c.fit ?? "cover" }}

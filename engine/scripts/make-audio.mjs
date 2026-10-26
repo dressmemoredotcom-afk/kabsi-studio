@@ -1,15 +1,21 @@
-// Synthesises the stock sound design: one background-music loop and the UI sound effects.
+// Synthesises stock sound design into a folder: UI sound effects and two music loops.
 // Everything is generated from scratch (sine, saw and filtered noise), so there is nothing to license.
-// To use licensed or hand-made audio instead, overwrite the files in assets/audio/ with the same names.
-//   npm run audio          everything
-//   node scripts/make-audio.mjs roomy    only the ambient stand-in for the Roomy reel
-import { mkdirSync, rmSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+// To use licensed or hand-made audio instead, overwrite the files with the same names.
+//   node engine/scripts/make-audio.mjs <out-dir>                       everything
+//   node engine/scripts/make-audio.mjs <out-dir> sfx upbeat ambient    only the parts named
+// Writes <out-dir>/sfx/sfx-*.mp3, <out-dir>/upbeat-loop.mp3 (124 BPM) and <out-dir>/ambient-loop.mp3 (100 BPM).
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
-import { fileURLToPath } from "node:url";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const ONLY_ROOMY = process.argv[2] === "roomy";
+const [outArg, ...parts] = process.argv.slice(2);
+if (!outArg) {
+  console.error("usage: node engine/scripts/make-audio.mjs <out-dir> [sfx] [upbeat] [ambient]");
+  process.exit(1);
+}
+const PARTS = parts.length ? new Set(parts) : new Set(["sfx", "upbeat", "ambient"]);
+const outDir = resolve(outArg);
 const SR = 44100;
 const TAU = Math.PI * 2;
 
@@ -92,13 +98,11 @@ const wav = (buf) => {
   return data;
 };
 
-const tmp = join(root, "out", ".tmp-audio");
-rmSync(tmp, { recursive: true, force: true });
-mkdirSync(tmp, { recursive: true });
-const sfxDir = join(root, "assets", "audio", "sfx");
-const bgmDir = join(root, "assets", "audio", "bgm");
-mkdirSync(sfxDir, { recursive: true });
+const tmp = mkdtempSync(join(tmpdir(), "make-audio-"));
+const sfxDir = join(outDir, "sfx");
+const bgmDir = outDir;
 mkdirSync(bgmDir, { recursive: true });
+if (PARTS.has("sfx")) mkdirSync(sfxDir, { recursive: true });
 
 const encode = (buf, dir, name, quality = 2) => {
   const w = join(tmp, `${name}.wav`);
@@ -193,13 +197,16 @@ const star = () => {
   return b;
 };
 
-if (!ONLY_ROOMY) {
+if (PARTS.has("sfx")) {
 encode(pop(), sfxDir, "sfx-pop");
 encode(whoosh(), sfxDir, "sfx-whoosh");
-encode(ping(), sfxDir, "sfx-whatsapp-ping");
+encode(ping(), sfxDir, "sfx-ping");
 encode(click(), sfxDir, "sfx-click");
 encode(success(), sfxDir, "sfx-success");
 encode(star(), sfxDir, "sfx-star");
+}
+
+if (PARTS.has("upbeat")) {
 
 // ---------- Background music: 16 bars at 124 BPM (two passes of Am F C G), built to loop ----------
 
@@ -293,13 +300,12 @@ for (let b = 0; b < BARS; b++) {
   }
 }
 bgm.normalize(0.89);
-encode(bgm, bgmDir, "kabsi-upbeat-loop", 3);
+encode(bgm, bgmDir, "upbeat-loop", 3);
 }
 
-// ---------- Roomy reel: chilled house stand-in, 16 bars at 100 BPM (Fmaj7 Em7 Dm9 Cmaj7, twice) ----------
-// A placeholder for assets/audio/bgm/luxury-house.mp3. Soft pads that pump gently with a quiet kick,
-// a warm sub bass, brushed hats and a bell-like arpeggio in the second half.
-{
+// ---------- Ambient loop: chilled house, 16 bars at 100 BPM (Fmaj7 Em7 Dm9 Cmaj7, twice) ----------
+// Soft pads that pump gently with a quiet kick, a warm sub bass, brushed hats and a bell-like arpeggio in the second half.
+if (PARTS.has("ambient")) {
   const RB = 100;
   const rbeat = 60 / RB;
   const rbar = rbeat * 4;
@@ -395,7 +401,7 @@ encode(bgm, bgmDir, "kabsi-upbeat-loop", 3);
     rest.r[i] += pads.r[i] * g;
   }
   rest.normalize(0.89);
-  encode(rest, bgmDir, "roomy-ambient-standin", 3);
+  encode(rest, bgmDir, "ambient-loop", 3);
 }
 
 rmSync(tmp, { recursive: true, force: true });

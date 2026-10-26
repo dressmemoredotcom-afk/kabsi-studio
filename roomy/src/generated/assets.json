@@ -1,25 +1,128 @@
 {
   "logo": {
-    "file": "roomy/roomy-logo.png",
+    "file": "brand/roomy-logo.png",
     "width": 1663,
     "height": 2026,
     "taglineCropY": 1942
   },
   "bgm": null,
-  "bgmStandin": "audio/bgm/roomy-ambient-standin.mp3",
-  "voiceover": null,
-  "media": {
-    "ashrafieh/walkthrough.mp4": {
-      "file": "roomy/ashrafieh/walkthrough.mp4",
-      "kind": "video",
-      "width": 848,
-      "height": 480,
-      "durationS": 62.554558,
-      "content": {
-        "x": 0,
-        "y": 26,
-        "width": 848,
-        "height": 428
+  "bgmStandin": "audio/ambient-loop.mp3",
+  "listings": {
+    "ashrafieh-traditional-house": {
+      "voiceover": null,
+      "media": {
+        "ashrafieh/walkthrough.mp4": {
+          "file": "media/ashrafieh/walkthrough.mp4",
+          "kind": "video",
+          "width": 848,
+          "height": 480,
+          "durationS": 62.554558,
+          "content": {
+            "x": 0,
+            "y": 26,
+            "width": 848,
+            "height": 428
+          }
+        }
+      }
+    },
+    "downtown-275sqm": {
+      "voiceover": null,
+      "media": {
+        "downtown/terrace-ruins.jpeg": {
+          "file": "media/downtown/terrace-ruins.jpeg",
+          "kind": "photo",
+          "width": 1280,
+          "height": 960,
+          "durationS": 0.04
+        },
+        "downtown/apartment-walkthrough.mp4": {
+          "file": "media/downtown/apartment-walkthrough.mp4",
+          "kind": "video",
+          "width": 464,
+          "height": 832,
+          "durationS": 45.021678
+        },
+        "downtown/living-room-library.jpeg": {
+          "file": "media/downtown/living-room-library.jpeg",
+          "kind": "photo",
+          "width": 1280,
+          "height": 960,
+          "durationS": 0.04
+        },
+        "downtown/master-bedroom.jpeg": {
+          "file": "media/downtown/master-bedroom.jpeg",
+          "kind": "photo",
+          "width": 1280,
+          "height": 960,
+          "durationS": 0.04
+        }
+      }
+    },
+    "sursock-580sqm": {
+      "voiceover": null,
+      "media": {
+        "sursock/walkthrough-1.mp4": {
+          "file": "media/sursock/walkthrough-1.mp4",
+          "kind": "video",
+          "width": 480,
+          "height": 848,
+          "durationS": 97.02
+        },
+        "sursock/walkthrough-2.mp4": {
+          "file": "media/sursock/walkthrough-2.mp4",
+          "kind": "video",
+          "width": 480,
+          "height": 848,
+          "durationS": 44.580862
+        }
+      }
+    },
+    "sursock-580sqm-v3": {
+      "voiceover": null,
+      "media": {
+        "sursock/photo-01.jpeg": {
+          "file": "media/sursock/photo-01.jpeg",
+          "kind": "photo",
+          "width": 960,
+          "height": 1280,
+          "durationS": 0.04
+        },
+        "sursock/walkthrough-1.mp4": {
+          "file": "media/sursock/walkthrough-1.mp4",
+          "kind": "video",
+          "width": 480,
+          "height": 848,
+          "durationS": 97.02
+        },
+        "sursock/photo-03.jpeg": {
+          "file": "media/sursock/photo-03.jpeg",
+          "kind": "photo",
+          "width": 960,
+          "height": 1280,
+          "durationS": 0.04
+        },
+        "sursock/walkthrough-2.mp4": {
+          "file": "media/sursock/walkthrough-2.mp4",
+          "kind": "video",
+          "width": 480,
+          "height": 848,
+          "durationS": 44.580862
+        },
+        "sursock/photo-05.jpeg": {
+          "file": "media/sursock/photo-05.jpeg",
+          "kind": "photo",
+          "width": 960,
+          "height": 1280,
+          "durationS": 0.04
+        },
+        "sursock/photo-10.jpeg": {
+          "file": "media/sursock/photo-10.jpeg",
+          "kind": "photo",
+          "width": 960,
+          "height": 1280,
+          "durationS": 0.04
+        }
       }
     }
   }

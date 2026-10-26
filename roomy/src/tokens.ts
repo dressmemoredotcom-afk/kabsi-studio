@@ -1,5 +1,5 @@
 // Roomy Properties (@roomyproperties) design tokens. Import colours, type and shadows from here only.
-import { alpha } from "../../core/frame";
+import { alpha } from "../../engine/src/frame";
 
 const palette = {
   deepTeal: "#245766",

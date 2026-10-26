@@ -1,19 +1,28 @@
-// Records what exists for the Roomy reel, in src/brands/roomy/generated/roomy-assets.json: every media file in
-// assets/roomy/listing.json (with its size and, for clips, its length), the logo, the music and an optional ready-made
-// voice-over. The composition reads that file, so a missing photo, clip, logo or track falls back to a designed
-// placeholder instead of failing the render. Files are found by name with or without a different image extension
-// (.jpg, .jpeg, .png, .webp). Runs before `npm run render:roomy` and `npm run studio`.
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+// Records what exists for the Roomy reels, in roomy/src/generated/assets.json: the logo and the music, and for each
+// listing every media file it lists (with its size and, for clips, its length) and an optional ready-made voice-over.
+// The composition reads that file, so a missing photo, clip, logo or track falls back to a designed placeholder
+// instead of failing the render. Files are found by name with or without a different image extension
+// (.jpg, .jpeg, .png, .webp). Runs before every Roomy render and before Studio.
+//   node roomy/scripts/assets.mjs            every listing in roomy/listings/
+//   node roomy/scripts/assets.mjs <id>       one listing (the others keep what was recorded)
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { RoomyListingSchema } from "../src/brands/roomy/schema.ts";
-import { mediaAssetPath } from "../src/brands/roomy/storyboard.ts";
+import { RoomyListingSchema } from "../src/schema.ts";
+import { mediaAssetPath } from "../src/storyboard.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const has = (rel) => existsSync(join(root, "assets", rel));
+const pub = join(root, "public");
+const has = (rel) => existsSync(join(pub, rel));
 
-const listing = RoomyListingSchema.parse(JSON.parse(readFileSync(join(root, "assets", "roomy", "listing.json"), "utf8")));
+const listingsDir = join(root, "listings");
+const known = readdirSync(listingsDir).filter((f) => f.endsWith(".json")).map((f) => f.slice(0, -5)).sort();
+const only = process.argv[2];
+if (only && !known.includes(only)) {
+  console.error(`roomy assets: no listing "${only}". Available: ${known.join(", ")}`);
+  process.exit(1);
+}
 
 const IMG = [".jpg", ".jpeg", ".png", ".webp"];
 const VID = [".mp4", ".mov", ".webm"];
@@ -25,7 +34,7 @@ const resolve = (rel, alternates) => {
 };
 
 const probe = (rel) => {
-  const r = spawnSync("ffprobe", ["-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height:format=duration", "-of", "json", join(root, "assets", rel)], { encoding: "utf8" });
+  const r = spawnSync("ffprobe", ["-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height:format=duration", "-of", "json", join(pub, rel)], { encoding: "utf8" });
   try {
     const j = JSON.parse(r.stdout);
     return { width: j.streams?.[0]?.width ?? 0, height: j.streams?.[0]?.height ?? 0, durationS: Number(j.format?.duration) || 0 };
@@ -39,7 +48,7 @@ const probe = (rel) => {
  * Returns the row to crop at, or null when the logo has no such band.
  */
 const taglineCropY = (rel, height) => {
-  const r = spawnSync("ffmpeg", ["-v", "error", "-i", join(root, "assets", rel), "-vf", `alphaextract,scale=1:${height}:flags=area,format=gray`, "-f", "rawvideo", "-"], { maxBuffer: 1 << 24 });
+  const r = spawnSync("ffmpeg", ["-v", "error", "-i", join(pub, rel), "-vf", `alphaextract,scale=1:${height}:flags=area,format=gray`, "-f", "rawvideo", "-"], { maxBuffer: 1 << 24 });
   if (r.status !== 0 || r.stdout.length < height) return null;
   const bands = [];
   let start = -1;
@@ -67,7 +76,7 @@ const taglineCropY = (rel, height) => {
  * fills the frame. ffmpeg's cropdetect finds the real picture; null when there are no bars worth removing.
  */
 const detectContent = (rel, width, height) => {
-  const r = spawnSync("ffmpeg", ["-hide_banner", "-nostats", "-t", "30", "-i", join(root, "assets", rel), "-vf", "cropdetect=limit=24:round=2:reset=0", "-an", "-f", "null", "-"], { encoding: "utf8", maxBuffer: 1 << 26 });
+  const r = spawnSync("ffmpeg", ["-hide_banner", "-nostats", "-t", "30", "-i", join(pub, rel), "-vf", "cropdetect=limit=24:round=2:reset=0", "-an", "-f", "null", "-"], { encoding: "utf8", maxBuffer: 1 << 26 });
   const counts = {};
   for (const m of (r.stderr ?? "").matchAll(/crop=(\d+):(\d+):(\d+):(\d+)/g)) counts[m[0]] = (counts[m[0]] ?? 0) + 1;
   const best = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
@@ -78,40 +87,55 @@ const detectContent = (rel, width, height) => {
   return { x, y, width: w, height: h };
 };
 
-const media = {};
-for (const item of listing.media) {
-  if (media[item.src]) continue;
-  const file = resolve(mediaAssetPath(item.src), item.type === "photo" ? IMG : VID);
-  const info = file ? probe(file) : { width: 0, height: 0, durationS: 0 };
-  const content = file && item.type === "video" ? detectContent(file, info.width, info.height) : null;
-  media[item.src] = { file, kind: item.type, ...info, ...(content ? { content } : {}) };
-}
+/** One listing's media files and its optional ready-made voice-over (roomy/public/voice/<id>/voiceover.*). */
+const scanListing = (listing) => {
+  const media = {};
+  for (const item of listing.media) {
+    if (media[item.src]) continue;
+    const file = resolve(mediaAssetPath(item.src), item.type === "photo" ? IMG : VID);
+    const info = file ? probe(file) : { width: 0, height: 0, durationS: 0 };
+    const content = file && item.type === "video" ? detectContent(file, info.width, info.height) : null;
+    media[item.src] = { file, kind: item.type, ...info, ...(content ? { content } : {}) };
+  }
+  const voiceover = ["mp3", "wav", "m4a"].map((e) => `voice/${listing.id}/voiceover.${e}`).find(has) ?? null;
+  return { voiceover, media };
+};
 
 // The logo may be called roomy-logo.* or Transparent.png.
-const logoFile = ["roomy/roomy-logo.png", "roomy/roomy-logo.webp", "roomy/Transparent.png", "roomy/transparent.png"].find(has) ?? null;
+const logoFile = ["brand/roomy-logo.png", "brand/roomy-logo.webp", "brand/Transparent.png", "brand/transparent.png"].find(has) ?? null;
 let logo = null;
 if (logoFile) {
   const size = probe(logoFile);
   logo = { file: logoFile, width: size.width, height: size.height, taglineCropY: taglineCropY(logoFile, size.height) };
 }
 
+const outFile = join(root, "src", "generated", "assets.json");
+const previous = existsSync(outFile) ? JSON.parse(readFileSync(outFile, "utf8")) : {};
+const listings = {};
+for (const id of known) {
+  if (only && id !== only) {
+    if (previous.listings?.[id]) listings[id] = previous.listings[id];
+    continue;
+  }
+  const listing = RoomyListingSchema.parse(JSON.parse(readFileSync(join(listingsDir, `${id}.json`), "utf8")));
+  if (listing.id !== id) throw new Error(`roomy/listings/${id}.json has id "${listing.id}"; the id must match the file name`);
+  listings[id] = scanListing(listing);
+  const found = listings[id];
+  console.log(`roomy assets: listing "${id}", ${listing.media.length} media item${listing.media.length === 1 ? "" : "s"}`);
+  for (const [src, m] of Object.entries(found.media)) console.log(`  ${m.file ? "ok     " : "MISSING"} ${src}${m.file && m.file !== mediaAssetPath(src) ? `  (found as ${m.file})` : ""}${m.file ? `  ${m.width}x${m.height}${m.durationS ? `, ${m.durationS.toFixed(1)} s` : ""}${m.content ? `, black bars cropped to ${m.content.width}x${m.content.height}` : ""}` : "  (a placeholder is used)"}`);
+  if (found.voiceover) console.log(`  voice-over: your file ${found.voiceover}`);
+}
+
 const manifest = {
   logo,
   // Your track, if you have added one.
-  bgm: ["audio/bgm/luxury-house.mp3", "audio/bgm/luxury-house.wav", "audio/bgm/luxury-house.m4a"].find(has) ?? null,
-  // A generated ambient track stands in for luxury-house.mp3 until you add yours.
-  bgmStandin: has("audio/bgm/roomy-ambient-standin.mp3") ? "audio/bgm/roomy-ambient-standin.mp3" : null,
-  // Optional ready-made voice-over for the whole reel, instead of the Kokoro lines.
-  voiceover: ["roomy/voiceover.mp3", "roomy/voiceover.wav", "roomy/voiceover.m4a"].find(has) ?? null,
-  media,
+  bgm: ["audio/luxury-house.mp3", "audio/luxury-house.wav", "audio/luxury-house.m4a"].find(has) ?? null,
+  // A generated ambient loop stands in for luxury-house.mp3 until you add yours.
+  bgmStandin: has("audio/ambient-loop.mp3") ? "audio/ambient-loop.mp3" : null,
+  listings,
 };
+mkdirSync(dirname(outFile), { recursive: true });
+writeFileSync(outFile, JSON.stringify(manifest, null, 2) + "\n");
 
-const out = join(root, "src", "brands", "roomy", "generated");
-mkdirSync(out, { recursive: true });
-writeFileSync(join(out, "roomy-assets.json"), JSON.stringify(manifest, null, 2) + "\n");
-
-console.log(`roomy assets: listing "${listing.id}", ${listing.media.length} media item${listing.media.length === 1 ? "" : "s"}`);
-for (const [src, m] of Object.entries(media)) console.log(`  ${m.file ? "ok     " : "MISSING"} ${src}${m.file && m.file !== mediaAssetPath(src) ? `  (found as ${m.file})` : ""}${m.file ? `  ${m.width}x${m.height}${m.durationS ? `, ${m.durationS.toFixed(1)} s` : ""}${m.content ? `, black bars cropped to ${m.content.width}x${m.content.height}` : ""}` : "  (a placeholder is used)"}`);
 console.log(`  ${logo ? "ok     " : "MISSING"} logo${logo ? `  ${logo.file}${logo.taglineCropY ? `  (tagline found, cropped below row ${logo.taglineCropY} of ${logo.height})` : ""}` : "  (a typographic wordmark is used)"}`);
-console.log(`  music: ${manifest.bgm ?? (manifest.bgmStandin ? "generated ambient stand-in (add assets/audio/bgm/luxury-house.mp3 to replace it)" : "none")}`);
-if (manifest.voiceover) console.log(`  voice-over: your file ${manifest.voiceover}`);
+console.log(`  music: ${manifest.bgm ?? (manifest.bgmStandin ? "generated ambient stand-in (add roomy/public/audio/luxury-house.mp3 to replace it)" : "none")}`);

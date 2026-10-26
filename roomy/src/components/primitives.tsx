@@ -1,6 +1,6 @@
 import React from "react";
-import { alpha } from "../../../core/frame";
-import { clampRange, lerp, pop } from "../../../core/anim";
+import { alpha } from "../../../engine/src/frame";
+import { clampRange, lerp, pop } from "../../../engine/src/anim";
 import { roomyTokens as T } from "../tokens";
 
 /** Smooth springs, no bounce: everything arrives slowly and settles. */

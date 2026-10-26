@@ -171,5 +171,5 @@ export const voiceSignature = (lines: string[], seconds: number = DEFAULT_SECOND
 
 /* ------------------------------ asset naming ------------------------------ */
 
-/** Where a media `src` lives under assets/: absolute paths from assets/, everything else inside assets/roomy/. */
-export const mediaAssetPath = (src: string): string => (src.startsWith("/") ? src.slice(1) : `roomy/${src}`);
+/** Where a media `src` lives under roomy/public/: absolute paths from there, everything else inside media/. */
+export const mediaAssetPath = (src: string): string => (src.startsWith("/") ? src.slice(1) : `media/${src}`);

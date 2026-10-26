@@ -1,13 +1,13 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import "./fonts";
-import { clampRange } from "../../core/anim";
+import { clampRange } from "../../engine/src/anim";
 import { roomyTokens as T } from "./tokens";
 import { RoomyListing } from "./schema";
-import { ASSETS, assetUrl, type MediaAsset } from "./assets";
+import { ASSETS, assetUrl, listingAssets, type MediaAsset } from "./assets";
 import { OVERLAP, outroFrom, planScenes, resolveVoScript, sceneCopy, totalFrames, voiceSignature } from "./storyboard";
 import { RoomyAudio, type VoiceClip } from "./RoomyAudio";
-import voice from "./generated/roomy-voice.json";
+import voice from "./generated/voice.json";
 import { EditorialBadge } from "./components/EditorialBadge";
 import { EditorialHeadline } from "./components/EditorialHeadline";
 import { GlassBar } from "./components/GlassBar";
@@ -19,10 +19,14 @@ import { mediaAssetPath } from "./storyboard";
 
 const MISSING: MediaAsset = { file: null, kind: "photo", width: 0, height: 0, durationS: 0 };
 
-/** The stored voice track is used only while it still matches this listing's script. */
+type StoredVoice = { voice: string; speed: number; signature: string; lines: VoiceClip[] };
+const VOICES = voice as unknown as Record<string, StoredVoice>;
+
+/** The listing's stored voice track, used only while it still matches the listing's script. */
 const voiceClips = (listing: RoomyListing): VoiceClip[] => {
+  const stored = VOICES[listing.id];
   const script = resolveVoScript(listing);
-  return voice.signature === voiceSignature(script, listing.durationSeconds) ? (voice.lines as VoiceClip[]) : [];
+  return stored && stored.signature === voiceSignature(script, listing.durationSeconds) ? stored.lines : [];
 };
 
 /**
@@ -30,8 +34,9 @@ const voiceClips = (listing: RoomyListing): VoiceClip[] => {
  * for any listing with one to twelve photos and clips. The last 4 seconds are the outro; the time before it is shared
  * evenly between the media items. Scenes dissolve into each other. Missing files fall back to a designed placeholder.
  */
-export const DynamicReel: React.FC<RoomyListing> = (listing) => {
+export const DynamicReel: React.FC<{ listing: RoomyListing }> = ({ listing }) => {
   const frame = useCurrentFrame();
+  const files = listingAssets(listing.id);
   const total = totalFrames(listing);
   const OUTRO_FROM = outroFrom(total);
   const plan = planScenes(listing.media.length, total);
@@ -45,7 +50,7 @@ export const DynamicReel: React.FC<RoomyListing> = (listing) => {
         // The last scene stays under the outro's dissolve; every scene stays under the next one's.
         if (frame < from || frame >= from + length) return null;
         const fade = i === 0 ? clampRange(frame, 0, 10) : clampRange(frame, from, from + OVERLAP);
-        const asset = ASSETS.media[item.src] ?? MISSING;
+        const asset = files.media[item.src] ?? MISSING;
         const url = assetUrl(asset.file);
         const text = copy[i];
         // Horizontal footage plays in a window on its own background: no scrim, and the badge sits above the window.
@@ -92,7 +97,7 @@ export const DynamicReel: React.FC<RoomyListing> = (listing) => {
         </AbsoluteFill>
       )}
 
-      <RoomyAudio clips={voiceClips(listing)} total={total} />
+      <RoomyAudio clips={voiceClips(listing)} voiceover={files.voiceover} total={total} />
     </AbsoluteFill>
   );
 };
