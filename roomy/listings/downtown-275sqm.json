@@ -1,0 +1,51 @@
+{
+  "id": "downtown-275sqm",
+  "neighborhood": "DOWNTOWN BEIRUT",
+  "propertyTitle": "ARCHITECTURAL RESIDENCE",
+  "specs": [
+    "275 SQM",
+    "2 MASTER SUITES",
+    "TEAK TERRACE",
+    "2 PARKING"
+  ],
+  "voScript": [
+    "Downtown Beirut. Overlooking history.",
+    "Two hundred and seventy-five square meters of refined living.",
+    "",
+    "A teak terrace, directly above the Roman ruins.",
+    "Two master suites, and private parking.",
+    "Exclusively with Roomy Properties."
+  ],
+  "media": [
+    {
+      "type": "photo",
+      "src": "downtown/terrace-ruins.jpeg",
+      "headline": "WAKE UP OVER HISTORY",
+      "subline": "Front-row views of the ancient ruins"
+    },
+    {
+      "type": "video",
+      "src": "downtown/apartment-walkthrough.mp4",
+      "startAtSecond": 1,
+      "headline": "275 SQM GRAND SALON",
+      "subline": "BESPOKE LIBRARY"
+    },
+    {
+      "type": "photo",
+      "src": "downtown/living-room-library.jpeg",
+      "headline": "FLOOR-TO-CEILING LIBRARY"
+    },
+    {
+      "type": "video",
+      "src": "downtown/apartment-walkthrough.mp4",
+      "startAtSecond": 19,
+      "headline": "EXPANSIVE TEAK TERRACE",
+      "subline": "PRIVATE RUINS VIEW"
+    },
+    {
+      "type": "photo",
+      "src": "downtown/master-bedroom.jpeg"
+    }
+  ],
+  "whatsappContact": "+961 71 203 398"
+}

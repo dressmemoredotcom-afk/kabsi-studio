@@ -1,0 +1,40 @@
+name: render-roomy
+
+# On demand (Actions tab, Run workflow): render one Roomy listing reel and upload roomy/out/<id>/ as an artifact.
+on:
+  workflow_dispatch:
+    inputs:
+      listing:
+        description: Listing id (roomy/listings/<id>.json)
+        type: string
+        required: true
+        default: "sursock-580sqm-v3"
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: System packages (FFmpeg and Chromium libraries)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg libnss3 libdbus-1-3 libatk1.0-0 libgbm-dev libasound2t64 \
+            libxrandr2 libxkbcommon-dev libxfixes3 libxcomposite1 libxdamage1 libatk-bridge2.0-0 \
+            libpango-1.0-0 libcairo2 libcups2
+      - run: npm ci
+      - uses: actions/cache@v4
+        with:
+          path: node_modules/@huggingface/transformers/.cache
+          key: kokoro-82m-fp32
+      - run: npm run roomy:render -- "$ID"
+        env:
+          ID: ${{ inputs.listing }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: roomy-${{ inputs.listing }}
+          path: roomy/out/${{ inputs.listing }}/
+          if-no-files-found: error
