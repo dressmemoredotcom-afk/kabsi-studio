@@ -1,0 +1,19 @@
+{
+  "voice": "bm_george",
+  "speed": 1,
+  "durations": {
+    "M1": 1.721,
+    "M2": 2.427,
+    "M3": 1.573
+  },
+  "files": {
+    "M1": "voice/kit-test/M1.placeholder.wav",
+    "M2": "voice/kit-test/M2.placeholder.wav",
+    "M3": "voice/kit-test/M3.placeholder.wav"
+  },
+  "starts": {
+    "M1": 0.2,
+    "M2": 2.221,
+    "M3": 5.2
+  }
+}

@@ -1,6 +1,8 @@
 // Makes the voice for one Kabsi video and records each line's measured duration and start.
+// One AI voice for every product video, chosen once in kabsi/config.json from bf_alice, bf_isabella, bf_lily, bm_george
+// and bm_lewis (calm, adult, British English). Never clone anyone else's voice.
 //   node kabsi/scripts/voice.mjs <ID>                  kabsi/config.json picks the Kokoro voice and speed
-//   node kabsi/scripts/voice.mjs <ID> --use bf_emma    one-off voice override
+//   node kabsi/scripts/voice.mjs <ID> --use bf_lily      one-off voice override (one of the five Kabsi voices)
 //   node kabsi/scripts/voice.mjs <ID> --speed 1.1      one-off speed override
 // Lines come from the video's kabsi/src/videos/*.copy.ts. For each line, a file named after the line id in
 // kabsi/public/voice/<ID>/ (mp3, wav or m4a) is used as is, so a recorded take can be dropped in. A line with no such
@@ -12,7 +14,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { makeTts, probeDuration, speak, toWav, trim } from "../../engine/scripts/tts.mjs";
-import { loadCopies } from "./check.mjs";
+import { loadCopies } from "./lib/copies.mjs";
+import { VOICES } from "../src/kit.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const config = JSON.parse(readFileSync(join(root, "config.json"), "utf8"));
@@ -26,6 +29,10 @@ if (!copy) {
 }
 const flag = (name) => (args.includes(name) ? args[args.indexOf(name) + 1] : undefined);
 const voice = flag("--use") ?? config.voice;
+if (!VOICES.includes(voice)) {
+  console.error(`kabsi voice: "${voice}" is not a Kabsi voice. Use one of ${VOICES.join(", ")}.`);
+  process.exit(1);
+}
 const speed = Number(flag("--speed") ?? config["voice-speed"]);
 const GAP = 0.3;
 

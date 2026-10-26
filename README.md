@@ -31,6 +31,8 @@ committed: the video, the poster, contact sheets (2 frames a second) and `script
 | `npm run kabsi:check` | Kabsi rule check. |
 | `npm run kabsi:render -- <ID>` | Render one Kabsi video into `kabsi/out/<ID>/`. |
 | `npm run kabsi:voice -- <ID>` | Make that video's voice lines. |
+| `npm run kabsi:checklist -- <ID>` | Rewrite that video's `checklist.md` from its review package. |
+| `npm run kabsi:voice-test` | Rewrite `kabsi/out/voice-test/`: two lines in the five Kabsi voices, with measurements. |
 | `npm run roomy:studio [-- <id>]` | Remotion Studio on the Roomy entry, on one listing. |
 | `npm run roomy:check` | Roomy rule check, every listing. |
 | `npm run roomy:render -- <id>` | Render `roomy/listings/<id>.json` into `roomy/out/<id>/`. |
@@ -73,8 +75,9 @@ company licence ([Remotion License](https://www.remotion.dev/docs/license)).
 
 | Asset | Licence | Notes |
 | --- | --- | --- |
-| Lalezar, Readex Pro | SIL Open Font License 1.1 | `kabsi/public/brand/fonts/OFL-*.txt`. From the google/fonts repository. |
-| Kokoro voices `af_heart`, `af_sarah` | Apache 2.0 | Ship with the model. |
+| Bricolage Grotesque, Manrope | SIL Open Font License 1.1 | `kabsi/public/brand/fonts/OFL-*.txt`. From the google/fonts repository. |
+| Kokoro voices `bf_alice`, `bf_isabella`, `bf_lily`, `bm_george`, `bm_lewis` | Apache 2.0 | Ship with the model. One of them is the Kabsi voice. |
+| `simple-icons` (the WhatsApp glyph) | CC0 1.0 | Used unaltered, only through `kabsi/src/components/WhatsAppGlyph.tsx`. |
 
 ### Roomy Properties
 

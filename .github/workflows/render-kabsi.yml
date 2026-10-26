@@ -5,10 +5,10 @@ on:
   workflow_dispatch:
     inputs:
       video:
-        description: Video ID from kabsi/docs/VIDEO-PLAN.md section 4, or KabsiKitTest
+        description: Video ID from kabsi/docs/VIDEO-PLAN.md section 4, or kit-test
         type: string
         required: true
-        default: "KabsiKitTest"
+        default: "kit-test"
 
 jobs:
   render:

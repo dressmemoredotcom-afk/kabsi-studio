@@ -9,6 +9,8 @@
     "kabsi:check": "node kabsi/scripts/check.mjs",
     "kabsi:render": "node kabsi/scripts/render.mjs",
     "kabsi:voice": "node kabsi/scripts/voice.mjs",
+    "kabsi:checklist": "node kabsi/scripts/checklist.mjs",
+    "kabsi:voice-test": "node kabsi/scripts/voice-test.mjs",
     "roomy:studio": "node roomy/scripts/reel.mjs --studio",
     "roomy:check": "node roomy/scripts/check.mjs",
     "roomy:render": "node roomy/scripts/reel.mjs",
@@ -27,6 +29,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "remotion": "4.0.538",
+    "simple-icons": "16.36.0",
     "zod": "4.5.4"
   },
   "devDependencies": {
