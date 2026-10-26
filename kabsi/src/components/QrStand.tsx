@@ -23,7 +23,7 @@ export const QrStand: React.FC<{
         bottom: -28,
         height: 40,
         borderRadius: "50%",
-        background: alpha(colors.black, 0.35),
+        background: alpha(colors.night, 0.35),
         filter: "blur(18px)",
       }}
     />
@@ -38,9 +38,9 @@ export const QrStand: React.FC<{
           boxSizing: "border-box",
           padding: "34px 34px 0",
           borderRadius: `${radii.large + 8}px ${radii.large + 8}px 10px 10px`,
-          background: colors.white,
-          border: `3px solid ${alpha(colors.white, 0.9)}`,
-          boxShadow: `${shadows.lifted}, inset 0 0 0 2px ${colors.hairline}`,
+          background: colors.paper,
+          border: `3px solid ${alpha(colors.paper, 0.9)}`,
+          boxShadow: `${shadows.lifted}, inset 0 0 0 2px ${alpha(colors.ink, 0.1)}`,
           overflow: "hidden",
         }}
       >
@@ -55,8 +55,8 @@ export const QrStand: React.FC<{
                 top: scan * STAND.qr - 5,
                 height: 10,
                 borderRadius: radii.pill,
-                background: colors.chatGreen,
-                boxShadow: `0 0 30px ${alpha(colors.chatGreen, 0.9)}`,
+                background: colors.green,
+                boxShadow: `0 0 30px ${alpha(colors.green, 0.9)}`,
               }}
             />
           )}
@@ -87,6 +87,7 @@ export const QrStand: React.FC<{
             alignItems: "center",
             justifyContent: "center",
             fontFamily: fonts.title,
+            fontWeight: 700,
             fontSize: 48,
             lineHeight: "70px",
             color: colors.yellow,
@@ -99,7 +100,7 @@ export const QrStand: React.FC<{
           style={{
             position: "absolute",
             inset: 0,
-            background: `linear-gradient(112deg, ${alpha(colors.white, 0.55)} 0%, ${alpha(colors.white, 0)} 30%, ${alpha(colors.white, 0)} 68%, ${alpha(colors.white, 0.25)} 100%)`,
+            background: `linear-gradient(112deg, ${alpha(colors.paper, 0.55)} 0%, ${alpha(colors.paper, 0)} 30%, ${alpha(colors.paper, 0)} 68%, ${alpha(colors.paper, 0.25)} 100%)`,
             mixBlendMode: "soft-light",
           }}
         />
@@ -112,8 +113,8 @@ export const QrStand: React.FC<{
           top: STAND.cardH - 6,
           height: STAND.baseH + 6,
           borderRadius: "10px 10px 22px 22px",
-          background: `linear-gradient(180deg, ${colors.stone} 0%, ${colors.ink} 40%, ${colors.carbon} 100%)`,
-          boxShadow: `0 6px 0 ${alpha(colors.black, 0.4)}`,
+          background: `linear-gradient(180deg, ${colors.mute} 0%, ${colors.ink} 40%, ${colors.carbon} 100%)`,
+          boxShadow: `0 6px 0 ${alpha(colors.night, 0.4)}`,
         }}
       />
     </div>

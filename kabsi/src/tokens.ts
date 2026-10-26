@@ -1,24 +1,22 @@
-// Kabsi design tokens. Import colours, radii and shadows from here only.
+// Kabsi design tokens, from section 2 of docs/VIDEO-PLAN.md. Import colours, radii and shadows from here only: no
+// other file may hold a colour. Shadows and glass are built from these colours with alpha().
+import { SAFE_INSETS } from "./kit";
+import { alpha } from "../../engine/src/frame";
 
 export const colors = {
+  /** One highlight per screen, never body text. */
   yellow: "#FFD60A",
-  yellowPressed: "#E8C309",
-  black: "#000000",
-  carbon: "#0B0B0B",
-  // Night, from section 2 of docs/VIDEO-PLAN.md: the background of the kit test.
   night: "#0C0C0B",
+  carbon: "#161614",
+  paper: "#F5F3EE",
   ink: "#111111",
-  white: "#FFFFFF",
-  sand: "#F6F4EF",
-  stone: "#5E5B55",
-  stoneOnDark: "#C9C5BC",
-  hairline: "#E4E0D7",
-  red: "#D93025",
+  mute: "#B8B3A8",
+  /** Approved, published. */
   green: "#1F8A5B",
-  amber: "#B45309",
-  amberSoft: "#FEF3C7",
-  // WhatsApp-style chat bubbles (components/whatsapp.tsx).
-  chatGreen: "#25D366",
+  /** Only for a problem. */
+  red: "#D93025",
+  /** The tap ring, drawn at 30 percent. */
+  tapRing: "#111827",
 } as const;
 
 export const radii = {
@@ -28,16 +26,24 @@ export const radii = {
 } as const;
 
 export const shadows = {
-  card: "0 6px 18px rgba(0,0,0,0.06)",
-  lifted: "0 14px 30px rgba(0,0,0,0.09)",
-  // Phone mockup and glass banners (components/PhoneMockup.tsx, whatsapp.tsx).
-  phone: "0 20px 50px rgba(0,0,0,0.3)",
-  glass: "0 8px 32px rgba(0,0,0,0.18)",
+  card: `0 6px 18px ${alpha(colors.night, 0.08)}`,
+  lifted: `0 14px 30px ${alpha(colors.night, 0.12)}`,
+  // Phone mockup and glass banners (components/PhoneMockup.tsx, components/chat.tsx).
+  phone: `0 20px 50px ${alpha(colors.night, 0.35)}`,
+  glass: `0 8px 32px ${alpha(colors.night, 0.2)}`,
 } as const;
 
 export const fonts = {
-  title: '"Lalezar", sans-serif',
-  body: '"Readex Pro", sans-serif',
+  title: '"Bricolage Grotesque", sans-serif',
+  body: '"Manrope", sans-serif',
 } as const;
 
-export { alpha, FRAME, SAFE } from "../../engine/src/frame";
+/** The 1080 x 1920 safe area: text stays out of the top 220 px, the bottom 420 px and the right 120 px. */
+export const SAFE = {
+  left: SAFE_INSETS.left,
+  right: 1080 - SAFE_INSETS.right,
+  top: SAFE_INSETS.top,
+  bottom: 1920 - SAFE_INSETS.bottom,
+} as const;
+
+export { alpha, FRAME } from "../../engine/src/frame";

@@ -1,6 +1,4 @@
 {
-  "voice": "af_heart",
-  "voice-speed": 1,
-  "voice-upbeat": "af_sarah",
-  "voice-speed-upbeat": 1.15
+  "voice": "bm_george",
+  "voice-speed": 1
 }

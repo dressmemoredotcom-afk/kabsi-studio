@@ -1,7 +1,7 @@
 # Kabsi video progress
 
 One row per video in section 4 of `VIDEO-PLAN.md`. Status words are the plan's: done, ready to make, waits for
-footage, later. Version is the latest render in `kabsi/out/<ID>/`. Nothing has been rendered from this repo yet.
+footage, later. Version is the latest render in `kabsi/out/<ID>/`. No catalogue video has been rendered from this repo yet. `kit-test` (`kabsi/out/kit-test/`) is the brand kit's own test, not a catalogue video.
 
 | ID | Video | Status | Version | Lane R review | Publish gate |
 | --- | --- | --- | --- | --- | --- |

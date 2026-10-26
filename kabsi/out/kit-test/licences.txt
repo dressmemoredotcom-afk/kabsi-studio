@@ -1,0 +1,10 @@
+Licences for kabsi-kit-test-demo
+
+Fonts: Bricolage Grotesque and Manrope, SIL Open Font License 1.1, from the google/fonts repository.
+  Licence texts: kabsi/public/brand/fonts/OFL-BricolageGrotesque.txt and OFL-Manrope.txt
+Voice: Kokoro-82M, voice bm_george, Apache 2.0. AI voice: turn on the platform's AI label where it asks.
+WhatsApp glyph: not used.
+Music: none.
+Stock clips: none.
+Recordings: none.
+Kit parts (components, tokens): written for this repository.
