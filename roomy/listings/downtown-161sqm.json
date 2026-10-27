@@ -30,7 +30,7 @@
     {
       "type": "video",
       "src": "downtown-161sqm/walkthrough.mp4",
-      "startAtSecond": 33.5,
+      "startAtSecond": 46.2,
       "headline": "CITY VIEWS",
       "subline": "FLOOR-TO-CEILING WINDOWS",
       "seconds": 2.6
@@ -44,7 +44,7 @@
     {
       "type": "video",
       "src": "downtown-161sqm/walkthrough.mp4",
-      "startAtSecond": 7.4,
+      "startAtSecond": 15.5,
       "seconds": 2.6,
       "headline": "EQUIPPED KITCHEN",
       "subline": "FULLY FINISHED AND EQUIPPED"
@@ -52,7 +52,7 @@
     {
       "type": "video",
       "src": "downtown-161sqm/walkthrough.mp4",
-      "startAtSecond": 64.7,
+      "startAtSecond": 57.5,
       "headline": "2 MASTER BEDROOMS",
       "subline": "BRIGHT AND GENEROUS",
       "seconds": 2.6
@@ -72,8 +72,9 @@
     {
       "type": "video",
       "src": "downtown-161sqm/walkthrough.mp4",
-      "startAtSecond": 82.5,
-      "seconds": 2.6
+      "startAtSecond": 60.6,
+      "seconds": 2.6,
+      "playbackRate": 0.9
     }
   ],
   "whatsappContact": "+961 71 203 398"
