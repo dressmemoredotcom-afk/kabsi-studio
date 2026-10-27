@@ -1,0 +1,68 @@
+{
+  "id": "downtown-161sqm",
+  "neighborhood": "DOWNTOWN, BEIRUT",
+  "propertyTitle": "A RESIDENCE IN THE HEART OF THE CITY",
+  "specs": [
+    "161 SQM",
+    "2 MASTER BEDROOMS",
+    "FULLY FINISHED",
+    "1 PARKING"
+  ],
+  "durationSeconds": 30,
+  "voScript": [
+    "Downtown Beirut. Light, space, and a central address.",
+    "Floor-to-ceiling windows, and city views.",
+    "One hundred and sixty-one square meters.",
+    "Two master bedrooms.",
+    "Fully finished, and ready for your own style.",
+    "Bright rooms, and warm wood floors.",
+    "And a parking space.",
+    "Exclusively with Roomy Properties."
+  ],
+  "media": [
+    {
+      "type": "photo",
+      "src": "downtown-161sqm/photo-02.jpeg",
+      "headline": "LIVE IN DOWNTOWN",
+      "subline": "Light, space and a central address"
+    },
+    {
+      "type": "video",
+      "src": "downtown-161sqm/walkthrough.mp4",
+      "startAtSecond": 33.5,
+      "headline": "CITY VIEWS",
+      "subline": "FLOOR-TO-CEILING WINDOWS"
+    },
+    {
+      "type": "photo",
+      "src": "downtown-161sqm/photo-03.jpeg",
+      "headline": "161 SQM",
+      "subline": "OPEN LIVING AND DINING"
+    },
+    {
+      "type": "video",
+      "src": "downtown-161sqm/walkthrough.mp4",
+      "startAtSecond": 64.7,
+      "headline": "2 MASTER BEDROOMS",
+      "subline": "FULLY FINISHED"
+    },
+    {
+      "type": "photo",
+      "src": "downtown-161sqm/photo-01.jpeg",
+      "headline": "MASTER BEDROOM",
+      "subline": "WARM AND REFINED"
+    },
+    {
+      "type": "photo",
+      "src": "downtown-161sqm/photo-04.jpeg",
+      "headline": "BRIGHT ROOMS",
+      "subline": "WARM WOOD FLOORS"
+    },
+    {
+      "type": "video",
+      "src": "downtown-161sqm/walkthrough.mp4",
+      "startAtSecond": 82.5
+    }
+  ],
+  "whatsappContact": "+961 71 203 398"
+}

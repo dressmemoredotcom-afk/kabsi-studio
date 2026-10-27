@@ -26,6 +26,46 @@
         }
       }
     },
+    "downtown-161sqm": {
+      "voiceover": null,
+      "media": {
+        "downtown-161sqm/photo-02.jpeg": {
+          "file": "media/downtown-161sqm/photo-02.jpeg",
+          "kind": "photo",
+          "width": 1280,
+          "height": 960,
+          "durationS": 0.04
+        },
+        "downtown-161sqm/walkthrough.mp4": {
+          "file": "media/downtown-161sqm/walkthrough.mp4",
+          "kind": "video",
+          "width": 848,
+          "height": 480,
+          "durationS": 94.366667
+        },
+        "downtown-161sqm/photo-03.jpeg": {
+          "file": "media/downtown-161sqm/photo-03.jpeg",
+          "kind": "photo",
+          "width": 1280,
+          "height": 960,
+          "durationS": 0.04
+        },
+        "downtown-161sqm/photo-01.jpeg": {
+          "file": "media/downtown-161sqm/photo-01.jpeg",
+          "kind": "photo",
+          "width": 1280,
+          "height": 960,
+          "durationS": 0.04
+        },
+        "downtown-161sqm/photo-04.jpeg": {
+          "file": "media/downtown-161sqm/photo-04.jpeg",
+          "kind": "photo",
+          "width": 1280,
+          "height": 960,
+          "durationS": 0.04
+        }
+      }
+    },
     "downtown-275sqm": {
       "voiceover": null,
       "media": {
