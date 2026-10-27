@@ -1,5 +1,5 @@
 {
-  "contactSheet": "0244ec105d9466d0fd71a87332bab9200c7b9ff778548fa845416a245299494b",
+  "contactSheet": "c20ffd5e7ce34f877f6dabc10f9715de4ad32287eb3ef63047d50b8db6130feb",
   "rows": {
     "frame-arabic": {
       "answer": "yes",
@@ -11,47 +11,47 @@
     },
     "frame-google": {
       "answer": "yes",
-      "note": "Google appears only as plain words (the Published line, the end card line, the small print); no Google logo or colours."
+      "note": "Google appears only as plain words (Approved line, Published line, end card line, small print); no Google logo or colours."
     },
     "frame-proof": {
       "answer": "yes",
-      "note": "The only review shown is the Example business's demo text: no stars, no name, no count, and it is not shown as a Kabsi testimonial."
+      "note": "The only review shown is the Example business's demo text: no stars, no count, no logo, and it is not shown as a Kabsi testimonial."
     },
     "frame-people": {
       "answer": "yes",
-      "note": "No people or faces in any frame."
+      "note": "No people or faces in any frame; the mark is the only picture."
     },
     "frame-example": {
       "answer": "yes",
-      "note": "The Example badge is in the chat header on every frame from 0.0 to 6.5 s, as long as the Example business is on screen."
+      "note": "The Example badge is in the chat header on every chat frame from 0.0 to 6.5 s, as long as the Example business is on screen."
     },
     "frame-yes": {
       "answer": "yes",
-      "note": "The Yes button (3.5 to 5.0 s), its tap and the owner's Yes bubble (from 5.5 s) are shown."
+      "note": "The Yes, Edit, Skip buttons show from 0.5 s, the Yes is tapped at 4.5 s and the owner's Yes bubble follows."
     },
     "safe-zone": {
       "answer": "yes",
-      "note": "All text sits inside the safe area on the contact sheet, and on a safe-zone debug still at 5.7 s."
+      "note": "All text is inside the safe area on the contact sheet and on safe-zone debug stills at 6.3 s and 8.5 s."
     },
     "captions-clear": {
       "answer": "yes",
-      "note": "Captions sit low in the empty part of the screen, about 300 px below the Yes button and its tap."
+      "note": "Captions sit on plain paper below the chat, about 46 px under the last bubble, never over a button, bubble or the tap."
     },
     "tap-rings": {
       "answer": "yes",
-      "note": "One soft dark ring over the Yes button at 4.9 to 5.4 s, visible on the yellow button."
+      "note": "One soft dark ring over the Yes button at 4.5 s, visible on the button."
     },
     "end-card": {
-      "answer": "no",
-      "note": "The line, the call to action and the small print show from 7.5 s to the end, but the mark is the dashed stand-in ring: the logo files are not uploaded yet."
+      "answer": "yes",
+      "note": "From 7.5 s: the real mark with the Kabsi wordmark, the line, the call to action and the small print, until the end."
     },
     "hook": {
       "answer": "yes",
-      "note": "The review and the caption \"A new review came in.\" are on screen by 0.5 s."
+      "note": "The review with its Yes, Edit, Skip buttons and the caption \"A new review came in.\" are on screen by 0.5 s."
     },
     "sound-off": {
       "answer": "yes",
-      "note": "Captions carry every spoken line and the chat shows the story."
+      "note": "Captions carry every spoken line and the chat shows the story: review, Yes, Approved, Published."
     }
   }
 }

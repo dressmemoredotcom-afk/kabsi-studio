@@ -23,7 +23,6 @@ export const runCheck = async (only) => {
   }
   const src = checkSource({ copies });
   failures.push(...src.failures);
-  if (src.logoMissing.length) lines.push(`note: logo files not uploaded yet (${src.logoMissing.length}); only a kit test may render without them`);
   lines.unshift(`${bannedCount} banned-phrase rules, ${src.sourceFiles} source files`);
   return { failures, lines };
 };

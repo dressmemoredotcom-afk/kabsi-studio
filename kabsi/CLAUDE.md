@@ -23,12 +23,20 @@ Kabsi (kabsi.co) looks after a local business's Google Business Profile. This fo
   its OFL licence file. No other font.
 - `src/components/`: `Captions` (burned-in, 2 lines of 32 characters, one yellow word, `taps` keeps it clear of a tap),
   `SafeZone` (text stays out of the top 220 px, bottom 420 px and right 120 px of 1080 x 1920; `debug` draws the bands),
-  `TapRing`, `ExampleBadge`, `EndCard`, `SmallPrint`, `Logo`, `KabsiFrame` (voice, burned-in captions and the safe-zone
-  overlay for every video), `PhoneMockup`, `chat.tsx` (the demo chat: paper screen, dark bubbles, yellow Yes),
-  `WhatsAppGlyph` (the only way to draw the WhatsApp glyph: from simple-icons, unaltered, never animated), `BRollLayer`,
-  `CutFlash`, `QrStand`, `QrArt`.
-- Logo: `public/brand/kabsi-mark.svg` and `public/brand/kabsi-wordmark.svg`, copied unchanged from kabsi-design-studio
-  `public/`. Never redrawn or recoloured. Until they are uploaded only `kit-test` may render, with a dashed stand-in ring.
+  `TapRing`, `ExampleBadge`, `EndCard`, `SmallPrint`, `Logo` (`LogoMark`), `wordmark.tsx` (`Wordmark`, `LogoLockup`),
+  `KabsiFrame` (voice, burned-in captions and the safe-zone overlay for every video), `PhoneMockup`, `chat.tsx` (the demo
+  chat, built to the design studio's own: see below), `WhatsAppGlyph` (the only way to draw the WhatsApp glyph: from
+  simple-icons, unaltered, never animated), `BRollLayer`, `CutFlash`, `QrStand`, `QrArt`.
+- Logo: the mark is `public/brand/kabsi-mark.svg`, the design studio's `favicon.svg` renamed and unchanged (the rule
+  check holds it to the same bytes). The wordmark is not a file: it is the text "Kabsi" in Bricolage Grotesque Bold 700,
+  letter spacing -0.02em, ink on a light ground and paper on a dark one, set by `components/wordmark.tsx`. Mark and
+  wordmark together use the studio's proportions (32 px mark, 10 px gap, 22 px text). Never redraw or recolour either.
+  Bricolage's optical size is pinned to 14 (`fonts.titleVariation`), as on the website.
+- Design studio references in `docs/`: `styles.css` (its colours match the nine in `tokens.ts`), `whatsapp.tsx` and
+  `public/brand/fonts/ui.tsx` (the mark's sizes), and two screenshots of its demo chat. `chat.tsx` follows them: status
+  bar, header with the mark and the Example badge, dotted ground that stacks from the bottom, incoming bubbles with a tail
+  and a row of three buttons (Yes, Edit, Skip, in that order), the owner's Yes as a yellow outgoing bubble with ticks,
+  Approved with an Undo button, Published. It keeps the kit's colours and fonts, and is not WhatsApp's own design.
 
 ## Where things go
 
@@ -39,9 +47,9 @@ Kabsi (kabsi.co) looks after a local business's Google Business Profile. This fo
   voice and render read it. Captions come only from the voice lines' `captions`: never write a second caption list.
 - `public/`: Remotion's public dir. `brand/` (fonts, logo), `audio/`, `voice/<ID>/`, `inputs/<ID>/` (Rashid's footage).
 - `config.json`: the Kokoro voice and speed. One voice for every video, one of `bf_alice`, `bf_isabella`, `bf_lily`,
-  `bm_george`, `bm_lewis`. It is `bm_george` for now, the calmest by the numbers in `out/voice-test/`; Hussein chooses once.
+  `bm_george`, `bm_lewis`. The voice is chosen: it is `bm_george`, and it stays that way for every video.
 - `src/generated/voice/<ID>.json`: measured voice lengths and starts, written by `npm run kabsi:voice`. Committed.
-- `out/<ID>/`: the review package, committed. `out/kit-test/` and `out/voice-test/` are the kit's own.
+- `out/<ID>/`: the review package, committed. `out/kit-test/` is the kit's own test.
 
 ## Commands
 
@@ -52,7 +60,7 @@ Kabsi (kabsi.co) looks after a local business's Google Business Profile. This fo
 | `npm run kabsi:voice -- <ID>` | Makes the voice lines (Kokoro, or a recorded file per line in `public/voice/<ID>/`, with optional word times). |
 | `npm run kabsi:render -- <ID>` | Check, voice, render every size, fit to the format preset (fails if the file breaks it), then write `out/<ID>/`. |
 | `npm run kabsi:checklist -- <ID>` | Rewrites `out/<ID>/checklist.md` from the package, picking up `visual-review.json`. |
-| `npm run kabsi:voice-test` | Rewrites `out/voice-test/`: two lines in the five voices, `all.wav`, README and measurements. |
+| `npm run kabsi:voice-test` | Writes `out/voice-test/`: two lines in the five voices, `all.wav`, README and measurements. The voice is chosen, so that folder is not kept. |
 
 `kabsi:render` needs Chrome: set `CHROME_PATH` if Remotion cannot download its own.
 
@@ -81,5 +89,8 @@ you could not see stays "lane R to confirm".
 no dashes or exclamation marks; the banned words and claims of VIDEO-PLAN section 1; no statistics or prices; no Arabic
 in any text under `kabsi/`; every invented business shows the Example badge; the end card line is exactly "Your business
 on Google. Taken care of."; no colour outside `tokens.ts`, which holds exactly the nine; numbers in the voice as words;
-captions joined equal the voice; at most 2 lines of 32 characters; length inside the format's range. A video of
-`kit-test` is the one exception: its length range is waived.
+captions joined equal the voice; at most 2 lines of 32 characters; length inside the format's range. Also banned:
+"more reviews", higher or better rating, automatic and automatically, autopilot, on its own and by itself (anywhere,
+since the check cannot tell whose "itself" it is), locks and lock your profile, blocks edits, stops edits. The logo is
+checked too: `kabsi-mark.svg` must be byte for byte the design studio's favicon, and the wordmark spec must hold. A video
+of `kit-test` is the one exception: its length range is waived.
