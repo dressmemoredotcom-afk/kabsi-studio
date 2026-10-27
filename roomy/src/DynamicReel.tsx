@@ -5,7 +5,7 @@ import { clampRange } from "../../engine/src/anim";
 import { roomyTokens as T } from "./tokens";
 import { RoomyListing } from "./schema";
 import { ASSETS, assetUrl, listingAssets, type MediaAsset } from "./assets";
-import { OVERLAP, outroFrom, planScenes, resolveVoScript, sceneCopy, totalFrames, voiceSignature } from "./storyboard";
+import { OVERLAP, outroFrom, planListing, resolveVoScript, sceneCopy, totalFrames, voiceSignature } from "./storyboard";
 import { RoomyAudio, type VoiceClip } from "./RoomyAudio";
 import voice from "./generated/voice.json";
 import { EditorialBadge } from "./components/EditorialBadge";
@@ -39,7 +39,7 @@ export const DynamicReel: React.FC<{ listing: RoomyListing }> = ({ listing }) =>
   const files = listingAssets(listing.id);
   const total = totalFrames(listing);
   const OUTRO_FROM = outroFrom(total);
-  const plan = planScenes(listing.media.length, total);
+  const plan = planListing(listing);
   const copy = sceneCopy(listing);
 
   return (

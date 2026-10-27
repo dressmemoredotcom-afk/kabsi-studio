@@ -1,0 +1,80 @@
+{
+  "id": "downtown-161sqm",
+  "neighborhood": "DOWNTOWN, BEIRUT",
+  "propertyTitle": "A RESIDENCE IN THE HEART OF THE CITY",
+  "specs": [
+    "161 SQM",
+    "2 MASTER BEDROOMS",
+    "FULLY FINISHED AND EQUIPPED",
+    "1 PARKING"
+  ],
+  "durationSeconds": 32,
+  "voScript": [
+    "Downtown Beirut. Light, space, and a central address.",
+    "Floor-to-ceiling windows, and city views.",
+    "One hundred and sixty-one square meters.",
+    "Fully finished and fully equipped.",
+    "Two master bedrooms.",
+    "Warm, and refined.",
+    "Bright rooms, and warm wood floors.",
+    "And a parking space.",
+    "Exclusively with Roomy Properties."
+  ],
+  "media": [
+    {
+      "type": "photo",
+      "src": "downtown-161sqm/photo-02.jpeg",
+      "headline": "LIVE IN DOWNTOWN",
+      "subline": "Light, space and a central address"
+    },
+    {
+      "type": "video",
+      "src": "downtown-161sqm/walkthrough.mp4",
+      "startAtSecond": 33.5,
+      "headline": "CITY VIEWS",
+      "subline": "FLOOR-TO-CEILING WINDOWS",
+      "seconds": 2.6
+    },
+    {
+      "type": "photo",
+      "src": "downtown-161sqm/photo-03.jpeg",
+      "headline": "161 SQM",
+      "subline": "OPEN LIVING AND DINING"
+    },
+    {
+      "type": "video",
+      "src": "downtown-161sqm/walkthrough.mp4",
+      "startAtSecond": 7.4,
+      "seconds": 2.6,
+      "headline": "EQUIPPED KITCHEN",
+      "subline": "FULLY FINISHED AND EQUIPPED"
+    },
+    {
+      "type": "video",
+      "src": "downtown-161sqm/walkthrough.mp4",
+      "startAtSecond": 64.7,
+      "headline": "2 MASTER BEDROOMS",
+      "subline": "BRIGHT AND GENEROUS",
+      "seconds": 2.6
+    },
+    {
+      "type": "photo",
+      "src": "downtown-161sqm/photo-01.jpeg",
+      "headline": "MASTER BEDROOM",
+      "subline": "WARM AND REFINED"
+    },
+    {
+      "type": "photo",
+      "src": "downtown-161sqm/photo-04.jpeg",
+      "headline": "BRIGHT ROOMS",
+      "subline": "WARM WOOD FLOORS"
+    },
+    {
+      "type": "video",
+      "src": "downtown-161sqm/walkthrough.mp4",
+      "startAtSecond": 82.5,
+      "seconds": 2.6
+    }
+  ],
+  "whatsappContact": "+961 71 203 398"
+}

@@ -8,6 +8,8 @@ export const MediaItemSchema = z.discriminatedUnion("type", [
     src: z.string(),
     headline: z.string().optional(),
     subline: z.string().optional(),
+    /** Fixes this scene's length in seconds; the items without it share the rest of the time evenly. */
+    seconds: z.number().min(1).max(10).optional(),
   }),
   z.object({
     type: z.literal("video"),
@@ -20,6 +22,8 @@ export const MediaItemSchema = z.discriminatedUnion("type", [
     focusX: z.number().min(0).max(100).default(50),
     headline: z.string().optional(),
     subline: z.string().optional(),
+    /** Fixes this scene's length in seconds. The clip also plays under the next scene's dissolve, 0.4 seconds more. */
+    seconds: z.number().min(1).max(10).optional(),
   }),
 ]);
 

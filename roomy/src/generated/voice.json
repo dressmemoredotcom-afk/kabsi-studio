@@ -83,6 +83,76 @@
       }
     ]
   },
+  "downtown-161sqm": {
+    "voice": "bf_emma",
+    "speed": 0.85,
+    "signature": "9:b50a1927",
+    "lines": [
+      {
+        "scene": 0,
+        "text": "Downtown Beirut. Light, space, and a central address.",
+        "file": "voice/downtown-161sqm/vo-0.wav",
+        "startS": 0.8,
+        "durS": 3.693
+      },
+      {
+        "scene": 1,
+        "text": "Floor-to-ceiling windows, and city views.",
+        "file": "voice/downtown-161sqm/vo-1.wav",
+        "startS": 5.493,
+        "durS": 2.476
+      },
+      {
+        "scene": 2,
+        "text": "One hundred and sixty-one square meters.",
+        "file": "voice/downtown-161sqm/vo-2.wav",
+        "startS": 8.969,
+        "durS": 2.665
+      },
+      {
+        "scene": 3,
+        "text": "Fully finished and fully equipped.",
+        "file": "voice/downtown-161sqm/vo-3.wav",
+        "startS": 12.634,
+        "durS": 2.22
+      },
+      {
+        "scene": 4,
+        "text": "Two master bedrooms.",
+        "file": "voice/downtown-161sqm/vo-4.wav",
+        "startS": 15.854,
+        "durS": 1.714
+      },
+      {
+        "scene": 5,
+        "text": "Warm, and refined.",
+        "file": "voice/downtown-161sqm/vo-5.wav",
+        "startS": 18.568,
+        "durS": 1.533
+      },
+      {
+        "scene": 6,
+        "text": "Bright rooms, and warm wood floors.",
+        "file": "voice/downtown-161sqm/vo-6.wav",
+        "startS": 21.8,
+        "durS": 2.251
+      },
+      {
+        "scene": 7,
+        "text": "And a parking space.",
+        "file": "voice/downtown-161sqm/vo-7.wav",
+        "startS": 26.2,
+        "durS": 1.541
+      },
+      {
+        "scene": 8,
+        "text": "Exclusively with Roomy Properties.",
+        "file": "voice/downtown-161sqm/vo-8.wav",
+        "startS": 29,
+        "durS": 2.401
+      }
+    ]
+  },
   "downtown-275sqm": {
     "voice": "bf_emma",
     "speed": 0.88,

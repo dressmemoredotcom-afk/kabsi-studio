@@ -8,7 +8,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { RoomyListingSchema } from "../src/schema.ts";
-import { FPS, outroFrom, planScenes, resolveVoScript, sceneCopy, totalFrames, voiceSignature } from "../src/storyboard.ts";
+import { FPS, outroFrom, planListing, resolveVoScript, sceneCopy, totalFrames, voiceSignature } from "../src/storyboard.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const failures = [];
@@ -93,8 +93,9 @@ for (const id of known) {
       voiceNote = v.lines.length ? `voice ${v.voice} at ${v.speed}x ends at ${prevEnd.toFixed(2)} s` : "your voiceover file";
     }
   }
-  const scenes = planScenes(listing.media.length, total);
+  const scenes = planListing(listing);
   const sum = scenes.reduce((n, sc) => n + sc.frames, 0) + (total - outroFrom(total));
+  scenes.forEach((sc) => { if (sc.frames < FPS) fail("timeline", `scene ${sc.index} is only ${sc.frames} frames, the fixed lengths leave too little time`); });
   if (sum !== total) fail("timeline", `scenes add up to ${sum} frames, expected ${total}`);
   summaries.push(`[${id}] ${listing.media.length} media item${listing.media.length === 1 ? "" : "s"}, ${total / FPS} s (${(scenes[0].frames / FPS).toFixed(1)} s first scene), ${strings.length} strings, ${voiceNote}`);
 }
