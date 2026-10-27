@@ -15,6 +15,8 @@ export type VideoCopy = {
   /** Sizes to render, each one of the format's sizes, as "WIDTHxHEIGHT". */
   sizes: string[];
   seconds: number;
+  /** The second of the poster frame. Default: the middle of the video. */
+  posterS?: number;
   /** Every on-screen string, in any shape of objects and arrays. */
   screen: Record<string, unknown>;
   /** The voice-over. Its `captions` are the one caption source: burned in, SRT and WebVTT all come from them. */

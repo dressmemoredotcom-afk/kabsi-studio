@@ -1,0 +1,10 @@
+Licences for kabsi-w1-hero
+
+Fonts: Bricolage Grotesque and Manrope, SIL Open Font License 1.1, from the google/fonts repository.
+  Licence texts: kabsi/public/brand/fonts/OFL-BricolageGrotesque.txt and OFL-Manrope.txt
+Voice: none.
+WhatsApp glyph: not used.
+Music: none.
+Stock clips: none.
+Recordings: none.
+Kit parts (components, tokens): written for this repository.

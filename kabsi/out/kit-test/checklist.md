@@ -18,9 +18,9 @@ Result: 29 yes, 0 no, 2 for lane R to confirm.
 | Google's name only as plain words; no Google logo, colours or approval | yes | the name appears only in text. Google appears only as plain words (Approved line, Published line, end card line, small print); no Google logo or colours. |
 | Small print on ads and explainers: Kabsi is independent and not affiliated with Google | yes | shown |
 | WhatsApp: the glyph only from simple-icons, unaltered, only where it means WhatsApp, never animated | yes | the glyph only comes through components/WhatsAppGlyph.tsx, which takes no style or animation |
-| No invented proof: no testimonials, star ratings, user counts or logos | yes | no such words in any string. The only review shown is the Example business's demo text: no stars, no count, no logo, and it is not shown as a Kabsi testimonial. |
+| No invented proof: no testimonials, star ratings, user counts or logos | yes | no such words in any string. The only review shown is the Example business (Juniper Hair Studio) demo text: no stars, no count, no logo, and it is not shown as a Kabsi testimonial. |
 | No actors or AI-made people presented as owners or customers | yes | no people in this video |
-| Invented example businesses carry the Example badge | yes | <ExampleBadge /> drawn for Rose Lane Salon. The Example badge is in the chat header on every chat frame from 0.0 to 6.5 s, as long as the Example business is on screen. |
+| Invented example businesses carry the Example badge | yes | <ExampleBadge /> drawn for Juniper Hair Studio. The Example badge is in the chat header on every chat frame from 0.0 to 6.5 s, as long as the Example business is on screen. |
 | Real owners appear only from the Founding 25, with written consent, saying their own words | yes | no real owner in this video |
 | Faces: only people who agreed in writing | yes | no faces in this video |
 | Stock clips: a licence that allows ads, link kept in the folder | yes | no stock clips |
@@ -37,7 +37,7 @@ Result: 29 yes, 0 no, 2 for lane R to confirm.
 | Logo: the real ring mark and the wordmark, never redrawn or recoloured | yes | kabsi-mark.svg is the design studio's favicon.svg byte for byte; the wordmark is the text "Kabsi" in Bricolage Grotesque Bold 700, letter spacing -0.02em, ink on light and paper on dark |
 | Captions: Manrope SemiBold, white on night at 80 percent, 2 lines of 32 characters at most, one yellow word at most, clear of the tap | yes | one source: the voice lines' captions. Captions sit on plain paper below the chat, about 46 px under the last bubble, never over a button, bubble or the tap. |
 | Captions as the format asks | yes | Reels, TikTok, Shorts: burned in, SRT file |
-| Safe zone: text out of the top 220 px, bottom 420 px and right 120 px (1080 x 1920) | yes | All text is inside the safe area on the contact sheet and on safe-zone debug stills at 6.3 s and 8.5 s. |
+| Safe zone: text out of the top 220 px, bottom 420 px and right 120 px (1080 x 1920) | yes | All text is inside the safe area on the contact sheet (re-checked after the copy change: the Approved line is two lines, the Undo button reads Undo). |
 | Tap rings: #111827 at 30 percent for half a second on each tap | yes | One soft dark ring over the Yes button at 4.5 s, visible on the button. |
 | End card, 3 seconds: the mark, the line, the call to action | yes | "Your business on Google. Taken care of." and "Free check at kabsi.co". From 7.5 s: the real mark with the Kabsi wordmark, the line, the call to action and the small print, until the end. |
 | The hook is in the first 2 seconds | yes | The review with its Yes, Edit, Skip buttons and the caption "A new review came in." are on screen by 0.5 s. |

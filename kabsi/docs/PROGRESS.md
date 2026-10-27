@@ -1,11 +1,11 @@
 # Kabsi video progress
 
 One row per video in section 4 of `VIDEO-PLAN.md`. Status words are the plan's: done, ready to make, waits for
-footage, later. Version is the latest render in `kabsi/out/<ID>/`. No catalogue video has been rendered from this repo yet. `kit-test` (`kabsi/out/kit-test/`) is the brand kit's own test, not a catalogue video.
+footage, later. Version is the latest render in `kabsi/out/<ID>/`. W1 v1 is the first catalogue video rendered from this repo. `kit-test` (`kabsi/out/kit-test/`) is the brand kit's own test, not a catalogue video.
 
 | ID | Video | Status | Version | Lane R review | Publish gate |
 | --- | --- | --- | --- | --- | --- |
-| W1 | Hero loop: "A review, ready for your yes" | ready to make | none | not sent | Only once owners approve on WhatsApp (launch). Not on today's kabsi.co. |
+| W1 | Hero loop: "A review, ready for your yes" | ready for lane R | v1 | not sent | Only once owners approve on WhatsApp (launch). Not on today's kabsi.co. |
 | W2 | How Kabsi works (60 s) | ready to make | none | not sent | Only once owners approve on WhatsApp (launch). Not on today's kabsi.co. |
 | W3 | Access: add on a phone, remove on a phone, add on a computer | done by lane R, files not in this repo yet | none here | done by lane R | none set |
 | W3b | Access: add in the Google Maps app | waits for footage | none | not sent | none set |

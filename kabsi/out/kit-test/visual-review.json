@@ -1,5 +1,5 @@
 {
-  "contactSheet": "c20ffd5e7ce34f877f6dabc10f9715de4ad32287eb3ef63047d50b8db6130feb",
+  "contactSheet": "e07187f6f0eaff51d9a7ded38c239750af80b76b876a8a523f36a213eefbf800",
   "rows": {
     "frame-arabic": {
       "answer": "yes",
@@ -15,7 +15,7 @@
     },
     "frame-proof": {
       "answer": "yes",
-      "note": "The only review shown is the Example business's demo text: no stars, no count, no logo, and it is not shown as a Kabsi testimonial."
+      "note": "The only review shown is the Example business (Juniper Hair Studio) demo text: no stars, no count, no logo, and it is not shown as a Kabsi testimonial."
     },
     "frame-people": {
       "answer": "yes",
@@ -31,7 +31,7 @@
     },
     "safe-zone": {
       "answer": "yes",
-      "note": "All text is inside the safe area on the contact sheet and on safe-zone debug stills at 6.3 s and 8.5 s."
+      "note": "All text is inside the safe area on the contact sheet (re-checked after the copy change: the Approved line is two lines, the Undo button reads Undo)."
     },
     "captions-clear": {
       "answer": "yes",
