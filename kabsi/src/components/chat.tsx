@@ -166,14 +166,16 @@ export const Bubble: React.FC<{
   buttons?: readonly string[];
   /** The button that shows pressed. */
   pressed?: string;
+  /** Widest the bubble grows, as a share of the screen. The studio's is 86 percent. */
+  maxWidth?: string;
   style?: React.CSSProperties;
   children: React.ReactNode;
-}> = ({ out = false, time = CLOCK, read = false, buttons, pressed, style, children }) => {
+}> = ({ out = false, time = CLOCK, read = false, buttons, pressed, maxWidth = "86%", style, children }) => {
   const bg = out ? colors.yellow : colors.paper;
   const timeColor = out ? alpha(colors.ink, 0.7) : SUBTLE;
   return (
     <div style={{ display: "flex", justifyContent: out ? "flex-end" : "flex-start", flexShrink: 0, ...style }}>
-      <div style={{ position: "relative", maxWidth: "86%", marginLeft: out ? 0 : u(8), marginRight: out ? u(8) : 0 }}>
+      <div style={{ position: "relative", maxWidth, marginLeft: out ? 0 : u(8), marginRight: out ? u(8) : 0 }}>
         <span
           style={{
             position: "absolute",

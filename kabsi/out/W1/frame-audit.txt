@@ -1,0 +1,21 @@
+W1 frame audit, made before the render from the scene source (src/videos/W1.tsx, W1.copy.ts) and checked on the contact
+sheets of both sizes afterwards. Question: which frames show Arabic script, a logo other than Kabsi's, a face, an email,
+a phone number, a contact name or a notification? Answer: none.
+
+Every frame of the video is drawn by the kit. It holds only these things, in this order:
+  0.0 to 1.5 s    phone, header (Kabsi's own ring mark, the name "Kabsi", "On WhatsApp", the Example badge), empty chat.
+  1.5 to 4.5 s    the review message with Yes, Edit, Skip. Words from W1.copy.ts only.
+  4.5 to 5.5 s    tap ring on Yes, the owner's Yes bubble.
+  5.5 to 8.0 s    Approved bubble with Undo.
+  8.0 to 10.5 s   Published bubble with the green check.
+  10.5 to 12.0 s  hold, then the chat eases away to the empty opening frame.
+
+  Arabic script       none. No string has any (rule check), and no Arabic font or file exists in kabsi/.
+  Logo other than     none. The only mark is Kabsi's ring in the chat header. No Google or WhatsApp logo or glyph is drawn;
+  Kabsi's             "Google" appears only as plain words in the messages.
+  Face or person      none. No footage, no photo, no avatar except the Kabsi mark.
+  Email address       none.
+  Phone number        none. "11:40" is the chat clock, not a number.
+  Contact name        none. The only name in the header is "Kabsi", the chat partner. "Harbour Lane Coffee" is the Example business.
+  Notification        none. No banner, no lock screen, no badge count.
+  Star icon or rating none, anywhere.

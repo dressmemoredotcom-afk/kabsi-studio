@@ -1,0 +1,57 @@
+{
+  "contactSheet": "a70c7eb6272d30396f9a8fe6a5dcd2421378d879d7ad167a6cf8a19cb21dfbb0",
+  "rows": {
+    "frame-arabic": {
+      "answer": "yes",
+      "note": "No Arabic in any frame of either size (see frame-audit.txt)."
+    },
+    "frame-hidden": {
+      "answer": "yes",
+      "note": "No recordings: every frame is drawn by the kit. No notification, email, phone number or contact suggestion appears."
+    },
+    "frame-google": {
+      "answer": "yes",
+      "note": "Google appears only as plain words (\"Publish it on Google?\", \"goes to Google\", \"is on Google\"); no Google logo or colours, nothing suggesting approval."
+    },
+    "frame-proof": {
+      "answer": "yes",
+      "note": "The review quote belongs to the Example business and is shown as a message to approve, not as proof. No stars, star icons, ratings, counts, logos or testimonial framing in any frame."
+    },
+    "frame-people": {
+      "answer": "yes",
+      "note": "No people or faces in any frame; the Kabsi mark is the only picture."
+    },
+    "frame-example": {
+      "answer": "yes",
+      "note": "The Example badge sits in the chat header and is on screen in every frame from 0.0 to 12.0 s in both sizes, including the empty opening and closing frames."
+    },
+    "frame-yes": {
+      "answer": "yes",
+      "note": "Yes, Edit, Skip show from 1.5 s, the Yes is tapped at 4.5 s and the owner's Yes bubble follows at 4.8 s, before Approved."
+    },
+    "safe-zone": {
+      "answer": "yes",
+      "note": "1080 x 1920: all text is inside the safe area (the header text starts below y 280, the lowest text ends above y 1440, the right-most text ends near x 915). 1080 x 608: the plan sets no safe zone for it. The phone is cropped top and bottom, so the header sits about 8 px from the top and the chat runs off the bottom; the kit's own 60 px margin for other sizes is not kept there. Lane R to decide if that matters on the website."
+    },
+    "captions-clear": {
+      "answer": "yes",
+      "note": "A website loop: no captions."
+    },
+    "tap-rings": {
+      "answer": "yes",
+      "note": "One soft dark ring on the Yes button at 4.5 s, half a second, in both sizes."
+    },
+    "end-card": {
+      "answer": "yes",
+      "note": "No end card: this is a loop."
+    },
+    "hook": {
+      "answer": "yes",
+      "note": "The Kabsi chat is on screen from the first frame and the review slides in at 1.5 s, inside the first 2 seconds. Checked at 390 px wide on the 1080 x 608 file: the text is about 12.6 px, readable, and nothing is cut off except older messages that scroll out under the header after the Yes."
+    },
+    "sound-off": {
+      "answer": "yes",
+      "note": "No sound; the chat tells the whole story."
+    }
+  }
+}

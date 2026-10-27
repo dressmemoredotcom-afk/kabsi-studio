@@ -58,6 +58,7 @@ for (const size of copy.sizes) {
     composition: compositionId(copy, size),
     outFile: file,
     posterFile: join(outDir, `${base}-poster.png`),
+    posterAtS: copy.posterS,
   });
   console.log(`${size}: ${fitToFormat(copy, file)}`);
   webpPoster(join(outDir, `${base}-poster.png`), join(outDir, `${base}-poster.webp`));
