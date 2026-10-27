@@ -12,7 +12,7 @@ export const COPY: VideoCopy = {
     today: "Today",
     header: { name: "Kabsi", note: "On WhatsApp" },
     review: {
-      business: "Rose Lane Salon:",
+      business: "Juniper Hair Studio:",
       intro: "new review from Maya.",
       quote: "'Lovely blow dry, but I waited too long.'",
       ready: "Reply ready:",
@@ -21,8 +21,8 @@ export const COPY: VideoCopy = {
     },
     buttons: ["Yes", "Edit", "Skip"],
     yes: "Yes",
-    approved: "Approved. It goes to Google in 3 seconds. Reply Undo to stop it.",
-    undo: "Undo (3)",
+    approved: "Approved. It goes to Google in 10 seconds. Reply Undo to stop it.",
+    undo: "Undo",
     published: "Published on your Google profile.",
   },
   voiceLines: [
@@ -31,7 +31,7 @@ export const COPY: VideoCopy = {
     { id: "M3", vo: "Then it is published.", captions: ["Then it is published."], offset: 5.2 },
   ],
   highlight: { "M2#2": "yes" },
-  businesses: ["Rose Lane Salon"],
+  businesses: ["Juniper Hair Studio"],
   endCard: true,
   smallPrint: true,
   demo: true,

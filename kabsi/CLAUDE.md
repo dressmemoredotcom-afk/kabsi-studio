@@ -33,7 +33,7 @@ Kabsi (kabsi.co) looks after a local business's Google Business Profile. This fo
   wordmark together use the studio's proportions (32 px mark, 10 px gap, 22 px text). Never redraw or recolour either.
   Bricolage's optical size is pinned to 14 (`fonts.titleVariation`), as on the website.
 - Design studio references in `docs/`: `styles.css` (its colours match the nine in `tokens.ts`), `whatsapp.tsx` and
-  `public/brand/fonts/ui.tsx` (the mark's sizes), and two screenshots of its demo chat. `chat.tsx` follows them: status
+  `docs/ui.tsx` (the mark's sizes), and two screenshots of its demo chat. `chat.tsx` follows them: status
   bar, header with the mark and the Example badge, dotted ground that stacks from the bottom, incoming bubbles with a tail
   and a row of three buttons (Yes, Edit, Skip, in that order), the owner's Yes as a yellow outgoing bubble with ticks,
   Approved with an Undo button, Published. It keeps the kit's colours and fonts, and is not WhatsApp's own design.

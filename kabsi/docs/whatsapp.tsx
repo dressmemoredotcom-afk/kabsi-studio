@@ -221,10 +221,10 @@ const SCENE = {
 } as const;
 const FINAL = 99999;
 
-// Rose Lane Salon (Example). The reply uses only what the review and the owner said: no invented promises.
+// Juniper Hair Studio (Example). The reply uses only what the review and the owner said: no invented promises.
 export type SceneReview = { business: string; intro: string; quote: string; draft: string };
 export const SCENE_REVIEW: SceneReview = {
-  business: "Rose Lane Salon",
+  business: "Juniper Hair Studio",
   intro: "new 5-star review from Layla K.",
   quote: "'Hana did my colour and it is exactly what I asked for.'",
   draft: "'Thank you, Layla. We will pass this on to Hana. See you at your next visit.'",
