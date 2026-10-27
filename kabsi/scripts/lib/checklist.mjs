@@ -6,10 +6,10 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { root, outFolder } from "./copies.mjs";
-import { checkSource, checkVideo, logoMissing } from "./rules.mjs";
+import { checkSource, checkVideo } from "./rules.mjs";
 import { loudness, verifyPreset } from "./package.mjs";
 import { FORMATS, burnsCaptions, captionFile } from "../../src/formats.ts";
-import { LOGO, STRINGS } from "../../src/kit.ts";
+import { STRINGS } from "../../src/kit.ts";
 
 export const CONFIRM = "lane R to confirm";
 
@@ -114,7 +114,7 @@ export const buildChecklist = async (copy) => {
   const kit = [
     ["Colours: only the nine of section 2, all from src/tokens.ts, no WhatsApp green", code(["colours"], "tokens.ts holds exactly the nine; no other colour in source")],
     ["Type: Bricolage Grotesque for titles, Manrope for captions and body", code(["fonts"], "both fonts with their OFL licences in public/brand/fonts/; no other font in source")],
-    ["Logo: the real ring mark and wordmark, never redrawn or recoloured", logoMissing().length ? { answer: "no", note: `missing ${logoMissing().map((m) => m.replace(`${root}/`, "kabsi/")).join(", ")}: Hussein uploads them unchanged from kabsi-design-studio public/` } : { answer: "yes", note: `${Object.values(LOGO).join(" and ")} present` }],
+    ["Logo: the real ring mark and the wordmark, never redrawn or recoloured", code(["logo"], 'kabsi-mark.svg is the design studio\'s favicon.svg byte for byte; the wordmark is the text "Kabsi" in Bricolage Grotesque Bold 700, letter spacing -0.02em, ink on light and paper on dark')],
     ["Captions: Manrope SemiBold, white on night at 80 percent, 2 lines of 32 characters at most, one yellow word at most, clear of the tap", copy.voiceLines.length ? (() => { const c = code(["captions", "highlight", "caption-source"], "one source: the voice lines' captions"); return c.answer === "no" ? c : seen("captions-clear", c.note); })() : { answer: "yes", note: "no spoken words, so no captions" }],
     ["Captions as the format asks", (() => {
       const burn = burnsCaptions(format);

@@ -1,10 +1,11 @@
 // The Kabsi rule check. Reads every voice line, caption and on-screen string of a video (its *.copy.ts plus the words
 // the kit puts on screen) and the source, and reports every rule it breaks. Rules are from docs/VIDEO-PLAN.md
 // sections 1 to 3. Used by check.mjs, voice.mjs, render.mjs and the checklist.
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { root } from "./copies.mjs";
-import { END_CARD_SECONDS, STRINGS, VOICES, LOGO } from "../../src/kit.ts";
+import { END_CARD_SECONDS, STRINGS, VOICES, LOGO, WORDMARK } from "../../src/kit.ts";
 import { FORMATS, burnsCaptions } from "../../src/formats.ts";
 import { captionProblem } from "../../src/captions.ts";
 
@@ -24,7 +25,16 @@ const banned = [
   [/\btop of google\b/i, "top of Google", "claims"],
   [/\bmore (customers|bookings|calls)\b/i, "more customers, bookings or calls", "claims"],
   [/\bguarantee(d|s)?\b/i, "guaranteed", "claims"],
-  [/\bfully[- ]automatic(ally)?\b/i, "fully automatic", "claims"],
+  [/\bautomatic(ally)?\b/i, "automatic, automatically (fully automatic too)", "claims"],
+  [/\bauto[- ]?pilot\b/i, "autopilot", "claims"],
+  // Kabsi publishes nothing without the owner's yes. Checked everywhere, since the check cannot tell whose "itself" it is.
+  [/\bon (its|their) own\b|\bby itself\b/i, "on its own, by itself", "claims"],
+  [/\bmore reviews\b/i, "more reviews", "claims"],
+  [/\b(higher|better) ratings?\b/i, "higher or better rating", "claims"],
+  // Kabsi never locks or blocks anything on the owner's profile.
+  [/\blocks\b|\block(ed|ing)?\s+(down\s+)?(your|the|a)\s+((google|business)\s+)*profile\b|\block your\b/i, "locks or lock your profile", "claims"],
+  [/\bblock(s|ed|ing)?\s+(all\s+|any\s+|your\s+|other\s+|manual\s+|direct\s+)?edit(s|ing)?\b/i, "blocks edits", "claims"],
+  [/\bstop(s|ped|ping)?\s+(all\s+|any\s+|your\s+|other\s+|manual\s+|direct\s+)?edit(s|ing)?\b/i, "stops edits", "claims"],
   [/\bset (it )?(and|&) forget\b/i, "set and forget", "claims"],
   [/\bgoogle[- ]approved\b|\bapproved by google\b/i, "Google-approved", "claims"],
   [/\bgoogle partner/i, "Google partner", "claims"],
@@ -67,7 +77,7 @@ export const collectStrings = (copy) => {
     else if (node && typeof node === "object") for (const [k, v] of Object.entries(node)) walk(v, path ? `${path}.${k}` : k);
   })(copy.screen, "");
   if (copy.endCard) {
-    strings.push({ where: "kit:endLine", text: STRINGS.endLine }, { where: "kit:endCta", text: STRINGS.endCta });
+    strings.push({ where: "kit:endLine", text: STRINGS.endLine }, { where: "kit:endCta", text: STRINGS.endCta }, { where: "kit:wordmark", text: STRINGS.wordmark });
   }
   if (copy.smallPrint) strings.push({ where: "kit:smallPrint", text: STRINGS.smallPrint });
   if (copy.businesses.length) strings.push({ where: "kit:exampleBadge", text: STRINGS.exampleBadge });
@@ -77,7 +87,8 @@ export const collectStrings = (copy) => {
 const readJson = (p) => JSON.parse(readFileSync(p, "utf8"));
 export const configPath = join(root, "config.json");
 export const voiceJsonPath = (id) => join(root, "src", "generated", "voice", `${id}.json`);
-export const logoMissing = () => Object.values(LOGO).map((f) => join(root, "public", f)).filter((p) => !existsSync(p));
+export const markPath = join(root, "public", LOGO.mark);
+export const wordmarkPath = join(root, "src", "components", "wordmark.tsx");
 
 /**
  * Checks one video. Returns { failures: [{ rule, where, msg }], strings, timing, notes }. Rule names are the checklist's:
@@ -244,11 +255,16 @@ export const checkSource = ({ copies }) => {
   if (STRINGS.smallPrint !== "Kabsi is independent and not affiliated with Google.") fail("small-print", "src/kit.ts", "the small print is exactly: Kabsi is independent and not affiliated with Google.");
   if (STRINGS.exampleBadge !== "Example") fail("example-badge", "src/kit.ts", 'the badge says "Example"');
 
-  // The real logo: any video other than a kit test needs it.
-  const missing = logoMissing();
-  const real = copies.filter((c) => !c.testOnly);
-  if (missing.length && real.length) fail("logo", "public/brand", `missing ${missing.map((m) => relative(root, m)).join(", ")}; upload them from kabsi-design-studio public/ unchanged`);
-  return { failures, logoMissing: missing, sourceFiles: sources.length };
+  // The logo. The mark is the design studio's favicon.svg, byte for byte. The wordmark is text, set to the spec.
+  if (!existsSync(markPath)) fail("logo", "public/brand", `missing ${relative(root, markPath)}: it is the design studio's favicon.svg, renamed and unchanged`);
+  else if (createHash("sha256").update(readFileSync(markPath)).digest("hex") !== LOGO.markSha256) fail("logo", relative(root, markPath), "the mark was changed: it must stay byte for byte the design studio's favicon.svg (never redrawn or recoloured)");
+  if (!existsSync(wordmarkPath)) fail("logo", "src/components/wordmark.tsx", "the wordmark component is missing");
+  else {
+    const w = readFileSync(wordmarkPath, "utf8");
+    if (!/fonts\.title\b/.test(w) || !/WORDMARK\.weight/.test(w) || !/WORDMARK\.letterSpacing/.test(w) || !/colors\.ink/.test(w) || !/colors\.paper/.test(w)) fail("logo", "src/components/wordmark.tsx", "the wordmark is Bricolage Grotesque Bold 700 with letter spacing -0.02em, ink on light and paper on dark");
+  }
+  if (WORDMARK.weight !== 700 || WORDMARK.letterSpacing !== "-0.02em" || STRINGS.wordmark !== "Kabsi") fail("logo", "src/kit.ts", 'the wordmark is the text "Kabsi", weight 700, letter spacing -0.02em');
+  return { failures, sourceFiles: sources.length };
 };
 
 export const bannedCount = banned.length;

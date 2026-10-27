@@ -7,6 +7,8 @@ export const STRINGS = {
   endCta: "Free check at kabsi.co",
   smallPrint: "Kabsi is independent and not affiliated with Google.",
   exampleBadge: "Example",
+  /** The wordmark's text, set in the font (components/wordmark.tsx). */
+  wordmark: "Kabsi",
 } as const;
 
 export const END_CARD_SECONDS = 3;
@@ -17,11 +19,21 @@ export const SAFE_INSETS = { top: 220, bottom: 420, right: 120, left: 60 } as co
 /** Every other frame size keeps this margin on all sides. */
 export const SAFE_MARGIN = 60;
 
-/** Logo files in kabsi/public/brand/, copied unchanged from kabsi-design-studio public/. Never redrawn or recoloured. */
+/**
+ * The ring mark: the design studio's favicon.svg, renamed and otherwise untouched, so the rule check holds it to the
+ * same bytes (sha256). Never redrawn or recoloured. The wordmark is not a file: it is the text "Kabsi" set in
+ * components/wordmark.tsx.
+ */
 export const LOGO = {
   mark: "brand/kabsi-mark.svg",
-  wordmark: "brand/kabsi-wordmark.svg",
+  markSha256: "b1cc4bc13388c6fa3d272c820f145d42c728e16f1ad03805536a776014e4ce85",
 } as const;
+
+/** The mark and wordmark together, from the design studio's ui.tsx (KabsiMark size-8, Logo gap-2.5 and text-[1.375rem]). */
+export const LOCKUP = { markPx: 32, gapPx: 10, wordmarkPx: 22 } as const;
+
+/** The wordmark: Bricolage Grotesque Bold, letter spacing -0.02em, ink on light and paper on dark. */
+export const WORDMARK = { weight: 700, letterSpacing: "-0.02em" } as const;
 
 /** The Kokoro voices Kabsi may use: calm, adult, British English. One of them is chosen once in config.json. */
 export const VOICES = ["bf_alice", "bf_isabella", "bf_lily", "bm_george", "bm_lewis"] as const;

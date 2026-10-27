@@ -35,6 +35,11 @@ export const shadows = {
 
 export const fonts = {
   title: '"Bricolage Grotesque", sans-serif',
+  /**
+   * Bricolage Grotesque has an optical-size axis; the website sets it at its default of 14, so every title and the
+   * wordmark use `fontVariationSettings: fonts.titleVariation` to look the same as on the website.
+   */
+  titleVariation: '"opsz" 14',
   body: '"Manrope", sans-serif',
 } as const;
 
