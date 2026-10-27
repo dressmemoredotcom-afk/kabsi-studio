@@ -9,7 +9,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { RoomyListingSchema } from "../src/schema.ts";
-import { FPS, outroFrom, planScenes, resolveVoScript, totalFrames, voiceSignature } from "../src/storyboard.ts";
+import { FPS, outroFrom, planListing, resolveVoScript, totalFrames, voiceSignature } from "../src/storyboard.ts";
 import { makeTts, probeDuration, speak as say, toWav, trim } from "../../engine/scripts/tts.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -57,7 +57,7 @@ if (["mp3", "wav", "m4a"].some((e) => existsSync(join(outDir, `voiceover.${e}`))
   process.exit(0);
 }
 
-const plan = planScenes(listing.media.length, total);
+const plan = planListing(listing);
 const sceneStart = (scene) => (scene === listing.media.length ? outroFrom(total) : plan[scene].from) / FPS;
 mkdirSync(outDir, { recursive: true });
 const getTts = makeTts();

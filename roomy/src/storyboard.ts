@@ -19,21 +19,30 @@ export const outroFrom = (total: number): number => total - OUTRO_FRAMES;
 export type ScenePlan = { index: number; from: number; frames: number };
 
 /**
- * Splits the time before the outro evenly between the media items. Each gets floor(content / N) frames and the first
- * scene takes the remainder, so the scenes always add up to exactly the frames before the outro (540 for 22 seconds).
+ * Splits the time before the outro between the media items. An item with a fixed length (`fixed`, in seconds) gets
+ * exactly that. The others each get floor(rest / N) frames and the first of them takes the remainder, so the scenes
+ * always add up to exactly the frames before the outro (540 for 22 seconds). With no fixed lengths the split is even.
  */
-export const planScenes = (count: number, total: number = TOTAL_FRAMES): ScenePlan[] => {
+export const planScenes = (count: number, total: number = TOTAL_FRAMES, fixed: (number | undefined)[] = []): ScenePlan[] => {
   const content = outroFrom(total);
-  const each = Math.floor(content / count);
-  const remainder = content - each * count;
+  const pinned = Array.from({ length: count }, (_, i) => (fixed[i] === undefined ? undefined : Math.round(fixed[i]! * FPS)));
+  const free = pinned.filter((f) => f === undefined).length;
+  const rest = content - pinned.reduce<number>((n, f) => n + (f ?? 0), 0);
+  const each = free ? Math.floor(rest / free) : 0;
+  const remainder = free ? rest - each * free : 0;
+  const firstFree = pinned.findIndex((f) => f === undefined);
   let from = 0;
   return Array.from({ length: count }, (_, index) => {
-    const frames = each + (index === 0 ? remainder : 0);
+    const frames = pinned[index] ?? each + (index === firstFree ? remainder : 0);
     const plan = { index, from, frames };
     from += frames;
     return plan;
   });
 };
+
+/** The scenes of one listing, honouring any `seconds` its items fix. */
+export const planListing = (listing: RoomyListing): ScenePlan[] =>
+  planScenes(listing.media.length, totalFrames(listing), listing.media.map((m) => m.seconds));
 
 
 /* ----------------------------- on-screen copy ----------------------------- */

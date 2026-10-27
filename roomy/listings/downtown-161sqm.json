@@ -5,16 +5,17 @@
   "specs": [
     "161 SQM",
     "2 MASTER BEDROOMS",
-    "FULLY FINISHED",
+    "FULLY FINISHED AND EQUIPPED",
     "1 PARKING"
   ],
-  "durationSeconds": 30,
+  "durationSeconds": 32,
   "voScript": [
     "Downtown Beirut. Light, space, and a central address.",
     "Floor-to-ceiling windows, and city views.",
     "One hundred and sixty-one square meters.",
+    "Fully finished and fully equipped.",
     "Two master bedrooms.",
-    "Fully finished, and ready for your own style.",
+    "Warm, and refined.",
     "Bright rooms, and warm wood floors.",
     "And a parking space.",
     "Exclusively with Roomy Properties."
@@ -31,7 +32,8 @@
       "src": "downtown-161sqm/walkthrough.mp4",
       "startAtSecond": 33.5,
       "headline": "CITY VIEWS",
-      "subline": "FLOOR-TO-CEILING WINDOWS"
+      "subline": "FLOOR-TO-CEILING WINDOWS",
+      "seconds": 2.6
     },
     {
       "type": "photo",
@@ -42,9 +44,18 @@
     {
       "type": "video",
       "src": "downtown-161sqm/walkthrough.mp4",
+      "startAtSecond": 7.4,
+      "seconds": 2.6,
+      "headline": "EQUIPPED KITCHEN",
+      "subline": "FULLY FINISHED AND EQUIPPED"
+    },
+    {
+      "type": "video",
+      "src": "downtown-161sqm/walkthrough.mp4",
       "startAtSecond": 64.7,
       "headline": "2 MASTER BEDROOMS",
-      "subline": "FULLY FINISHED"
+      "subline": "BRIGHT AND GENEROUS",
+      "seconds": 2.6
     },
     {
       "type": "photo",
@@ -61,7 +72,8 @@
     {
       "type": "video",
       "src": "downtown-161sqm/walkthrough.mp4",
-      "startAtSecond": 82.5
+      "startAtSecond": 82.5,
+      "seconds": 2.6
     }
   ],
   "whatsappContact": "+961 71 203 398"
