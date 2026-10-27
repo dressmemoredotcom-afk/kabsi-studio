@@ -1,0 +1,497 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+/* Self hosted fonts (OFL). Only the weight axis, latin first; the browser fetches other ranges only when needed. */
+@import "@fontsource-variable/bricolage-grotesque/wght.css";
+@import "@fontsource-variable/manrope/wght.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Kabsi design tokens (Design 1). Written up in docs/DESIGN-PROPOSAL.md; shown on /system.
+ *
+ * Three layers:
+ * 1. Brand constants (--kb-*, --map-*, --wa-*): fixed values, never used for a role directly in pages.
+ * 2. Roles (--surface-*, --text-*, --line*, --focus...): what pages and components use. The public website is
+ *    dark (:root). .theme-light switches the same roles to the light signed-in look (Design 3 compares them).
+ * 3. Tailwind names (@theme inline): bg-surface-1, text-text-2, rounded-card, shadow-lift, ease-kb and so on.
+ *    The shadcn names (bg-primary, text-muted-foreground...) map onto the roles so the ui/ primitives match.
+ */
+
+:root {
+  /* Brand constants */
+  --kb-yellow: #ffd60a;
+  --kb-yellow-pressed: #e8c309;
+  --kb-black: #000000;
+  --kb-night: #0c0c0b;
+  --kb-carbon: #161614;
+  --kb-graphite: #211f1c;
+  --kb-smoke: #2c2a26;
+  --kb-paper: #f5f3ee;
+  --kb-mute: #b8b3a8;
+  --kb-faint: #9a958a;
+  --kb-stroke-dark: #7d786f;
+  --kb-white: #ffffff;
+  --kb-sand: #f6f4ef;
+  --kb-ink: #111111;
+  --kb-stone: #5e5b55;
+  --kb-hairline: #e4e0d7;
+  --kb-green: #1f8a5b;
+  --kb-green-ink: #17704a;
+  --kb-green-soft: #e6f4ec;
+  --kb-green-on-dark: #5fd39b;
+  --kb-red: #d93025;
+  --kb-red-ink: #b3261e;
+  --kb-red-soft: #fce8e6;
+  --kb-red-on-dark: #ff8a80;
+  --kb-amber: #b45309;
+  --kb-amber-soft: #fef3c7;
+  --kb-amber-on-dark: #f5b94a;
+
+  /* The map (docs/reference/DESIGN.md). It always sits on its own light ground. */
+  --map-rank-top: #146c46;
+  --map-rank-mid: #6cc497;
+  --map-rank-low: #fef3c7;
+  --map-rank-none: #0b0b0b;
+  --map-ground: #efece4;
+  --map-block: #e3dfd4;
+  --map-street: #ffffff;
+  --map-water: #d7e3e6;
+
+  /* WhatsApp style mockups only (brief section 5), never Kabsi's own pages */
+  --wa-chat-bg: #efeae2;
+  --wa-bubble-in: #ffffff;
+  --wa-bubble-out: #d9fdd3;
+  --wa-ink: #111b21;
+  --wa-time: #667781;
+  /* #667781 is 4.2 to 1 on the sent bubble; one step darker keeps 4.5 to 1 there */
+  --wa-time-out: #5a6a72;
+  --wa-tick: #53bdeb;
+  --wa-link: #0a6c9c;
+  --wa-header: #f7f8fa;
+  --wa-divider: #e3e6e8;
+  --wa-bubble-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+  --whatsapp: #25d366;
+
+  /* Roles: the public website, dark first */
+  --surface-0: var(--kb-night);
+  --surface-1: var(--kb-carbon);
+  --surface-2: var(--kb-graphite);
+  --surface-3: var(--kb-smoke);
+  --surface-band: var(--kb-black);
+  --text-1: var(--kb-paper);
+  --text-2: var(--kb-mute);
+  --text-3: var(--kb-faint);
+  --line: rgb(245 243 238 / 0.1);
+  --line-strong: rgb(245 243 238 / 0.18);
+  --stroke: var(--kb-stroke-dark);
+  --focus: var(--kb-paper);
+  --ok: var(--kb-green-on-dark);
+  --warn: var(--kb-amber-on-dark);
+  --bad: var(--kb-red-on-dark);
+  --ok-soft: rgb(95 211 155 / 0.12);
+  --warn-soft: rgb(245 185 74 / 0.12);
+  --bad-soft: rgb(255 138 128 / 0.12);
+  --info-soft: rgb(245 243 238 / 0.07);
+  --glass: rgb(22 22 20 / 0.78);
+  --scrim: rgb(0 0 0 / 0.6);
+
+  /* Shadows. On dark a shadow alone disappears, so each one carries a 1 px top light. */
+  --shadow-rest: inset 0 1px 0 0 rgb(255 255 255 / 0.05), 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-lift: inset 0 1px 0 0 rgb(255 255 255 / 0.06), 0 18px 40px -18px rgb(0 0 0 / 0.85);
+  --shadow-float: 0 -1px 0 0 rgb(255 255 255 / 0.06) inset, 0 24px 60px -20px rgb(0 0 0 / 0.9);
+  --shadow-phone: 0 40px 80px -30px rgb(0 0 0 / 0.9), 0 0 0 1px rgb(255 255 255 / 0.06);
+  --glow-yellow: 0 6px 18px -12px rgb(255 214 10 / 0.3);
+
+  /* Motion */
+  --ease-kb: cubic-bezier(0.2, 0.6, 0.3, 1);
+  --dur-press: 80ms;
+  --dur-colour: 160ms;
+  --dur-state: 200ms;
+  --dur-enter: 320ms;
+  --dur-scene: 400ms;
+  --stagger: 60ms;
+
+  /* shadcn names, mapped to the roles so src/components/ui looks like Kabsi */
+  --radius: 1rem;
+  --background: var(--surface-0);
+  --foreground: var(--text-1);
+  --card: var(--surface-1);
+  --card-foreground: var(--text-1);
+  --popover: var(--surface-1);
+  --popover-foreground: var(--text-1);
+  --primary: var(--kb-yellow);
+  --primary-foreground: var(--kb-black);
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--text-1);
+  --muted: var(--surface-2);
+  --muted-foreground: var(--text-2);
+  --accent: var(--surface-3);
+  --accent-foreground: var(--text-1);
+  --destructive: var(--kb-red);
+  --destructive-foreground: var(--kb-white);
+  --border: var(--line);
+  --input: var(--stroke);
+  --ring: var(--focus);
+}
+
+/* The light look for the signed-in website and emails (Design 3 shows both, Rashid picks). */
+.theme-light {
+  --surface-0: var(--kb-sand);
+  --surface-1: var(--kb-white);
+  --surface-2: var(--kb-sand);
+  --surface-3: #ece9e1;
+  --surface-band: var(--kb-black);
+  --text-1: var(--kb-ink);
+  --text-2: var(--kb-stone);
+  --text-3: var(--kb-stone);
+  --line: var(--kb-hairline);
+  --line-strong: #d5d0c4;
+  --stroke: var(--kb-stone);
+  --focus: var(--kb-black);
+  --ok: var(--kb-green-ink);
+  --warn: var(--kb-amber);
+  --bad: var(--kb-red-ink);
+  --ok-soft: var(--kb-green-soft);
+  --warn-soft: var(--kb-amber-soft);
+  --bad-soft: var(--kb-red-soft);
+  --info-soft: var(--kb-sand);
+  --glass: rgb(255 255 255 / 0.85);
+  --shadow-rest: 0 1px 2px rgb(17 17 17 / 0.06);
+  --shadow-lift: 0 6px 18px rgb(0 0 0 / 0.06);
+  --shadow-float: 0 14px 30px rgb(0 0 0 / 0.09);
+  color: var(--text-1);
+  background-color: var(--surface-0);
+}
+
+@theme inline {
+  /* Fonts. The Arabic companion slots in after each family for the later Saudi step. */
+  --font-sans: "Manrope Variable", var(--font-arabic-text, ui-sans-serif), system-ui, sans-serif;
+  --font-display:
+    "Bricolage Grotesque Variable", var(--font-arabic-display, ui-sans-serif), system-ui, sans-serif;
+
+  /* Type scale. Phone first; display and h2 grow with the screen. 15 px floor for reading, 13 px for labels. */
+  --text-display: clamp(2.5rem, 1.55rem + 4.1vw, 4.5rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.03em;
+  --text-h2: clamp(1.875rem, 1.45rem + 1.8vw, 3rem);
+  --text-h2--line-height: 1.08;
+  --text-h2--letter-spacing: -0.022em;
+  --text-h3: 1.375rem;
+  --text-h3--line-height: 1.25;
+  --text-h3--letter-spacing: -0.012em;
+  --text-title: 1.125rem;
+  --text-title--line-height: 1.35;
+  --text-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --text-lead--line-height: 1.6;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-small: 0.9375rem;
+  --text-small--line-height: 1.5;
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1.35;
+  /* Inside the phone mockups only: a phone drawn at about 75 percent of real size */
+  --text-chat: 0.875rem;
+  --text-chat--line-height: 1.4;
+  --text-chat-meta: 0.6875rem;
+  --text-chat-meta--line-height: 1;
+
+  /* Colours by role */
+  --color-surface-0: var(--surface-0);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-band: var(--surface-band);
+  --color-text-1: var(--text-1);
+  --color-text-2: var(--text-2);
+  --color-text-3: var(--text-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-stroke: var(--stroke);
+  --color-focus: var(--focus);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-bad: var(--bad);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn-soft: var(--warn-soft);
+  --color-bad-soft: var(--bad-soft);
+  --color-info-soft: var(--info-soft);
+  --color-glass: var(--glass);
+  --color-scrim: var(--scrim);
+
+  /* Brand constants, for the few places that must not follow the theme */
+  --color-kb-yellow: var(--kb-yellow);
+  --color-kb-yellow-pressed: var(--kb-yellow-pressed);
+  --color-kb-black: var(--kb-black);
+  --color-kb-white: var(--kb-white);
+  --color-kb-ink: var(--kb-ink);
+  --color-kb-stone: var(--kb-stone);
+  --color-kb-sand: var(--kb-sand);
+  --color-kb-green: var(--kb-green);
+  --color-kb-green-ink: var(--kb-green-ink);
+  --color-kb-paper: var(--kb-paper);
+  --color-map-top: var(--map-rank-top);
+  --color-map-mid: var(--map-rank-mid);
+  --color-map-low: var(--map-rank-low);
+  --color-map-none: var(--map-rank-none);
+  --color-map-ground: var(--map-ground);
+  --color-map-block: var(--map-block);
+  --color-map-street: var(--map-street);
+  --color-map-water: var(--map-water);
+  --color-kb-amber: var(--kb-amber);
+  --color-wa-chat: var(--wa-chat-bg);
+  --color-wa-in: var(--wa-bubble-in);
+  --color-wa-out: var(--wa-bubble-out);
+  --color-wa-ink: var(--wa-ink);
+  --color-wa-time: var(--wa-time);
+  --color-wa-time-out: var(--wa-time-out);
+  --color-wa-tick: var(--wa-tick);
+  --color-wa-link: var(--wa-link);
+  --color-wa-header: var(--wa-header);
+  --color-wa-divider: var(--wa-divider);
+  --color-whatsapp: var(--whatsapp);
+
+  /* shadcn names */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Radius: small things tight, big things soft. Buttons, chips and badges are pills. */
+  --radius-input: 0.5rem;
+  --radius-bubble: 0.5rem;
+  --radius-inner: 0.75rem;
+  --radius-card: 1rem;
+  --radius-panel: 1.5rem;
+  --radius-phone: 3rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
+  /* Shadows */
+  --shadow-rest: var(--shadow-rest);
+  --shadow-lift: var(--shadow-lift);
+  --shadow-float: var(--shadow-float);
+  --shadow-phone: var(--shadow-phone);
+  --shadow-bubble: var(--wa-bubble-shadow);
+  --shadow-glow: var(--glow-yellow);
+
+  /* Motion */
+  --ease-kb: var(--ease-kb);
+  --animate-enter: kb-enter var(--dur-enter) var(--ease-kb) both;
+  --animate-drop: kb-drop var(--dur-scene) var(--ease-kb) both;
+  --animate-pop: kb-pop var(--dur-enter) var(--ease-kb) both;
+  --animate-fade: kb-fade var(--dur-enter) var(--ease-kb) both;
+  /* The trades row: the only thing allowed to loop. Pauses on touch and hover, stops under reduced motion. */
+  --animate-marquee: kb-marquee var(--duration) linear infinite;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    background-color: var(--surface-0);
+    color: var(--text-1);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-feature-settings: "ss01", "cv11";
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--kb-yellow);
+    color: var(--kb-black);
+  }
+  /* One focus ring everywhere: 2 px, 2 px away, the theme's focus colour. Never removed. */
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+}
+
+/* Layout */
+@utility container-kb {
+  width: 100%;
+  max-width: 75rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  @media (min-width: 768px) {
+    padding-inline: 2rem;
+  }
+}
+@utility section-y {
+  padding-block: 4.5rem;
+  @media (min-width: 1024px) {
+    padding-block: 7.5rem;
+  }
+}
+@utility measure {
+  max-width: 38rem;
+}
+
+/* Surfaces */
+@utility glass {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+}
+
+/* Press feedback inside 100 ms on every control (brief 7). */
+@utility press {
+  transition:
+    transform var(--dur-press) var(--ease-kb),
+    background-color var(--dur-colour) var(--ease-kb),
+    border-color var(--dur-colour) var(--ease-kb),
+    color var(--dur-colour) var(--ease-kb),
+    box-shadow var(--dur-state) var(--ease-kb);
+  &:active:not(:disabled):not([aria-disabled="true"]) {
+    transform: scale(0.97);
+  }
+}
+
+/* The map's light ground with our own quiet street pattern */
+@utility map-streets {
+  background-color: var(--map-ground);
+}
+
+/* WhatsApp style chat ground with a faint pattern of our own (never WhatsApp's doodles) */
+@utility wa-ground {
+  background-color: var(--wa-chat-bg);
+  background-image: radial-gradient(rgb(17 27 33 / 0.05) 1px, transparent 1.2px);
+  background-size: 14px 14px;
+}
+
+@keyframes kb-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes kb-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-110%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes kb-pop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes kb-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes kb-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+@keyframes kb-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+@keyframes kb-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+@keyframes kb-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes kb-sweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@utility skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 25%,
+    var(--surface-3) 50%,
+    var(--surface-2) 75%
+  );
+  background-size: 200% 100%;
+  animation: kb-shimmer 1.4s linear infinite;
+  border-radius: var(--radius-inner);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
